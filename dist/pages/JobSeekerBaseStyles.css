@@ -1,0 +1,94 @@
+.card-profile-image {
+    border-radius: 50%;
+    width: 6vw !important;
+    height: 6vw;
+    margin: 0 auto;
+    margin-top: 0.2vw;
+    background-color: #e8eafa;
+}
+.card-profile-details-container{
+    margin: 0 auto;
+    text-align: center;
+    padding: .5vw !important;
+}
+.card-profile-details-text{
+    padding: 0;
+    margin: 0;
+    display: block;
+    font-size: 0.8vw !important;
+}
+.card-profile-details-text-text{
+    padding: 0;
+    margin: 0;
+    display: block ;
+    font-size: 0.75vw !important;
+}
+.profile-card-button-container{
+    display: block;
+    margin: 0;
+    background-color: #e9f0fe;
+    border-radius: 1vw;
+    width:16vw;
+}
+.profile-card-button{
+    display: flex  ;
+    justify-content: flex-start !important;
+    color: #626880 !important;
+    width: 100% ;
+    padding: 0.2vw !important;
+}
+.profile-card-button-image{
+    width: 15%;
+    padding-top: .5vw;
+}
+.profile-card-button-text{
+    display: inline;
+    font-size: 1vw;
+}
+.line{
+    width: 6.3vw;                  
+    color: black;
+    margin: auto 20px;
+    border: 2px solid #DFE5FF;
+}
+.contest-detail-card-header-container{
+    width: 100%;
+    height: 2.3rem;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 1vw;
+}
+.contest-detail-card-body-container{
+    width: 100%;
+    display: flex;
+    padding: 1vw 1.5vw 1vw 0vw;
+}
+.contest-details-container{
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+.contest-status-details-container{
+    display: flex;
+    flex-direction: row;
+    height: 50%;
+    border-bottom: 1px solid #DFE5FF;
+    margin-left: 1vw;
+}
+.job-details-container{
+    display: flex;
+    flex-direction: row;
+    height: 50%;
+}
+.job-details-container-container{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 60%;
+}
+.job-details-container-container-container{
+    display: flex;
+    height: 50%;
+    justify-content: center;
+}
+

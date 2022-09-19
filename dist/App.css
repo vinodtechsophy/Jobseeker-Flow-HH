@@ -1,0 +1,338 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,400&family=Roboto&display=swap");
+
+:root {
+  --primary-blue: #4d6cd9;
+  --background-white: #f7f8fa;
+  --dark-title: #30374c;
+  --light-title: #626880;
+  --light-background: #717982;
+  --highlight-red: #ff3b2d;
+  --tab-outline: #8d00f9;
+  --primary-white: #fefefe;
+  --full-white: #ffffff;
+  --light-border: #dfe5ff;
+  --light-grey: #ced4f0;
+  --light-white: #e9f0ff;
+  --sky-blue: #e9f0ff;
+  --text-dark: #353535;
+}
+
+* {
+  font-family: "Nunito";
+}
+
+button {
+  text-transform: none !important;
+}
+
+.form-internal-body {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+button:focus {
+  outline: none !important;
+}
+
+.all-content-backdrop {
+  background: var(--background-white);
+  height: 100vh;
+}
+
+.main-content-container {
+  padding-left: 17.5em;
+  font-size: 1.3rem;
+  height: 100vh;
+  background-color: var(--background-white);
+  color: var(--light-background);
+  margin-top: 6.8%;
+  padding-right: 5%;
+}
+
+.main-content-overlay {
+  flex-grow: 1;
+  background-color: var(--primary-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 20px;
+}
+
+.main-content-div {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.stepper-container {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 35px;
+}
+
+.head-title-text {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 40px;
+  text-align: center;
+  color: var(--light-title);
+}
+
+.forms-button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.refresh-button {
+  color: var(--highlight-red) !important;
+  border: solid 1.5px var(--highlight-red) !important;
+}
+
+.refresh-icon-style {
+  margin-right: 10px;
+  font-size: 12px;
+  color: var(--highlight-red);
+}
+
+.save-draft-button {
+  color: var(--primary-blue) !important;
+  border: 1.5px solid var(--primary-blue) !important;
+  margin-left: 20px !important;
+}
+
+.save-icon-style {
+  margin-right: 10px;
+  font-size: 12px;
+  color: var(--primary-blue);
+}
+
+.next-button {
+  background-color: var(--primary-blue) !important;
+}
+
+.next-icon {
+  margin-left: 10px !important;
+  font-size: 12px !important;
+}
+
+.forward-icon {
+  margin-right: 10px !important;
+  font-size: 12px !important;
+}
+
+.main-title-divider {
+  padding-top: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 30px;
+}
+
+.review-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  width: 100%;
+  height: 68px;
+  background: var(--primary-white);
+  box-shadow: 0px 2px 8px rgba(206, 212, 240, 0.8);
+  border-radius: 16px;
+  margin-bottom: 24px;
+}
+
+.review-title-text {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 30px;
+  color: var(--dark-title);
+}
+
+.review-buttons-color {
+  color: var(--primary-blue) !important;
+}
+
+.review-icons {
+  margin-right: 10px;
+}
+
+.review-divider {
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 30px;
+}
+
+.tab-list-button {
+  color: var(--background-white) !important;
+  white-space: nowrap;
+  border-radius: 12px !important;
+  border: 0 !important;
+}
+
+.tab-list-button:hover {
+  border: 0 !important;
+  background-color: transparent;
+}
+
+.tab-list--active-button {
+  color: var(--primary-blue);
+  white-space: nowrap;
+  background-color: var(--background-white) !important;
+  border-radius: 12px !important;
+}
+
+.step-count-wrapper {
+  gap: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: start !important;
+  padding: 0.7% 1% 0.7% 1% !important;
+  font-size: 15px;
+  height: 13%;
+  background: var(--full-white);
+  border: 1.5px solid var(--light-border) !important;
+  border-radius: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.step-count-text {
+  font-size: 23px;
+  color: var(--dark-title);
+  margin: 0;
+  padding: 0;
+}
+
+.step-underline {
+  width: 50px;
+  height: 2px;
+  flex: none;
+  order: 2;
+  flex-grow: 0;
+  border-radius: 16px;
+}
+
+.columns-dialog-title {
+  font-size: 18px;
+  margin-top: 7px;
+}
+
+.columns-sub-title {
+  font-size: 15px;
+}
+
+span::first-letter {
+  text-transform: capitalize;
+}
+
+.faq-answer {
+  background-color: var(--light-white);
+  padding-left: 3%;
+  border-radius: 8px;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  padding-right: 1%;
+}
+
+.head-button-container {
+  background-color: var(--primary-blue);
+  height: 8.6vh;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 1.2% 3%;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 25px;
+  padding-top: 25px;
+}
+
+.css-1m8civw-MuiButtonBase-root-MuiPaginationItem-root {
+  border: 1px solid var(--light-grey) !important;
+}
+
+.grid-container {
+  height: 85vh;
+  width: 100%;
+}
+
+.grid-select {
+  height: 32px;
+  font-size: 0.875rem;
+}
+
+.toolbar-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.job-seeker-profile-content {
+  padding: 1% 5% 4% 5%;
+}
+
+.step-content-title-text {
+  font-size: 24px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.asterisk-span {
+  color: #db3131;
+}
+
+.number-input-field {
+  width: 80px;
+  margin-right: 8px;
+}
+
+.input-align {
+  padding-top: 7px;
+  margin-right: 25%;
+}
+
+.inline-div {
+  display: flex;
+}
+
+.generic-container {
+  padding-left: 4%;
+  padding-right: 2%;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.button-stack-container {
+  margin-top: 40px;
+}
+
+.previous-button {
+  color: var(--primary-blue) !important;
+  border-color: var(--primary-blue) !important;
+}
+
+.stack-button {
+  width: 200px;
+  border-radius: 12px !important;
+}
+
+.MuiContainer-root {
+  color: var(--text-dark) !important;
+}
+
+.forms-button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.save-draft-button {
+  color: var(--primary-blue) !important;
+  border: 1.5px solid var(--primary-blue) !important;
+  margin-left: 20px !important;
+}

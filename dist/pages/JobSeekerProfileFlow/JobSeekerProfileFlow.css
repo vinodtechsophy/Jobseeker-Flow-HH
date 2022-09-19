@@ -1,0 +1,111 @@
+.experience-details-card {
+    padding-left: 4%;
+    padding-right: 2%;
+    box-shadow: 0px 4px 16px rgba(206, 212, 240, 0.8);
+    padding-top: 20px;
+    padding-bottom: 30px;
+    margin-bottom: 10px;
+}
+
+.experience-card-title {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    margin-top: 15px;
+}
+
+.work-status-select {
+    margin-left: 10vw;
+}
+
+.ctc-details-text {
+    font-size: 24px;
+    margin-bottom: 0.6em;
+    margin-top: 1.2em;
+}
+
+.conditional-container {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.tctc-text {
+    margin-left: 10px;
+    padding-top: 7px;
+}
+
+.expected-ctc {
+    margin-bottom: 20px;
+}
+
+.notice-details-card {
+    padding-left: 10%;
+    padding-right: 10%;
+    box-shadow: 0px 4px 16px rgba(206, 212, 240, 0.8);
+    padding-top: 20px;
+    padding-bottom: 30px;
+    margin-bottom: 10px;
+}
+
+.notice-period-radio {
+    margin-top: 10px;
+    padding-left: 5%;
+}
+
+.notice-period-conditional {
+    margin-bottom: 30px;
+    padding-left: 5%;
+}
+
+.job-change-field {
+    width: 35%;
+    margin-bottom: 30px;
+    padding-left: 5%;
+}
+
+.job-change-field .MuiInputBase-root {
+    background: var(--sky-blue);
+}
+
+.outline-div {
+    padding: 3% 5% 4% 1%;
+    border: 1px solid var(--light-grey);
+    border-radius: 16px;
+}
+
+.upload-button-group {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.profile-location-field .MuiInputBase-root {
+    background: var(--sky-blue);
+    width: 280px;
+}
+
+.final-button-div {
+    padding: 1% 2%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.save-button {
+    width: 120px;
+    color: var(--primary-blue) !important;
+    border-color: var(--primary-blue) !important;
+    border-radius: 12px !important;
+}
+
+.reason-field .MuiInputBase-root {
+    background: var(--sky-blue);
+    width: 380px;
+    margin-top: 20px;
+}
+
+.experienced-div {
+    padding: 2% 4% 2% 10%;
+    border: 1px solid var(--light-title);
+    border-radius: 16px;
+}

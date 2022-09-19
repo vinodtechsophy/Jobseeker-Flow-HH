@@ -54,7 +54,7 @@ import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { LIGHT_GREY } from "../../color";
 import ColumnSelection from "../../components/ColumnSelection/ColumnSelection";
-import BookmarkIcon from "../../assets/bookmark.svg";
+import BookmarkIcon from "../../../public/assets/bookmark.svg";
 import { LISTING_GENERIC_HEADERS } from "./ColumnHeader";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import { PAGE_SIZE_ARRAY } from "../../constants";

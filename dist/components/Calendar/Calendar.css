@@ -1,0 +1,9 @@
+.MuiPaper-root {
+    /* margin-left: 560px;
+    margin-top: 150px; */
+  }
+  
+  .MuiBox-root > input {
+    display: none;
+  }
+  
