@@ -2,6 +2,7 @@
   "name": "job-seeker-flow",
   "version": "0.1.0",
   "private": true,
+  "main": "index.tsx",
   "dependencies": {
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
