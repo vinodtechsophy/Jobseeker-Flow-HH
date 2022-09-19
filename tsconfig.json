@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include"],
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -14,15 +14,16 @@
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react-jsx",
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "outDir": "dist"
   },
-  "include": ["src", "custom.d.ts"],
+  "include": ["src/*", "custom.d.ts"],
   "exclude": [
     "node_modules",
     "babel.config.js",
     "metro.config.js",
     "gulpfile.js"
-  ]
+  ],
+  "files": ["src/**/*"]
 }

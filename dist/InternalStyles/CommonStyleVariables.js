@@ -1,0 +1,10 @@
+export var FORM_MAX_WIDTH = "450px";
+export var AUTO_MARGIN = "auto";
+export var FORM_GRID_SPACING = 3;
+export var FULL_SIZE_GRID = 12;
+export var HALF_SIZE_GRID = 6;
+export var PRIMARY_COLOR = '#DFE5FF';
+export var OFF_WHITE_COLOR = '#ffffff';
+export var PRIMARY_THEME_COLOR = '#4D6CD9';
+export var FULL_WIDTH_PERCENT = '100%';
+export var DASHED_BORDER = '2px dashed blue';
