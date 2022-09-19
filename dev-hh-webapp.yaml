@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: web-app
+  template:
+    metadata:
+      labels:
+        name: web-app
+    spec:
+      containers:
+      - image: 142964740405.dkr.ecr.ap-south-1.amazonaws.com/web-app:$BUILD_NUMBER
+        name: web-app
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: hh-ecr
+        
+      
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app
+  namespace: dev
+spec:
+  type: ClusterIP
+  ports: 
+  - port: 80
+  selector:
+    name: web-app

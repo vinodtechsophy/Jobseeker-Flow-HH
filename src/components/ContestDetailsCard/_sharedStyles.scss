@@ -1,0 +1,62 @@
+@mixin nav-item-text(
+  $color,
+  $color-hover: 0,
+  $background: 0,
+  $background-hover: 0
+) {
+  text-decoration: none;
+  text-transform: none;
+  color: $color;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 1rem;
+  letter-spacing: 0rem;
+  opacity: 1;
+  margin: 0 auto;
+  @if $background != 0 {
+    background: $background;
+  }
+
+  &:hover {
+    font-weight: bold;
+    @if $color-hover != 0 {
+      color: $color-hover;
+    } @else {
+      color: white;
+    }
+    @if $background-hover != 0 {
+      background: $background-hover;
+    }
+    cursor: pointer;
+  }
+}
+
+@mixin flex-row-container {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin border($border, $borderRadius) {
+  border: $border;
+  box-sizing: border-box;
+  border-radius: $borderRadius;
+}
+
+@mixin font($size, $weight, $color, $lineHeight) {
+  font-weight: $weight;
+  font-size: $size;
+  line-height: $lineHeight;
+  color: $color;
+}
+
+@mixin display-align($flexDirection, $justifyContent, $alignItems) {
+  display: flex;
+  flex-direction: $flexDirection;
+  justify-content: $justifyContent;
+  align-items: $alignItems;
+}
+
+@mixin size($height, $width) {
+  height: $height;
+  width: $width;
+}

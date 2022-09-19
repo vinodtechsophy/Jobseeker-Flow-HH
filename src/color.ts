@@ -1,0 +1,12 @@
+export const CLOSE_RED = '#E8EAFA';
+export const BORDER_RED = '#FBFBFB';
+export const WHITE_TEXT = '#FFFFFF';
+export const MAIN_BLUE = '#4D6CD9';
+export const DARK_BLUE = '#30374C';
+export const LIGHT_YELLOW = '#F5BC2F';
+export const LIGHT_ORANGE = '#ED7C19';
+export const DARK_RED = '#C30011';
+export const MAIN_GREEN = '#00C15D';
+export const LIGHT_GREY = '#EAEAF0';
+export const COOL_RED = '#EF4444';
+export const SKY_BLUE = '#E9F0FF';

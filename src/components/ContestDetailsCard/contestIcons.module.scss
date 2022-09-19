@@ -1,0 +1,24 @@
+@import "./sharedStyles";
+
+.contest-icons-conatiner {
+  display: flex;
+}
+
+.contest-icon-conatiner {
+  display: flex;
+  align-items: center;
+}
+
+.contest-icon-conatiner:not(:last-child) {
+  margin-right: 3.145rem;
+}
+
+.contest-icons-text {
+  @include font(0.8125rem, bold, var(--light-title), 1.125rem);
+  margin-left: 0.5rem;
+  margin-bottom: auto;
+}
+
+.contest-icon-clickable {
+  cursor: pointer;
+}

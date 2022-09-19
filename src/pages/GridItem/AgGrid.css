@@ -1,0 +1,37 @@
+.ag-theme-alpine {
+  --ag-header-height: 30px;
+  --ag-header-foreground-color: white;
+  --ag-header-background-color: #4d6cd9;
+  --ag-header-cell-hover-background-color: rgb(80, 40, 140);
+  --ag-header-cell-moving-background-color: rgb(80, 40, 140);
+  --ag-borders: solid 1px;
+  --ag-borders-row: solid 1px;
+  --ag-border-color: #dfe5ff;
+}
+.ag-root-wrapper {
+  border-radius: 10px;
+}
+
+.ag-theme-alpine .ag-header-cell {
+  font-size: 18px;
+}
+.ag-header-cell {
+  border-right-color: #dfe5ff;
+  border-right-width: 1px;
+  border-right-style: solid;
+}
+.ag-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 16.5px;
+}
+
+.ag-text-field-input {
+  color: black !important;
+}
+
+.ag-theme-alpine .ag-cell {
+  padding-left: 0px;
+  padding-right: 0px;
+}

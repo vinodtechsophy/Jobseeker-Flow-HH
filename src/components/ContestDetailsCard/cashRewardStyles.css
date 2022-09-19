@@ -1,0 +1,17 @@
+.cash-reward-container {
+  display: flex;
+  height: 3.125rem;
+}
+
+.cash-reward-content {
+  margin-left: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.375rem;
+}
+
+.cash-reward-amount {
+  font-weight: bold;
+  font-size: 1.375rem;
+  line-height: 1.875rem;
+  color: #0f172a;
+}

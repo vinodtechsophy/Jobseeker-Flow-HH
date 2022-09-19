@@ -1,0 +1,9 @@
+<svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="path-1-inside-1_284_26014" fill="white">
+<rect x="0.481934" y="4.19629" width="39.9058" height="36.3847" rx="3.99058"/>
+</mask>
+<rect x="0.481934" y="4.19629" width="39.9058" height="36.3847" rx="3.99058" stroke="#00E777" stroke-width="13.967" stroke-linejoin="round" mask="url(#path-1-inside-1_284_26014)"/>
+<path d="M0.481934 8.18687C0.481934 5.98293 2.26858 4.19629 4.47251 4.19629H36.3971C38.6011 4.19629 40.3877 5.98293 40.3877 8.18687V11.2385H0.481934V8.18687Z" fill="#4D6CD9"/>
+<rect x="14.5767" y="0.674805" width="9.38959" height="3.5211" rx="1.76055" transform="rotate(90 14.5767 0.674805)" fill="#4D6CD9"/>
+<rect x="29.8306" y="0.674805" width="9.38959" height="3.5211" rx="1.76055" transform="rotate(90 29.8306 0.674805)" fill="#4D6CD9"/>
+</svg>

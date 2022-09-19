@@ -1,0 +1,25 @@
+.contest-quota-container {
+  display: flex;
+  padding: 1.3125rem 1.5625rem 1.3125rem 1.5625rem;
+  justify-content: space-evenly;
+}
+
+.contest-quota-image-container {
+  text-align: center;
+}
+
+.contest-quota-label {
+  font-weight: bold;
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  color: var(--light-title);
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+.contest-quota-text {
+  font-weight: bold;
+  font-size: 1rem;
+  line-height: 1.375rem;
+  color: #30374c;
+}
