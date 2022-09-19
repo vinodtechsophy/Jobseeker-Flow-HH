@@ -25,5 +25,5 @@
     "metro.config.js",
     "gulpfile.js"
   ],
-  "files": ["src/**/*"]
+  "file": ["src/*"]
 }
