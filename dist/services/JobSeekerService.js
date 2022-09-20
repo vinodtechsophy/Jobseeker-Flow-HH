@@ -83,3 +83,19 @@ export var contestLinkedJobsekeers = function (id, page, size) { return __awaite
         }
     });
 }); };
+export var getAggregateData = function (contestId) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, axios
+                    .get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/job-seekers/aggregate?filterColumn=contestId&filterValue=").concat(contestId), {
+                    headers: {
+                        Authorization: "Bearer ".concat(sessionStorage.getItem("react-token")),
+                    },
+                })
+                    .catch(function (error) {
+                    console.log(error);
+                })];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };

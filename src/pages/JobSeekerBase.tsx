@@ -11,7 +11,8 @@ import AllJs from "./AllJs/AllJs";
 
 const useStyles = makeStyles(() => ({}));
 
-const JobSeekerBase: FC<any> = (): ReactElement => {
+const JobSeekerBase: FC<any> = (props): ReactElement => {
+  const { id, contestId } = props;
   const classes = useStyles();
 
   const [activeTab, setActiveTab] = React.useState(0);
@@ -50,7 +51,7 @@ const JobSeekerBase: FC<any> = (): ReactElement => {
     {
       title: "Vetting",
       index: 4,
-      component: <Vetting />,
+      component: <Vetting contestId={"CONTEST_07_10078"} />,
     },
     {
       title: "Interview",

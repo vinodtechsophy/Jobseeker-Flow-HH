@@ -10,7 +10,6 @@ import React, {
 
 import Checkbox from "@mui/material/Checkbox";
 import { Button, Grid, Typography, Box } from "@mui/material";
-import GridItem from "../GridItem/GridItem";
 import { AgGridReact } from "ag-grid-react";
 import { relations, LISTING_GENERIC_HEADERS } from "./ColumnHeaders";
 import { ColDef } from "ag-grid-community";
@@ -20,297 +19,374 @@ import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { LIGHT_GREY } from "../../color";
 import ColumnSelection from "../../components/ColumnSelection/ColumnSelection";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import BookmarkIcon from "../../assets/bookmark.svg";
-import BookmarkSelectedIcon from "../../assets/bookmark-selected.svg";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import { PAGE_SIZE_ARRAY } from "../../constants";
-import { contestLinkedJobsekeers } from "../../services/JobSeekerService";
+import {
+  contestLinkedJobsekeers,
+  getAggregateData,
+} from "../../services/JobSeekerService";
+import KeycloakService from "../../services/KeycloakService";
+import moment from "moment";
+import { makeStyles } from "@mui/styles";
 
-const rowData = [
-  {
-    jobSeekerName: "Vinod",
-    experience: 2,
-    expectedCTC: "7 LPA",
-    profileUploaded: "30-09-2022",
-    recruiterUploading: "HiringHood",
-    phoneNumber: 9493947123,
-    emailAddress: "test@gmail.com",
-    currentLocation: "HYD",
-    currentlyWorking: "Yes",
-    resumeUploaded: "No",
-    changeConsentStatus: "passed",
-    jobSeekerID: "HH-1234",
-    changeHHShortlisting: "passed",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Harish",
-    experience: 2,
-    expectedCTC: "7 LPA",
-    profileUploaded: "30-09-2022",
-    recruiterUploading: "ABC Hiring",
-    phoneNumber: 9493947123,
-    emailAddress: "test@gmail.com",
-    currentLocation: "HYD",
-    currentlyWorking: "Yes",
-    resumeUploaded: "No",
-    changeConsentStatus: "passed",
-    jobSeekerID: "HH-1234",
-    changeHHShortlisting: "passed",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Joel",
-    experience: 2,
-    expectedCTC: "7 LPA",
-    profileUploaded: "30-09-2022",
-    recruiterUploading: "",
-    phoneNumber: 9493947123,
-    emailAddress: "test@gmail.com",
-    currentLocation: "HYD",
-    currentlyWorking: "Yes",
-    resumeUploaded: "No",
-    changeConsentStatus: "passed",
-    jobSeekerID: "HH-1234",
-    changeHHShortlisting: "failed",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Sam",
-    experience: 0,
-    expectedCTC: "",
-    profileUploaded: "20-09-2022",
-    recruiterUploading: "",
-    phoneNumber: 0,
-    emailAddress: "",
-    currentLocation: "",
-    currentlyWorking: "",
-    resumeUploaded: "",
-    changeConsentStatus: "pending",
-    jobSeekerID: "",
-    changeHHShortlisting: "",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Jagadish",
-    experience: 0,
-    expectedCTC: "",
-    profileUploaded: "20-09-2022",
-    recruiterUploading: "",
-    phoneNumber: 0,
-    emailAddress: "",
-    currentLocation: "",
-    currentlyWorking: "",
-    resumeUploaded: "",
-    changeConsentStatus: "failed",
-    jobSeekerID: "",
-    changeHHShortlisting: "",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Vinod",
-    experience: 2,
-    expectedCTC: "7 LPA",
-    profileUploaded: "30-09-2022",
-    recruiterUploading: "HiringHood",
-    phoneNumber: 9493947123,
-    emailAddress: "test@gmail.com",
-    currentLocation: "HYD",
-    currentlyWorking: "Yes",
-    resumeUploaded: "No",
-    changeConsentStatus: "passed",
-    jobSeekerID: "HH-1234",
-    changeHHShortlisting: "passed",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Harish",
-    experience: 2,
-    expectedCTC: "7 LPA",
-    profileUploaded: "30-09-2022",
-    recruiterUploading: "ABC Hiring",
-    phoneNumber: 9493947123,
-    emailAddress: "test@gmail.com",
-    currentLocation: "HYD",
-    currentlyWorking: "Yes",
-    resumeUploaded: "No",
-    changeConsentStatus: "passed",
-    jobSeekerID: "HH-1234",
-    changeHHShortlisting: "passed",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Joel",
-    experience: 2,
-    expectedCTC: "7 LPA",
-    profileUploaded: "30-09-2022",
-    recruiterUploading: "",
-    phoneNumber: 9493947123,
-    emailAddress: "test@gmail.com",
-    currentLocation: "HYD",
-    currentlyWorking: "Yes",
-    resumeUploaded: "No",
-    changeConsentStatus: "passed",
-    jobSeekerID: "HH-1234",
-    changeHHShortlisting: "failed",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Sam",
-    experience: 0,
-    expectedCTC: "",
-    profileUploaded: "20-09-2022",
-    recruiterUploading: "",
-    phoneNumber: 0,
-    emailAddress: "",
-    currentLocation: "",
-    currentlyWorking: "",
-    resumeUploaded: "",
-    changeConsentStatus: "pending",
-    jobSeekerID: "",
-    changeHHShortlisting: "",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Jagadish",
-    experience: 0,
-    expectedCTC: "",
-    profileUploaded: "20-09-2022",
-    recruiterUploading: "",
-    phoneNumber: 0,
-    emailAddress: "",
-    currentLocation: "",
-    currentlyWorking: "",
-    resumeUploaded: "",
-    changeConsentStatus: "failed",
-    jobSeekerID: "",
-    changeHHShortlisting: "",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Vinod",
-    experience: 2,
-    expectedCTC: "7 LPA",
-    profileUploaded: "30-09-2022",
-    recruiterUploading: "HiringHood",
-    phoneNumber: 9493947123,
-    emailAddress: "test@gmail.com",
-    currentLocation: "HYD",
-    currentlyWorking: "Yes",
-    resumeUploaded: "No",
-    changeConsentStatus: "passed",
-    jobSeekerID: "HH-1234",
-    changeHHShortlisting: "passed",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Harish",
-    experience: 2,
-    expectedCTC: "7 LPA",
-    profileUploaded: "30-09-2022",
-    recruiterUploading: "ABC Hiring",
-    phoneNumber: 9493947123,
-    emailAddress: "test@gmail.com",
-    currentLocation: "HYD",
-    currentlyWorking: "Yes",
-    resumeUploaded: "No",
-    changeConsentStatus: "passed",
-    jobSeekerID: "HH-1234",
-    changeHHShortlisting: "passed",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Joel",
-    experience: 2,
-    expectedCTC: "7 LPA",
-    profileUploaded: "30-09-2022",
-    recruiterUploading: "",
-    phoneNumber: 9493947123,
-    emailAddress: "test@gmail.com",
-    currentLocation: "HYD",
-    currentlyWorking: "Yes",
-    resumeUploaded: "No",
-    changeConsentStatus: "passed",
-    jobSeekerID: "HH-1234",
-    changeHHShortlisting: "failed",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Sam",
-    experience: 0,
-    expectedCTC: "",
-    profileUploaded: "20-09-2022",
-    recruiterUploading: "",
-    phoneNumber: 0,
-    emailAddress: "",
-    currentLocation: "",
-    currentlyWorking: "",
-    resumeUploaded: "",
-    changeConsentStatus: "pending",
-    jobSeekerID: "",
-    changeHHShortlisting: "",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-  {
-    jobSeekerName: "Jagadish",
-    experience: 0,
-    expectedCTC: "",
-    profileUploaded: "20-09-2022",
-    recruiterUploading: "",
-    phoneNumber: 0,
-    emailAddress: "",
-    currentLocation: "",
-    currentlyWorking: "",
-    resumeUploaded: "",
-    changeConsentStatus: "failed",
-    jobSeekerID: "",
-    changeHHShortlisting: "",
-    changeEmployerDuplication: "",
-    changeEmployerShortlisting: "",
-  },
-];
+const useStyles = makeStyles(() => ({
+  deleteIcon: { color: "#4D6CD9", margin: "10px" },
+  actions1: { fontSize: "15px !important" },
+  bookmarkIcon: { color: "#4D6CD9" },
+}));
 
-const Vetting = () => {
+// const rowData = [
+//   {
+//     jobSeekerName: "Vinod",
+//     experience: 2,
+//     expectedCTC: "7 LPA",
+//     profileUploaded: "30-09-2022",
+//     recruiterUploading: "HiringHood",
+//     phoneNumber: 9493947123,
+//     emailAddress: "test@gmail.com",
+//     currentLocation: "HYD",
+//     currentlyWorking: "Yes",
+//     resumeUploaded: "No",
+//     changeConsentStatus: "passed",
+//     jobSeekerID: "HH-1234",
+//     changeHHShortlisting: "passed",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Harish",
+//     experience: 2,
+//     expectedCTC: "7 LPA",
+//     profileUploaded: "30-09-2022",
+//     recruiterUploading: "ABC Hiring",
+//     phoneNumber: 9493947123,
+//     emailAddress: "test@gmail.com",
+//     currentLocation: "HYD",
+//     currentlyWorking: "Yes",
+//     resumeUploaded: "No",
+//     changeConsentStatus: "passed",
+//     jobSeekerID: "HH-1234",
+//     changeHHShortlisting: "passed",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Joel",
+//     experience: 2,
+//     expectedCTC: "7 LPA",
+//     profileUploaded: "30-09-2022",
+//     recruiterUploading: "",
+//     phoneNumber: 9493947123,
+//     emailAddress: "test@gmail.com",
+//     currentLocation: "HYD",
+//     currentlyWorking: "Yes",
+//     resumeUploaded: "No",
+//     changeConsentStatus: "passed",
+//     jobSeekerID: "HH-1234",
+//     changeHHShortlisting: "failed",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Sam",
+//     experience: 0,
+//     expectedCTC: "",
+//     profileUploaded: "20-09-2022",
+//     recruiterUploading: "",
+//     phoneNumber: 0,
+//     emailAddress: "",
+//     currentLocation: "",
+//     currentlyWorking: "",
+//     resumeUploaded: "",
+//     changeConsentStatus: "pending",
+//     jobSeekerID: "",
+//     changeHHShortlisting: "",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Jagadish",
+//     experience: 0,
+//     expectedCTC: "",
+//     profileUploaded: "20-09-2022",
+//     recruiterUploading: "",
+//     phoneNumber: 0,
+//     emailAddress: "",
+//     currentLocation: "",
+//     currentlyWorking: "",
+//     resumeUploaded: "",
+//     changeConsentStatus: "failed",
+//     jobSeekerID: "",
+//     changeHHShortlisting: "",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Vinod",
+//     experience: 2,
+//     expectedCTC: "7 LPA",
+//     profileUploaded: "30-09-2022",
+//     recruiterUploading: "HiringHood",
+//     phoneNumber: 9493947123,
+//     emailAddress: "test@gmail.com",
+//     currentLocation: "HYD",
+//     currentlyWorking: "Yes",
+//     resumeUploaded: "No",
+//     changeConsentStatus: "passed",
+//     jobSeekerID: "HH-1234",
+//     changeHHShortlisting: "passed",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Harish",
+//     experience: 2,
+//     expectedCTC: "7 LPA",
+//     profileUploaded: "30-09-2022",
+//     recruiterUploading: "ABC Hiring",
+//     phoneNumber: 9493947123,
+//     emailAddress: "test@gmail.com",
+//     currentLocation: "HYD",
+//     currentlyWorking: "Yes",
+//     resumeUploaded: "No",
+//     changeConsentStatus: "passed",
+//     jobSeekerID: "HH-1234",
+//     changeHHShortlisting: "passed",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Joel",
+//     experience: 2,
+//     expectedCTC: "7 LPA",
+//     profileUploaded: "30-09-2022",
+//     recruiterUploading: "",
+//     phoneNumber: 9493947123,
+//     emailAddress: "test@gmail.com",
+//     currentLocation: "HYD",
+//     currentlyWorking: "Yes",
+//     resumeUploaded: "No",
+//     changeConsentStatus: "passed",
+//     jobSeekerID: "HH-1234",
+//     changeHHShortlisting: "failed",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Sam",
+//     experience: 0,
+//     expectedCTC: "",
+//     profileUploaded: "20-09-2022",
+//     recruiterUploading: "",
+//     phoneNumber: 0,
+//     emailAddress: "",
+//     currentLocation: "",
+//     currentlyWorking: "",
+//     resumeUploaded: "",
+//     changeConsentStatus: "pending",
+//     jobSeekerID: "",
+//     changeHHShortlisting: "",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Jagadish",
+//     experience: 0,
+//     expectedCTC: "",
+//     profileUploaded: "20-09-2022",
+//     recruiterUploading: "",
+//     phoneNumber: 0,
+//     emailAddress: "",
+//     currentLocation: "",
+//     currentlyWorking: "",
+//     resumeUploaded: "",
+//     changeConsentStatus: "failed",
+//     jobSeekerID: "",
+//     changeHHShortlisting: "",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Vinod",
+//     experience: 2,
+//     expectedCTC: "7 LPA",
+//     profileUploaded: "30-09-2022",
+//     recruiterUploading: "HiringHood",
+//     phoneNumber: 9493947123,
+//     emailAddress: "test@gmail.com",
+//     currentLocation: "HYD",
+//     currentlyWorking: "Yes",
+//     resumeUploaded: "No",
+//     changeConsentStatus: "passed",
+//     jobSeekerID: "HH-1234",
+//     changeHHShortlisting: "passed",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Harish",
+//     experience: 2,
+//     expectedCTC: "7 LPA",
+//     profileUploaded: "30-09-2022",
+//     recruiterUploading: "ABC Hiring",
+//     phoneNumber: 9493947123,
+//     emailAddress: "test@gmail.com",
+//     currentLocation: "HYD",
+//     currentlyWorking: "Yes",
+//     resumeUploaded: "No",
+//     changeConsentStatus: "passed",
+//     jobSeekerID: "HH-1234",
+//     changeHHShortlisting: "passed",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Joel",
+//     experience: 2,
+//     expectedCTC: "7 LPA",
+//     profileUploaded: "30-09-2022",
+//     recruiterUploading: "",
+//     phoneNumber: 9493947123,
+//     emailAddress: "test@gmail.com",
+//     currentLocation: "HYD",
+//     currentlyWorking: "Yes",
+//     resumeUploaded: "No",
+//     changeConsentStatus: "passed",
+//     jobSeekerID: "HH-1234",
+//     changeHHShortlisting: "failed",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Sam",
+//     experience: 0,
+//     expectedCTC: "",
+//     profileUploaded: "20-09-2022",
+//     recruiterUploading: "",
+//     phoneNumber: 0,
+//     emailAddress: "",
+//     currentLocation: "",
+//     currentlyWorking: "",
+//     resumeUploaded: "",
+//     changeConsentStatus: "pending",
+//     jobSeekerID: "",
+//     changeHHShortlisting: "",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+//   {
+//     jobSeekerName: "Jagadish",
+//     experience: 0,
+//     expectedCTC: "",
+//     profileUploaded: "20-09-2022",
+//     recruiterUploading: "",
+//     phoneNumber: 0,
+//     emailAddress: "",
+//     currentLocation: "",
+//     currentlyWorking: "",
+//     resumeUploaded: "",
+//     changeConsentStatus: "failed",
+//     jobSeekerID: "",
+//     changeHHShortlisting: "",
+//     changeEmployerDuplication: "",
+//     changeEmployerShortlisting: "",
+//   },
+// ];
+
+const Vetting = (props) => {
+  const classes = useStyles();
+  const { contestId } = props;
   const gridRef = useRef<AgGridReact<any>>();
   const [columnDefs, setColumnDefs] = useState(LISTING_GENERIC_HEADERS);
   const [pageSize, setPageSize] = useState(10);
-  const [pageNo, setPageNo] = React.useState(1);
+  const [pageNo, setPageNo] = React.useState(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
-  const [totalPages, setTotalPages] = useState(4);
-  // const [rowData, setRowData] = React.useState<any[]>();
+  const [totalPages, setTotalPages] = useState(0);
+  const [rowData, setRowData] = React.useState<any[]>();
   const [selectedButton, setSelectedButton] = React.useState<Number>(1);
   const [columnsListOpen, setColumnsListOpen] = React.useState(false);
   const [floatingFilter, setFloatingFilter] = React.useState(true);
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
+  const [agCount, setAgCount] = useState<any>({
+    submitted: 0,
+    consent: 0,
+    hhShortlisting: 0,
+    employerDuplication: 0,
+    employerShortlisting: 0,
+  });
 
   useEffect(() => {
-    const getTableRowData = async () => {
-      const response = await contestLinkedJobsekeers(
-        "CONTEST_07_10078",
-        0,
-        100
-      );
-      console.log(response?.data);
-      // setTotalPages(response?.data?.data?.totalPages);
-      // setPageNo(response?.data?.data?.page);
-      // setPageSize(response?.data?.data?.size);
-    };
-    getTableRowData();
+    fetchToken();
+  }, [contestId]);
+
+  const fetchToken = async () => {
+    const token = await KeycloakService.fetchTokenOtherUser();
+    sessionStorage.setItem("react-token", token);
+  };
+
+  useEffect(() => {
+    getTableRowData(pageNo, pageSize, contestId);
+    handleAggregateData(contestId);
   }, []);
+
+  const handleAggregateData = async (contestId) => {
+    const response: any = await getAggregateData(contestId);
+
+    if (response.data.success) {
+      const result = response.data.data.filter(
+        (data) => data.status === "TOTAL_JOB_SEEKERS"
+      );
+      const result1 = response.data.data.filter(
+        (data) => data.status === "JOB_SEEKER_DUPLICATE"
+      );
+      setAgCount({
+        submitted: result[0].count,
+        consent: 0,
+        hhShortlisting: 0,
+        employerDuplication: result1[0].count,
+        employerShortlisting: 0,
+      });
+    } else {
+      setAgCount({
+        submitted: 0,
+        consent: 0,
+        hhShortlisting: 0,
+        employerDuplication: 0,
+        employerShortlisting: 0,
+      });
+    }
+  };
+
+  const getTableRowData = async (pageNo, pageSize, contestId) => {
+    const response: any = await contestLinkedJobsekeers(
+      contestId,
+      pageNo,
+      pageSize
+    );
+
+    if (response.data.success) {
+      let mapData = response.data.data.content;
+      let result = mapData.map((item, index) => {
+        item.appliedDate = moment(item.appliedDate).format("DD-MM-YYYY");
+
+        let Data = {
+          ...item,
+          ...item.matchedProfileLogsList[0],
+          ...item.matchedProfilesList[0],
+        };
+
+        return Data;
+      });
+      setRowData(result);
+      setTotalPages(response?.data?.data?.totalPages);
+      setPageNo(response?.data?.data?.pageNo);
+      setPageSize(response?.data?.data?.pageSize);
+    } else {
+      console.log("false");
+      setRowData([]);
+    }
+  };
 
   const autoGroupColumnDef = useMemo<ColDef>(() => {
     return {
@@ -346,8 +422,6 @@ const Vetting = () => {
     };
   }, []);
 
-  console.log(columnDefs);
-
   const setColumnsDisplay = (columnList) => {
     const newColumnDefs = columnDefs.map((colDef) => {
       const columnReference = columnList.find(
@@ -368,6 +442,11 @@ const Vetting = () => {
     onUpdateColumns(newColumnDefs);
   };
 
+  useEffect(() => {
+    // call api with new pagenumber
+    getTableRowData(pageNo, pageSize, contestId);
+  }, [pageNo, pageSize, contestId]);
+
   const onUpdateColumns = useCallback((data) => {
     if (gridRef?.current) gridRef.current.api.setColumnDefs(data);
   }, []);
@@ -379,12 +458,10 @@ const Vetting = () => {
     }
   }, []);
   const pageChange = (pageNumber) => {
-    setPageNo(pageNumber);
-    // apiCallRelatedFormData(contestStatus, pageNumber - 1);
+    setPageNo(pageNumber - 1);
   };
   const pageSizeChange = (pageSizeChanged) => {
     setPageSize(pageSizeChanged);
-    // apiCallRelatedFormData(contestStatus, 0, pageSizeChanged);
   };
 
   return (
@@ -420,11 +497,11 @@ const Vetting = () => {
             },
           ]}
           countsList={[
-            { _id: 1, count: 5 },
-            { _id: 2, count: 5 },
-            { _id: 3, count: 5 },
-            { _id: 4, count: 5 },
-            { _id: 5, count: 5 },
+            { _id: 1, count: agCount.submitted },
+            { _id: 2, count: agCount.consent },
+            { _id: 3, count: agCount.hhShortlisting },
+            { _id: 4, count: agCount.employerDuplication },
+            { _id: 5, count: agCount.employerShortlisting },
           ]}
           setSelectedButton={setSelectedButton}
           selectedButton={selectedButton}
@@ -451,10 +528,10 @@ const Vetting = () => {
             </Button>
           </div>
           <div>
-            <Box display={"inline-block"}>
-              <Checkbox /> 10 Selected
-              <DeleteOutlineIcon sx={{ color: "#4D6CD9" }} />
-              <img src={BookmarkIcon} />
+            <Box display={"inline-block"} className={classes.actions1}>
+              <Checkbox /> {selectedRows.length} Selected
+              <DeleteOutlineIcon className={classes.deleteIcon} />
+              <BookmarkBorderIcon className={classes.bookmarkIcon} />
             </Box>
           </div>
         </div>
@@ -495,3 +572,6 @@ const Vetting = () => {
 };
 
 export default Vetting;
+function item(item: any) {
+  throw new Error("Function not implemented.");
+}

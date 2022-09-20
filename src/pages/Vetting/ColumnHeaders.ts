@@ -59,7 +59,7 @@ export const LISTING_GENERIC_HEADERS = [
   },
   {
     headerName: "Job seeker Name",
-    field: "jobSeekerName",
+    field: "firstName",
     filter: "agTextColumnFilter",
     minWidth: 200,
     hide: false,
@@ -98,7 +98,7 @@ export const LISTING_GENERIC_HEADERS = [
   },
   {
     headerName: "Profile Uploaded",
-    field: "profileUploaded",
+    field: "appliedDate",
     hide: false,
     filter: "agDateColumnFilter",
     filterParams: dateFilterParams,
@@ -109,7 +109,7 @@ export const LISTING_GENERIC_HEADERS = [
   },
   {
     headerName: "Recruiter Uploading",
-    field: "recruiterUploading",
+    field: "referredBy",
     hide: false,
     minWidth: 230,
     filter: "agTextColumnFilter",
@@ -122,7 +122,7 @@ export const LISTING_GENERIC_HEADERS = [
   },
   {
     headerName: "Phone Number",
-    field: "phoneNumber",
+    field: "mobileNumber",
     hide: false,
     minWidth: 200,
     filter: "agNumberColumnFilter",
@@ -135,7 +135,7 @@ export const LISTING_GENERIC_HEADERS = [
   },
   {
     headerName: "Email Address",
-    field: "emailAddress",
+    field: "emailId",
     hide: false,
     minWidth: 200,
     filter: "agTextColumnFilter",
@@ -175,7 +175,7 @@ export const LISTING_GENERIC_HEADERS = [
   },
   {
     headerName: "Resume Uploaded",
-    field: "resumeUploaded",
+    field: "resumeDocumentId",
     hide: false,
     minWidth: 215,
     cellRenderer: ResumeUploaded,
@@ -207,7 +207,7 @@ export const LISTING_GENERIC_HEADERS = [
   },
   {
     headerName: "Job Seeker ID",
-    field: "jobSeekerID",
+    field: "_id",
     hide: false,
     minWidth: 200,
     filter: "agTextColumnFilter",

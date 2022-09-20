@@ -68,7 +68,7 @@ import DehazeIcon from "@mui/icons-material/Dehaze";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
-import { downloadFile } from "../../services/DocumentService";
+import { openFile } from "../../services/DocumentService";
 import KeycloakService from "../../services/KeycloakService";
 var useStyles = makeStyles(function () { return ({
     buttonContainer: {
@@ -90,7 +90,7 @@ var useStyles = makeStyles(function () { return ({
         color: "#4d6cd9",
     },
 }); });
-export var ResumeUploaded = function () {
+export var ResumeUploaded = function (params) {
     useEffect(function () {
         fetchToken();
     }, []);
@@ -108,22 +108,15 @@ export var ResumeUploaded = function () {
     }); };
     var classes = useStyles();
     var handleViewResume = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response, response1, pdf, downloadLink, blob, url;
+        var resumeId;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, downloadFile("1018755347892011008")];
+                case 0:
+                    resumeId = params.getValue();
+                    console.log(resumeId);
+                    return [4 /*yield*/, openFile(resumeId)];
                 case 1:
-                    response = _a.sent();
-                    response1 = response === null || response === void 0 ? void 0 : response.data;
-                    pdf = response1;
-                    downloadLink = document.createElement("a");
-                    blob = new Blob(["\ufeff", pdf]);
-                    url = URL.createObjectURL(blob);
-                    downloadLink.href = url;
-                    downloadLink.download = "data.pdf";
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
-                    document.body.removeChild(downloadLink);
+                    _a.sent();
                     return [2 /*return*/];
             }
         });
@@ -145,7 +138,7 @@ export var Icons = function (params) {
         } }, { children: [_jsx(VisibilityIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(LocalPhoneRoundedIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(ChatBubbleOutlineIcon, { className: classes.iconColor, onClick: handleChat }), _jsx(DehazeIcon, { className: classes.iconColor, onClick: handleClick })] })));
 };
 export var CustomDropDown = function (params) {
-    console.log("Vetting custom feild", params);
+    // console.log("Vetting custom feild", params);
     var Passed = {
         option: "passed",
         color: "#22C55E",
@@ -241,7 +234,7 @@ export var CustomDropDown = function (params) {
             setOpen(false);
         }, 4000);
     };
-    return (_jsxs(_Fragment, { children: [_jsx("div", { children: _jsxs("select", __assign({ id: id, style: { border: "1px solid #DFE5FF" }, value: option.option, onChange: handleChange }, { children: [_jsx("option", __assign({ value: "" }, { children: "Null" })), _jsx("option", __assign({ value: "passed" }, { children: "Passed" })), _jsx("option", __assign({ value: "pending" }, { children: "Pending" })), _jsx("option", __assign({ value: "failed" }, { children: "Failed" }))] })) }), _jsx("div", __assign({ style: { display: "inline-flex", alignItems: "center" } }, { children: (function () {
+    return (_jsxs(_Fragment, { children: [_jsx("div", { children: _jsxs("select", __assign({ id: id, style: { border: "1px solid #DFE5FF" }, value: option.option, onChange: handleChange, disabled: true }, { children: [_jsx("option", __assign({ value: "" }, { children: "Null" })), _jsx("option", __assign({ value: "passed" }, { children: "Passed" })), _jsx("option", __assign({ value: "pending" }, { children: "Pending" })), _jsx("option", __assign({ value: "failed" }, { children: "Failed" }))] })) }), _jsx("div", __assign({ style: { display: "inline-flex", alignItems: "center" } }, { children: (function () {
                     if (option.option == "passed") {
                         return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, { children: _jsx(CheckCircleIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) }) })));
                     }

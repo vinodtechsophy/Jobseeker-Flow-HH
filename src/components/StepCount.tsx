@@ -20,9 +20,10 @@ const StepCount: FC<any> = (props): ReactElement => {
             arrow
           >
             <Button
-              className="step-count-wrapper"
-              variant={
-                button.id === props.selectedButton ? "contained" : "outlined"
+              className={
+                button.id === props.selectedButton
+                  ? "step-count-wrapper"
+                  : "step-count-outlined"
               }
               onClick={() => props.setSelectedButton(button.id)}
             >
@@ -31,7 +32,7 @@ const StepCount: FC<any> = (props): ReactElement => {
                   (item: { _id: any }) => item._id === button.id
                 )?.count || "0"}
               </div>
-              {button.label}
+              <div className="step-count-label">{button.label}</div>
               <div
                 className="step-underline"
                 style={{

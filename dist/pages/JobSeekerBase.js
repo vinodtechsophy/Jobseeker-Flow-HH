@@ -21,7 +21,8 @@ import Notification from "../components/Notification";
 import DuplicationFailed from "./DuplicationFailed/DuplicationFailed";
 import AllJs from "./AllJs/AllJs";
 var useStyles = makeStyles(function () { return ({}); });
-var JobSeekerBase = function () {
+var JobSeekerBase = function (props) {
+    var id = props.id, contestId = props.contestId;
     var classes = useStyles();
     var _a = React.useState(0), activeTab = _a[0], setActiveTab = _a[1];
     var _b = React.useState(""), dataMessage = _b[0], setDataMessage = _b[1];
@@ -51,7 +52,7 @@ var JobSeekerBase = function () {
         {
             title: "Vetting",
             index: 4,
-            component: _jsx(Vetting, {}),
+            component: _jsx(Vetting, { contestId: "CONTEST_07_10078" }),
         },
         {
             title: "Interview",

@@ -63,3 +63,18 @@ export const contestLinkedJobsekeers = async (
       console.log(error);
     });
 };
+
+export const getAggregateData = async (contestId: string) => {
+  return await axios
+    .get(
+      `${process.env.REACT_APP_MAIN_SERVER_URL}hiringhood/v1/job-seekers/aggregate?filterColumn=contestId&filterValue=${contestId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,
+        },
+      }
+    )
+    .catch((error) => {
+      console.log(error);
+    });
+};

@@ -165,7 +165,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
                   <FormControl>
                     <RadioGroup
                       id="jobType"
-                      value={experiencedSeekerForm.values.jobType}
+                      value={jobType}
                       onChange={(e) => {
                         setJobType(e.target.value);
                         experiencedSeekerForm.setFieldValue(

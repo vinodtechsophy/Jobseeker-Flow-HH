@@ -26,7 +26,7 @@ import DehazeIcon from "@mui/icons-material/Dehaze";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
-import { downloadFile } from "../../services/DocumentService";
+import { openFile } from "../../services/DocumentService";
 import KeycloakService from "../../services/KeycloakService";
 
 const useStyles = makeStyles(() => ({
@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const ResumeUploaded = () => {
+export const ResumeUploaded = (params) => {
   useEffect(() => {
     fetchToken();
   }, []);
@@ -61,18 +61,9 @@ export const ResumeUploaded = () => {
   };
   const classes = useStyles();
   const handleViewResume = async () => {
-    let response = await downloadFile("1018755347892011008");
-    let response1 = response?.data;
-    var pdf = response1;
-    var downloadLink = document.createElement("a");
-    var blob = new Blob(["\ufeff", pdf]);
-    var url = URL.createObjectURL(blob);
-    downloadLink.href = url;
-    downloadLink.download = "data.pdf";
-
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+    const resumeId = params.getValue();
+    console.log(resumeId);
+    await openFile(resumeId);
   };
 
   return (
@@ -119,7 +110,7 @@ export const Icons = (params) => {
 };
 
 export const CustomDropDown = (params: any) => {
-  console.log("Vetting custom feild", params);
+  // console.log("Vetting custom feild", params);
   const Passed = {
     option: "passed",
     color: "#22C55E",
@@ -223,6 +214,7 @@ export const CustomDropDown = (params: any) => {
           style={{ border: "1px solid #DFE5FF" }}
           value={option.option}
           onChange={handleChange}
+          disabled
         >
           <option value="">Null</option>
           <option value="passed">Passed</option>

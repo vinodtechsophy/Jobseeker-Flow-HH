@@ -13,6 +13,7 @@ import {
     COUNTRY_LABEL,
     HALF_SIZE_GRID,
     FULL_SIZE_GRID,
+    MONTH_LABEL,
 } from "../../../constants";
 import {
     COLLEGE_END_TEXT,
@@ -21,47 +22,14 @@ import {
     INSTITUTE_NAME_TEXT,
     INSTITUTE_LOCATION_TEXT,
 } from "./FreshGraduateDetailsConstants";
-import Calendar from '../../../components/Calendar/Calendar';
-import { useFormik, getIn } from "formik";
-import * as Yup from "yup";
 
 const FreshGraduateDetails: FC<any> = (props): ReactElement => {
 
     const classes: any = useStyles();
 
-    const experiencedSeekerForm = useFormik({
-        initialValues: {
-          currentEmployer: "",
-          country: "",
-          city: "",
-          relievingDate: "",
-          joiningDate: "",
-          notWorkingReason: "",
-          endClient: "",
-          payrollEmployer: "",
-          lastEmployer: "",
-        },
-        validationSchema: Yup.object().shape({
-          currentEmployer: Yup.string()
-            .required("Please add current Employer")
-            .min(1),
-          country: Yup.string().required("Please add Country").min(1),
-          city: Yup.string().required("Please add City").min(1),
-          jobType: Yup.string(),
-          endClient: Yup.string(),
-          lastEmployer: Yup.string(),
-          payrollEmployer: Yup.string(),
-          joiningDate: Yup.string(),
-          relievingDate: Yup.string(),
-          notWorkingReason: Yup.string(),
-        }),
-        onSubmit: (values, { setSubmitting }) => {},
-        enableReinitialize: true,
-      });
-
-    const handleDate = (dateValue) => {
-        experiencedSeekerForm.setFieldValue("relievingDate", dateValue)
-    };
+    const [serviceList, setServiceList] = React.useState<any>([]);
+    const [credentialStatus, setCredentialStatus] = React.useState(false);
+    const [serviceListFiles, setServiceListFiles] = React.useState<any>([]);
 
     return (
         <React.Fragment>
@@ -116,7 +84,12 @@ const FreshGraduateDetails: FC<any> = (props): ReactElement => {
                         className="add-team-grid"
                     >
                         <p>{COLLEGE_START_TEXT}</p>
-                        <Calendar />
+                        <TextField
+                            disabled={props.disabled}
+                            label={CITY_LABEL}
+                            className={classes.boxInputField}
+                            size="small"
+                        />
                     </Grid>
                     <Grid
                         item
@@ -127,7 +100,12 @@ const FreshGraduateDetails: FC<any> = (props): ReactElement => {
                         className="add-team-grid"
                     >
                         <p>{COLLEGE_END_TEXT}</p>
-                        <Calendar setDate={handleDate} status={false} />
+                        <TextField
+                            disabled={props.disabled}
+                            label={MONTH_LABEL}
+                            size="small"
+                            className={classes.boxInputField}
+                        />
                     </Grid>
                 </Grid>
             </div>

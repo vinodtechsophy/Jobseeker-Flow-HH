@@ -54,3 +54,23 @@ export var downloadFile = function (id) { return __awaiter(void 0, void 0, void 
         }
     });
 }); };
+export var openFile = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var Token;
+    return __generator(this, function (_a) {
+        Token = sessionStorage.getItem("react-token");
+        fetch("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "dms/v1/documents/download?id=").concat(id), {
+            method: "get",
+            headers: new Headers({
+                Authorization: "Bearer ".concat(Token),
+            }),
+        })
+            .then(function (res) { return res.blob(); })
+            .then(function (blobData) {
+            var fileURL = URL.createObjectURL(blobData);
+            //Open the URL on new Window
+            var pdfWindow = window.open();
+            pdfWindow.location.href = fileURL;
+        });
+        return [2 /*return*/];
+    });
+}); };
