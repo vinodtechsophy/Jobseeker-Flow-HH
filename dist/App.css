@@ -193,11 +193,11 @@ button:focus {
   padding: 0.7% 1% 0.7% 1% !important;
   font-size: 15px;
   height: 13%;
-  background: var(--full-white);
+  color: #fff !important;
+  background: #4d6cd9 !important;
   border: 1.5px solid var(--light-border) !important;
   border-radius: 8px;
-  overflow: hidden;
-  white-space: nowrap;
+  text-align: left;
 }
 
 .step-count-text {
@@ -335,4 +335,25 @@ span::first-letter {
   color: var(--primary-blue) !important;
   border: 1.5px solid var(--primary-blue) !important;
   margin-left: 20px !important;
+}
+
+.step-count-label {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 95%;
+}
+
+.step-count-outlined {
+  gap: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: start !important;
+  padding: 0.7% 1% 0.7% 1% !important;
+  font-size: 15px;
+  height: 13%;
+  background: var(--full-white) !important;
+  border: 1.5px solid var(--light-border) !important;
+  border-radius: 8px;
+  text-align: left;
 }
