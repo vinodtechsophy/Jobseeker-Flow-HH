@@ -60,7 +60,7 @@ import { Grid, Button, Checkbox, TextField, Typography, } from "@mui/material";
 import { useFormik, getIn } from "formik";
 import * as Yup from "yup";
 import { StyledContainer, useStyles } from "../JobSeekerProfileFlowStyles";
-import { URL_REGEX, URL_ERROR_MSG, ALPHA_ERR_MSG, HALF_SIZE_GRID, FULL_SIZE_GRID, LETTERS_ONLY_REGEX, ALPHA_NUMERIC_REGEX, SPECIAL_CHAR_ERR_MSG, } from "../../../constants";
+import { WARNING_KEY, URL_REGEX, URL_ERROR_MSG, ALPHA_ERR_MSG, HALF_SIZE_GRID, FULL_SIZE_GRID, LETTERS_ONLY_REGEX, ALPHA_NUMERIC_REGEX, SPECIAL_CHAR_ERR_MSG, } from "../../../constants";
 import { FormAttributes, SAVE_BTN_TEXT, DELETE_BTN_TEXT, CERTIFICATION_ADD_TEXT, CERTIFICATION_NAME_TEXT, CERTIFICATION_ORIGIN_TEXT, CREDENTIAL_ID_TEXT, CREDENTIAL_URL_TEXT, CERTIFICATION_EXPIRY_DATE, CERTIFICATION_ISSUE_DATE, CREDENTIAL_EXPIRY_TEXT, } from "./CertificationDetailsConstants";
 import AddIcon from "@mui/icons-material/Add";
 import "./CertificationDetails.css";
@@ -72,6 +72,11 @@ var CertificationDetails = function (props) {
         var list = __spreadArray([], serviceList, true);
         list.splice(index, 1);
         setServiceList(list);
+        var memberList = __spreadArray([], certificationDetailsForm.values.members, true);
+        memberList.splice(index, 1);
+        certificationDetailsForm.setValues(function (prevValues) { return ({
+            members: memberList,
+        }); });
     };
     var initialValuesForForm = {
         name: "",
@@ -150,7 +155,7 @@ var CertificationDetails = function (props) {
         certificationDetailsForm.setValues(function (prevValues) { return ({
             members: __spreadArray(__spreadArray([], prevValues.members, true), [__assign({}, initialValuesForForm)], false),
         }); });
-        setServiceList(function (prevState) { return __spreadArray(__spreadArray([], prevState, true), [{ service: "" }], false); });
+        setServiceList(function (prevState) { return __spreadArray(__spreadArray([], prevState, true), [__assign({}, initialValuesForForm)], false); });
     };
     var getError = function (name) {
         var error = getIn(certificationDetailsForm.errors, name);
@@ -168,13 +173,25 @@ var CertificationDetails = function (props) {
         certificationDetailsForm.setFieldValue("members[".concat(index, "].expirationDate"), date);
     };
     var handleSaveData = function (index) {
-        certificationDetailsForm.setFieldValue("members[".concat(index, "].saveStatus"), true);
-        props.setCertificationData(certificationDetailsForm.values.members[index]);
+        if (!certificationDetailsForm.values.members[index].issueDate) {
+            props.setType(WARNING_KEY);
+            props.setDataMessage("Please select issue date");
+            props.setOpen(true);
+        }
+        else if (!certificationDetailsForm.values.members[index].credentialStatus
+            && !certificationDetailsForm.values.members[index].expirationDate) {
+            props.setType(WARNING_KEY);
+            props.setDataMessage("Please select expiration date");
+            props.setOpen(true);
+        }
+        else {
+            certificationDetailsForm.setFieldValue("members[".concat(index, "].saveStatus"), true);
+            props.setCertificationData(certificationDetailsForm.values.members[index]);
+        }
     };
     var handleDeleteData = function (index) {
         props.removeCertification(index);
         handleServiceRemove(index);
-        certificationDetailsForm.resetForm();
     };
     return (_jsx(React.Fragment, { children: _jsxs("div", __assign({ className: "certification-div" }, { children: [_jsx("div", __assign({ className: "add-btn-div" }, { children: _jsxs(Button, __assign({ className: "next-button", variant: "contained", onClick: handleServiceAdd }, { children: [_jsx(AddIcon, { className: "add-icon" }), " ", CERTIFICATION_ADD_TEXT] })) })), serviceList.length > 0 &&
                     serviceList.map(function (singleService, index) { return (_jsx("div", __assign({ className: "services" }, { children: _jsx("div", __assign({ className: "first-division" }, { children: _jsxs(StyledContainer, { children: [_jsxs(Grid, __assign({ container: true, className: classes.muiContainer }, { children: [_jsx(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: FULL_SIZE_GRID, lg: FULL_SIZE_GRID, sx: {

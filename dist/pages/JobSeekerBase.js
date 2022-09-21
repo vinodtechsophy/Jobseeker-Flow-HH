@@ -20,6 +20,7 @@ import Vetting from "./Vetting/Vetting";
 import Notification from "../components/Notification";
 import DuplicationFailed from "./DuplicationFailed/DuplicationFailed";
 import AllJs from "./AllJs/AllJs";
+import Manage from "./Manage/Manage";
 var useStyles = makeStyles(function () { return ({}); });
 var JobSeekerBase = function (props) {
     var id = props.id, contestId = props.contestId;
@@ -52,7 +53,7 @@ var JobSeekerBase = function (props) {
         {
             title: "Vetting",
             index: 4,
-            component: _jsx(Vetting, { contestId: "CONTEST_07_10078" }),
+            component: _jsx(Vetting, { contestId: contestId, id: id }),
         },
         {
             title: "Interview",
@@ -62,7 +63,7 @@ var JobSeekerBase = function (props) {
         {
             title: "Manage Profiles",
             index: 6,
-            component: _jsx("div", { children: "Page Not Avaliable" }),
+            component: _jsx(Manage, { contestId: contestId, id: id }),
         },
         {
             title: "Broadcast",
