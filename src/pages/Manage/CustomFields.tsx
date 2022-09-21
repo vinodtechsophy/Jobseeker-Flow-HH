@@ -52,9 +52,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ResumeUploaded = (params) => {
-
   const classes = useStyles();
-  
   const handleViewResume = async () => {
     const resumeId = params.getValue();
     console.log(resumeId);

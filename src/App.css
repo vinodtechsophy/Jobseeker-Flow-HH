@@ -197,6 +197,8 @@ button:focus {
   background: #4d6cd9 !important;
   border: 1.5px solid var(--light-border) !important;
   border-radius: 8px;
+  overflow: hidden;
+  white-space: nowrap;
   text-align: left;
 }
 

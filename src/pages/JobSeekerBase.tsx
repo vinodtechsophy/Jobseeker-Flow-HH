@@ -8,6 +8,7 @@ import Vetting from "./Vetting/Vetting";
 import Notification from "../components/Notification";
 import DuplicationFailed from "./DuplicationFailed/DuplicationFailed";
 import AllJs from "./AllJs/AllJs";
+import Manage from "./Manage/Manage";
 
 const useStyles = makeStyles(() => ({}));
 
@@ -51,7 +52,7 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
     {
       title: "Vetting",
       index: 4,
-      component: <Vetting contestId={"CONTEST_07_10078"} />,
+      component: <Vetting contestId={contestId} id={id} />,
     },
     {
       title: "Interview",
@@ -61,7 +62,7 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
     {
       title: "Manage Profiles",
       index: 6,
-      component: <div>Page Not Avaliable</div>,
+      component: <Manage contestId={contestId} id={id} />,
     },
     {
       title: "Broadcast",

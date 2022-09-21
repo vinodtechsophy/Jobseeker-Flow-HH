@@ -31,6 +31,7 @@ import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
   }));
   
   const JobSeekerAddProfile: FC<any> = (props: any): ReactElement => {
+    
     useEffect(() => {
       fetchToken();
     }, []);

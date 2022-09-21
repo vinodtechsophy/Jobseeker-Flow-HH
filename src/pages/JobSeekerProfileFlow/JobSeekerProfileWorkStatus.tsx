@@ -47,6 +47,7 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
 
     const classes: any = useStyles();
     const experiencedRef = React.useRef<any>();
+    const freshGraduateRef = React.useRef<any>();
     const userDataState = useAppSelector((state) => state.currentUser);
 
     const [jobStatus, setJobStatus] = React.useState(userDataState.userData.workStatus);
@@ -64,6 +65,19 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
         country: '',
         city: '',
     });
+    const [freshGraduateDetails, setFreshGraduateDetails] = React.useState<{
+        instituteName: string,
+        instituteCity: string,
+        instituteCountry: string,
+        collegeEndDate: string,
+        collegeStartDate: string,
+    }>({
+        instituteName: "",
+        instituteCity: "",
+        instituteCountry: "",
+        collegeEndDate: "",
+        collegeStartDate: "",
+    })
 
     const handleProfileFetch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setProfileFetchLocation((event.target as HTMLInputElement).value);
@@ -75,6 +89,7 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
 
     const submitWorkStatus = async () => {
         if(experiencedRef?.current) experiencedRef?.current.childMethod();
+        if(freshGraduateRef?.current) freshGraduateRef?.current.childMethod();
         const profileWorkStatusMap = buildDetailsPayload();
         if(!validateWorkStatusMap(profileWorkStatusMap)) {
             props.setOpen(true);
@@ -106,7 +121,7 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
     const buildDetailsPayload = () => {
         return {
             jobStatus, currentLocation, preferredLocation, profileFetchLocation, additonalCertificationStatus,
-            ...experiencedDetails, certificationDetails
+            ...experiencedDetails, certificationDetails, ...freshGraduateDetails
         }
     }
 
@@ -118,26 +133,18 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
         ) return false
         else if(data.additonalCertificationStatus === YesNoOptions[0]) {
             if(data.certificationDetails?.length < 1) return false;
+        } else if(jobStatus === WorkStatusType.FRESHER) {
+            if(
+                !data.instituteName || !data.instituteCity || !data.instituteCountry
+                || !data.collegeEndDate || !data.collegeStartDate
+            ) return false
         }
         return true
     }
 
     const handleCertifications = (certification) => {
-        if(!certification.issueDate) {
-            props.setType(WARNING_KEY);
-            props.setDataMessage("Please select issue date");
-            props.setOpen(true);
-        } else if(
-            !certification.credentialStatus 
-            && !certification.expirationDate
-        ) {
-            props.setType(WARNING_KEY);
-            props.setDataMessage("Please select expiration date");
-            props.setOpen(true);
-        } else {
-            delete certification.saveStatus;
-            setCertificationDetails(data => [...data, certification]);
-        }
+        delete certification.saveStatus;
+        setCertificationDetails(data => [...data, certification]);
     }
 
     const removeCertification = (index) => {
@@ -283,6 +290,9 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
                             disabled={!props.hasButtons} 
                             setCertificationData={handleCertifications}
                             removeCertification={removeCertification}
+                            setType={props.setType}
+                            setOpen={props.setOpen}
+                            setDataMessage={props.setDataMessage}
                         />
                     </div>
 
@@ -297,7 +307,14 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
                     {
                         jobStatus === WorkStatusType.FRESHER ?
 
-                        <FreshGraduateDetails disabled={!props.hasButtons} />
+                        <FreshGraduateDetails 
+                          disabled={!props.hasButtons} 
+                          ref={freshGraduateRef}
+                          setParentData={setFreshGraduateDetails}
+                          setType={props.setType}
+                          setOpen={props.setOpen}
+                          setDataMessage={props.setDataMessage}
+                        />
 
                         :
 

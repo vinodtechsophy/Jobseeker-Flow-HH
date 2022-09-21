@@ -11,7 +11,7 @@ import { useFormik, getIn } from "formik";
 import * as Yup from "yup";
 import { StyledContainer, useStyles } from "../JobSeekerProfileFlowStyles";
 import {
-  ERROR_KEY,
+  WARNING_KEY,
   URL_REGEX,
   URL_ERROR_MSG,
   ALPHA_ERR_MSG,
@@ -53,6 +53,11 @@ const CertificationDetails: FC<any> = (props): ReactElement => {
     const list = [...serviceList];
     list.splice(index, 1);
     setServiceList(list);
+    const memberList = [...certificationDetailsForm.values.members];
+    memberList.splice(index, 1);
+    certificationDetailsForm.setValues((prevValues) => ({
+      members: memberList,
+    }));
   };
 
   const initialValuesForForm = {
@@ -134,7 +139,7 @@ const CertificationDetails: FC<any> = (props): ReactElement => {
     certificationDetailsForm.setValues((prevValues) => ({
       members: [...prevValues.members, { ...initialValuesForForm }],
     }));
-    setServiceList((prevState: any) => [...prevState, { service: "" }]);
+    setServiceList((prevState: any) => [...prevState, { ...initialValuesForForm }]);
   };
 
   const getError = (name: string) => {
@@ -159,17 +164,29 @@ const CertificationDetails: FC<any> = (props): ReactElement => {
   };
 
   const handleSaveData = (index) => {
-    certificationDetailsForm.setFieldValue(
-      `members[${index}].saveStatus`,
-      true
-    );
-    props.setCertificationData(certificationDetailsForm.values.members[index]);
+      if(!certificationDetailsForm.values.members[index].issueDate) {
+        props.setType(WARNING_KEY);
+        props.setDataMessage("Please select issue date");
+        props.setOpen(true);
+    } else if(
+        !certificationDetailsForm.values.members[index].credentialStatus 
+        && !certificationDetailsForm.values.members[index].expirationDate
+    ) {
+        props.setType(WARNING_KEY);
+        props.setDataMessage("Please select expiration date");
+        props.setOpen(true);
+    } else {
+      certificationDetailsForm.setFieldValue(
+        `members[${index}].saveStatus`,
+        true
+      );
+      props.setCertificationData(certificationDetailsForm.values.members[index]);
+    }
   };
 
   const handleDeleteData = (index) => {
     props.removeCertification(index);
     handleServiceRemove(index);
-    certificationDetailsForm.resetForm();
   };
 
   return (
