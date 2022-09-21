@@ -13,7 +13,6 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import { TextField } from "@mui/material";
 import "../../App.css";
-import "./InlineInputs.css";
 var InlineInputs = function (props) {
     return (_jsxs("div", { children: [props.InlineInputTitle ? (_jsx("div", __assign({ className: "experience-card-title" }, { children: _jsx("div", { children: _jsxs("p", { children: [props.InlineInputTitle, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }) }) }))) : null, _jsx("div", __assign({ className: "inline-div" }, { children: props.InlineInputsArray.map(function (input, index) { return (_jsxs(React.Fragment, { children: [_jsx("div", __assign({ className: "number-input-field" }, { children: _jsx(TextField, { disabled: props.disabled, type: input.type, label: input.label, placeholder: input.placeholder, onInput: function (e) {
                                     var _a;

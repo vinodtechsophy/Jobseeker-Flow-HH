@@ -1,7 +1,6 @@
 import React, { ReactElement, FC, useEffect } from "react";
 import { TextField } from "@mui/material";
 import "../../App.css";
-import "./InlineInputs.css";
 import { InlineInputModal } from "../../pages/JobSeekerProfileFlow/JobSeekerProfileFlowConstants";
 
 const InlineInputs: FC<any> = (props): ReactElement => {
