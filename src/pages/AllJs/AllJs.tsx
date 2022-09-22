@@ -20,100 +20,32 @@ import BookmarkIcon from "../../assets/bookmark.svg";
 import { relations, LISTING_GENERIC_HEADERS } from "./ColumnHeader";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import { PAGE_SIZE_ARRAY } from "../../constants";
-import { contestLinkedJobsekeers } from "../../services/JobSeekerService";
+import { 
+  contestLinkedJobsekeers,
+  getAggregateData,
+} from "../../services/JobSeekerService";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import moment from "moment";
 
-const rowData = [
-  {
-    jobSeekerName: "Narayana",
-    jobSeekerID: "HH-121",
-    technology: "JAVA",
-    experience: "2Years",
-    expectedCTC: "6Lakhs",
-    profileUploaded: "12-08-2022",
-    ownershipExpiryDate: "30-08-2022",
-    profileOwnedby: "Vinod",
-    lastCurrentContestParticipated: "DataScience",
-    jobSeekerMainStage: "Data",
-    jobSeekerSubStage: "onHold",
-    jobSeekerComment: "pending",
-    belongstoCollection: "High",
-    phoneNumber: 9014064300,
-    emailAddress: "narayana@gmail.com",
-    currentLocation: "hyderabad",
-    currentlyWorking: "yes",
-    noticePeriod: "30 days",
-    resumeUploaded: "yes",
-  },
-  {
-    jobSeekerName: "Bujji",
-    jobSeekerID: "HH-122",
-    technology: "JAVA",
-    experience: "2Years",
-    expectedCTC: "6Lakhs",
-    profileUploaded: "19-07-2022",
-    ownershipExpiryDate: "30-08-2022",
-    profileOwnedby: "Vinod",
-    lastCurrentContestParticipated: "DataScience",
-    jobSeekerMainStage: "Data",
-    jobSeekerSubStage: "onHold",
-    jobSeekerComment: "pending",
-    belongstoCollection: "High",
-    phoneNumber: 9703121036,
-    emailAddress: "narayana@gmail.com",
-    currentLocation: "hyderabad",
-    currentlyWorking: "yes",
-    noticePeriod: "30 days",
-    resumeUploaded: "yes",
-  },
-  {
-    jobSeekerName: "Sai",
-    jobSeekerID: "HH-123",
-    technology: "JAVA",
-    experience: "2Years",
-    expectedCTC: "6Lakhs",
-    profileUploaded: "11-08-2022",
-    ownershipExpiryDate: "30-07-2022",
-    profileOwnedby: "Vinod",
-    lastCurrentContestParticipated: "DataScience",
-    jobSeekerMainStage: "Data",
-    jobSeekerSubStage: "onHold",
-    jobSeekerComment: "pending",
-    belongstoCollection: "High",
-    phoneNumber: 9494764509,
-    emailAddress: "narayana@gmail.com",
-    currentLocation: "hyderabad",
-    currentlyWorking: "yes",
-    noticePeriod: "30 days",
-    resumeUploaded: "yes",
-  },
-];
-const AllJs = () => {
+const AllJs = (props) => {
+
   const gridRef = useRef<AgGridReact<any>>();
+  const { contestId } = props;
+
   const [columnDefs, setColumnDefs] = useState(LISTING_GENERIC_HEADERS);
   const [pageSize, setPageSize] = useState(10);
   const [pageNo, setPageNo] = React.useState(1);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [totalPages, setTotalPages] = useState(4);
-  // const [rowData, setRowData] = React.useState<any[]>();
+  const [rowData, setRowData] = React.useState<any[]>();
   const [selectedButton, setSelectedButton] = React.useState<Number>(1);
   const [columnsListOpen, setColumnsListOpen] = React.useState(false);
   const [floatingFilter, setFloatingFilter] = React.useState(true);
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   useEffect(() => {
-    const getTableRowData = async () => {
-      const response = await contestLinkedJobsekeers(
-        "CONTEST_07_10078",
-        0,
-        100
-      );
-      console.log(response?.data);
-      // setTotalPages(response?.data?.data?.totalPages);
-      // setPageNo(response?.data?.data?.page);
-      // setPageSize(response?.data?.data?.size);
-    };
-    getTableRowData();
+    getTableRowData(pageNo, pageSize, contestId);
+    handleAggregateData(contestId);
   }, []);
 
   const autoGroupColumnDef = useMemo<ColDef>(() => {
@@ -150,7 +82,6 @@ const AllJs = () => {
     };
   }, []);
 
-  console.log(columnDefs);
   const setColumnsDisplay = (columnList) => {
     const newColumnDefs = columnDefs.map((colDef) => {
       const columnReference = columnList.find(
@@ -183,11 +114,70 @@ const AllJs = () => {
   }, []);
   const pageChange = (pageNumber) => {
     setPageNo(pageNumber);
-    // apiCallRelatedFormData(contestStatus, pageNumber - 1);
+    getTableRowData(pageNumber, pageSize, contestId);
   };
   const pageSizeChange = (pageSizeChanged) => {
     setPageSize(pageSizeChanged);
-    // apiCallRelatedFormData(contestStatus, 0, pageSizeChanged);
+    getTableRowData(pageNo, pageSizeChanged, contestId);
+  };
+
+  const getTableRowData = async (pageNo, pageSize, contestId) => {
+    const response: any = await contestLinkedJobsekeers(
+      contestId,
+      pageNo,
+      pageSize
+    );
+
+    if (response.data.success) {
+      let mapData = response.data.data.content;
+      let result = mapData.map((item, index) => {
+
+        let Data = {
+          ...item,
+          ...item.matchedProfileLogsList[0],
+          ...item.matchedProfilesList[0],
+        };
+        Data.name = `${Data.firstName} ${Data.lastName}`;
+        Data.appliedDate = moment(Data.appliedDate).format("DD-MM-YYYY");
+        return Data;
+      });
+      console.log(result)
+      setRowData(result);
+      setTotalPages(response?.data?.data?.totalPages);
+      setPageNo(response?.data?.data?.pageNo);
+      setPageSize(response?.data?.data?.pageSize);
+    } else {
+      console.log("false");
+      setRowData([]);
+    }
+  };
+
+  const handleAggregateData = async (contestId) => {
+    const response: any = await getAggregateData(contestId);
+
+    if (response.data.success) {
+      const result = response.data.data.filter(
+        (data) => data.status === "TOTAL_JOB_SEEKERS"
+      );
+      const result1 = response.data.data.filter(
+        (data) => data.status === "JOB_SEEKER_DUPLICATE"
+      );
+      // setAgCount({
+      //   submitted: result[0].count,
+      //   consent: 0,
+      //   hhShortlisting: 0,
+      //   employerDuplication: result1[0].count,
+      //   employerShortlisting: 0,
+      // });
+    } else {
+      // setAgCount({
+      //   submitted: 0,
+      //   consent: 0,
+      //   hhShortlisting: 0,
+      //   employerDuplication: 0,
+      //   employerShortlisting: 0,
+      // });
+    }
   };
 
   return (

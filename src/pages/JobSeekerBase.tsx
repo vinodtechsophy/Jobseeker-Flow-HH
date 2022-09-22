@@ -47,7 +47,7 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
     {
       title: "All JS",
       index: 3,
-      component: <AllJs />,
+      component: <AllJs contestId={contestId} id={id} />,
     },
     {
       title: "Vetting",

@@ -1,18 +1,8 @@
-import React, { ReactElement, FC, useEffect } from "react";
+import React, { ReactElement, FC, useEffect, useState } from "react";
 import {
-  Step,
-  Stack,
   Radio,
-  Select,
-  Button,
-  Stepper,
-  MenuItem,
-  Checkbox,
-  StepLabel,
   TextField,
-  FormLabel,
   RadioGroup,
-  InputLabel,
   FormControl,
   FormControlLabel,
 } from "@mui/material";
@@ -40,10 +30,22 @@ import PreviousNextButtons from "../../components/PreviousNextButtons/PreviousNe
 import CurrentOffers from "./CurrentOffers/CurrentOffers";
 import { useStyles } from "./JobSeekerProfileFlowStyles";
 import Calendar from "../../components/Calendar/Calendar";
+import { 
+  updateJobSeekerProfile,
+  UploadFiles
+} from "../../services/FormDataService";
+import {
+  ERROR_KEY,
+  SUCCESS_KEY,
+  FORM_SUBMISSION_SUCCESS,
+  WARNING_KEY,
+  OFFER_LETTER,
+} from "../../constants";
+import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
 
 const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
   const classes = useStyles();
-
+  const userDataState = useAppSelector((state) => state.currentUser);
   const [offerStatus, setOfferStatus] = React.useState("");
   const [joiningDate, setJoiningDate] = React.useState("");
   const [noticePeriod, setNoticePeriod] = React.useState("");
@@ -53,7 +55,130 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
   const [negotiablePeriod, setNegotiablePeriod] = React.useState("");
   const [negotiableStatus, setNegotiableStatus] = React.useState("");
   const [currentlyWorking, setCurrentlyWorking] = React.useState(true);
+  const [offerData, setOfferData] = useState<any[]>([]);
+  const [reasonOfJobChange, setReasonOfJobChange] = useState("");
+  const [reasonOfResignation, setReasonOfResignation] = useState("");
 
+  const uploadPayloadBuild = (files) => {
+    return {
+      documentTypeId: OFFER_LETTER,
+      documentPath: `offerLetter/${files[0]?.path}`,
+      documentName: files[0]?.path,
+      files,
+    };
+  };
+
+  const buildDetailsPayload = () => {
+    return {
+      currentlyWorking,
+      noticeStatus,
+      lastWorkingDate,
+      noticePeriod,
+      reasonOfJobChange,
+      negotiableStatus,
+      buyoutStatus,
+      offerStatus,
+      reasonOfResignation,
+      joiningDate,
+      offerData,
+      negotiablePeriod,
+    };
+  };
+  const submitNoticePeriodInfo = async () => {
+    
+    const noticePeriodInfoMap = buildDetailsPayload();
+
+    if (!validateNoticePeriodInfo(noticePeriodInfoMap)) {
+      props.setOpen(true);
+      props.setType(WARNING_KEY);
+      props.setDataMessage("Please enter all Notice Period details");
+      return;
+    }
+    if (noticePeriodInfoMap.offerData.length > 0) {
+      try {
+        const fileIds: {index: number, id: string}[] = [];
+        await Promise.all(
+          noticePeriodInfoMap.offerData.map(async (offer, index) => {
+            const uploadResponse = await UploadFiles(uploadPayloadBuild(offer?.letterFiles));
+            fileIds.push({
+              index,
+              id: uploadResponse?.data?.data?.id
+            })
+          })
+        );
+        noticePeriodInfoMap.offerData.forEach((offer, index) => {
+          const idData = fileIds.find(files => files.index === index);
+          noticePeriodInfoMap.offerData[index].offerDocumentId = idData?.id;
+        });
+      } catch (error) {
+        props.setOpen(true);
+        props.setType(ERROR_KEY);
+        props.setDataMessage("File upload failed, cannot process further, please try again");
+        return;
+      }
+    }
+    try {
+      const profileDetailsResponse = await updateJobSeekerProfile({
+        profileId: userDataState.userData.profileId || '1018862574432321536',
+        profileData: { noticePeriodInfoMap },
+      });
+      console.log(profileDetailsResponse?.data);
+      if (profileDetailsResponse?.data?.success) {
+        props.setType(SUCCESS_KEY);
+        props.setDataMessage(FORM_SUBMISSION_SUCCESS);
+        props.setOpen(true);
+        props.handleComplete(3);
+        props.handleNext();
+      }
+    } catch (error: any) {
+      console.log(error);
+      props.setType(ERROR_KEY);
+      props.setDataMessage(error?.message);
+      props.setOpen(true);
+    }
+  };
+  const validateNoticePeriodInfo = (data) => {
+    if (data.noticeStatus === "Serving Notice Period"){
+      if(!data.lastWorkingDate || !data.reasonOfJobChange || !data.offerStatus || !data.negotiableStatus)
+      return false;
+      if(data.negotiableStatus === "Yes"){
+        if(!data.negotiablePeriod)
+        return false;
+      }
+      if (data.offerStatus === "Yes") {
+        if (offerData.length === 0) {
+          return false;
+        } else {
+          offerData.forEach((row) => {
+            if (
+              !row.designation ||
+              !row.joiningDate ||
+              !row.employerName ||
+              !row.joiningLocation 
+            )
+              return false;
+          });
+        }
+      } else {
+        setOfferData([]);
+        if (!data.reasonOfResignation) return false;
+      }
+    } else {
+      if(!data.noticePeriod || !data.reasonOfJobChange || !data.negotiableStatus || !data.buyoutStatus)
+      return false;
+      if(data.negotiableStatus === 'Yes'){
+        if(!data.negotiablePeriod)
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const removeOfferData = (index) => {
+    const list = [...offerData];
+    list.splice(index, 1);
+    setOfferData(list);
+  };
   return (
     <div className="job-seeker-profile-content">
       <div className="notice-details-card">
@@ -172,7 +297,7 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
                 fullWidth
                 rows={3}
                 helperText={WORD_LIMIT_TEXT}
-                onChange={(e) => console.log("val ", e.target.value)}
+                onChange={(e) => setReasonOfJobChange(e.target.value)}
                 InputProps={{
                   inputProps: {
                     maxLength: 1200,
@@ -301,7 +426,7 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
                   fullWidth
                   rows={3}
                   helperText={WORD_LIMIT_TEXT}
-                  onChange={(e) => console.log("val ", e.target.value)}
+                  onChange={(e) => setReasonOfResignation(e.target.value)}
                   InputProps={{
                     inputProps: {
                       maxLength: 1200,
@@ -313,7 +438,13 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
             ) : offerStatus === YesNoOptions[0] ? (
               <div className="notice-period-conditional">
                 <div className="outline-div">
-                  <CurrentOffers />
+                  <CurrentOffers
+                    setOfferData={setOfferData}
+                    removeOfferData={removeOfferData}
+                    setType={props.setType}
+                    setOpen={props.setOpen}
+                    setDataMessage={props.setDataMessage}
+                  />
                 </div>
               </div>
             ) : null}
@@ -322,7 +453,7 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
       </div>
       {props.hasButtons ? (
         <PreviousNextButtons
-          handleNext={props.handleNext}
+          handleNext={submitNoticePeriodInfo}
           handleBack={props.handleBack}
         />
       ) : null}

@@ -60,7 +60,7 @@ export const dateFilterParams = {
     },
     {
       headerName: "Job seeker Name",
-      field: "jobSeekerName",
+      field: "name",
       filter: "agTextColumnFilter",
       minWidth: 200,
       hide: false,
@@ -73,7 +73,7 @@ export const dateFilterParams = {
     },
     {
       headerName: "Job Seeker ID",
-      field: "jobSeekerID",
+      field: "_id",
       hide: false,
       minWidth: 200,
       filter: "agTextColumnFilter",
@@ -123,7 +123,7 @@ export const dateFilterParams = {
     },
     {
       headerName: "Profile Uploaded",
-      field: "profileUploaded",
+      field: "appliedDate",
       hide: false,
       minWidth: 215,
       filter: "agDateColumnFilter",
@@ -146,7 +146,7 @@ export const dateFilterParams = {
     },
     {
       headerName: "Profile Owned by",
-      field: "profileOwnedby",
+      field: "referredBy",
       hide: false,
       minWidth: 180,
       filterParams: {
@@ -172,7 +172,7 @@ export const dateFilterParams = {
     },
     {
       headerName: "Job Seeker Main Stage",
-      field: "jobSeekerMainStage",
+      field: "status",
       hide: false,
       minWidth: 230,
       filter: "agTextColumnFilter",
@@ -225,7 +225,7 @@ export const dateFilterParams = {
 
     {
       headerName: "Phone Number",
-      field: "phoneNumber",
+      field: "mobileNumber",
       hide: false,
       minWidth: 200,
       filter: "agNumberColumnFilter",
@@ -238,7 +238,7 @@ export const dateFilterParams = {
     },
     {
       headerName: "Email Address",
-      field: "emailAddress",
+      field: "emailId",
       hide: false,
       minWidth: 200,
       filter: "agTextColumnFilter",
@@ -291,7 +291,7 @@ export const dateFilterParams = {
     
     {
       headerName: "Resume Uploaded",
-      field: "resumeUploaded",
+      field: "resumeDocumentId",
       hide: false,
       minWidth: 215,
       filter: "agTextColumnFilter",

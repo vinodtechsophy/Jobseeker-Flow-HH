@@ -42,9 +42,11 @@ export const CONTEST_DETAILS = "991273137863147520";
 export const JD_PATCH_FORM = "999548019411533824";
 export const CONTEST_ABOUT_EMPLOYER = "991289466351534080";
 export const JOB_SEEKER_RESUME = "1018802975069569024";
+export const OFFER_LETTER = "1022430257759780864";
 
 export const ALL_KEY = "All";
 export const COLUMNS_TEXT = "Columns";
+export const DISABLED_KEY = 'disabled';
 
 export const emailValidation = (email: string) => {
   const regex = new RegExp(
