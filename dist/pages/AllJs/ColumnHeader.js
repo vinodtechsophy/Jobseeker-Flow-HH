@@ -45,7 +45,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Job seeker Name",
-        field: "jobSeekerName",
+        field: "name",
         filter: "agTextColumnFilter",
         minWidth: 200,
         hide: false,
@@ -58,7 +58,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Job Seeker ID",
-        field: "jobSeekerID",
+        field: "_id",
         hide: false,
         minWidth: 200,
         filter: "agTextColumnFilter",
@@ -108,7 +108,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Profile Uploaded",
-        field: "profileUploaded",
+        field: "appliedDate",
         hide: false,
         minWidth: 215,
         filter: "agDateColumnFilter",
@@ -130,7 +130,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Profile Owned by",
-        field: "profileOwnedby",
+        field: "referredBy",
         hide: false,
         minWidth: 180,
         filterParams: {
@@ -156,7 +156,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Job Seeker Main Stage",
-        field: "jobSeekerMainStage",
+        field: "status",
         hide: false,
         minWidth: 230,
         filter: "agTextColumnFilter",
@@ -208,7 +208,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Phone Number",
-        field: "phoneNumber",
+        field: "mobileNumber",
         hide: false,
         minWidth: 200,
         filter: "agNumberColumnFilter",
@@ -221,7 +221,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Email Address",
-        field: "emailAddress",
+        field: "emailId",
         hide: false,
         minWidth: 200,
         filter: "agTextColumnFilter",
@@ -273,7 +273,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Resume Uploaded",
-        field: "resumeUploaded",
+        field: "resumeDocumentId",
         hide: false,
         minWidth: 215,
         filter: "agTextColumnFilter",

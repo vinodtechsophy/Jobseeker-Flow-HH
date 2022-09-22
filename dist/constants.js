@@ -31,8 +31,10 @@ export var CONTEST_DETAILS = "991273137863147520";
 export var JD_PATCH_FORM = "999548019411533824";
 export var CONTEST_ABOUT_EMPLOYER = "991289466351534080";
 export var JOB_SEEKER_RESUME = "1018802975069569024";
+export var OFFER_LETTER = "1022430257759780864";
 export var ALL_KEY = "All";
 export var COLUMNS_TEXT = "Columns";
+export var DISABLED_KEY = 'disabled';
 export var emailValidation = function (email) {
     var regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|[[\t -Z^-~]*])");
     return !(!email || regex.test(email) === false);

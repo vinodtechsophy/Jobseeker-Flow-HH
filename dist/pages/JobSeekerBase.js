@@ -48,7 +48,7 @@ var JobSeekerBase = function (props) {
         {
             title: "All JS",
             index: 3,
-            component: _jsx(AllJs, {}),
+            component: _jsx(AllJs, { contestId: contestId, id: id }),
         },
         {
             title: "Vetting",
