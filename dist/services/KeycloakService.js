@@ -93,8 +93,8 @@ var fetchTokenDifferently = function () { return __awaiter(void 0, void 0, void 
             case 0:
                 params = new URLSearchParams();
                 params.append("client_id", process.env.REACT_APP_CLIENT_ID || "tp-ui-core");
-                params.append("username", process.env.REACT_APP_KC_USERNAME || "test");
-                params.append("password", process.env.REACT_APP_KC_PASSWORD || "test");
+                params.append("username", process.env.REACT_APP_KC_USERNAME || "919005464397");
+                params.append("password", process.env.REACT_APP_KC_PASSWORD || "1234");
                 params.append("grant_type", "password");
                 return [4 /*yield*/, axios.post("".concat(process.env.REACT_APP_AUTH_SERVER_URL, "realms/techsophy-platform/protocol/openid-connect/token"), params)];
             case 1:

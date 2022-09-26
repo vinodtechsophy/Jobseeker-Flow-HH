@@ -68,15 +68,15 @@ var JobSeekerProfileReview = function (props) {
             case 1:
                 return null;
             case 2:
-                return _jsx(JobSeekerProfileUpload, { hasButtons: false });
+                return _jsx(JobSeekerProfileUpload, { profileDataId: '1018862574432321536', hasButtons: false });
             case 3:
-                return _jsx(JobSeekerProfileDetails, { hasButtons: false });
+                return _jsx(JobSeekerProfileDetails, { profileDataId: '1018862574432321536', hasButtons: false });
             case 4:
-                return _jsx(JobSeekerProfileWorkStatus, { hasButtons: false });
+                return _jsx(JobSeekerProfileWorkStatus, { profileDataId: '1018862574432321536', hasButtons: false });
             case 5:
-                return _jsx(JobSeekerProfileNoticePeriod, { hasButtons: false });
+                return _jsx(JobSeekerProfileNoticePeriod, { profileDataId: '1018862574432321536', hasButtons: false });
             default:
-                return _jsx(JobSeekerProfileJD, { hasButtons: false });
+                return _jsx(JobSeekerProfileJD, { profileDataId: '1018862574432321536', hasButtons: false });
         }
     };
     var submitAllDetails = function () { return __awaiter(void 0, void 0, void 0, function () {

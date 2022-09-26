@@ -63,7 +63,7 @@ import PreviousNextButtons from "../../components/PreviousNextButtons/PreviousNe
 import CurrentOffers from "./CurrentOffers/CurrentOffers";
 import { useStyles } from "./JobSeekerProfileFlowStyles";
 import Calendar from "../../components/Calendar/Calendar";
-import { updateJobSeekerProfile, UploadFiles } from "../../services/FormDataService";
+import { updateJobSeekerProfile, UploadFiles, } from "../../services/FormDataService";
 import { ERROR_KEY, SUCCESS_KEY, FORM_SUBMISSION_SUCCESS, WARNING_KEY, OFFER_LETTER, } from "../../constants";
 import { useAppSelector } from "../../services/StoreHooks";
 var JobSeekerProfileNoticePeriod = function (props) {
@@ -134,7 +134,7 @@ var JobSeekerProfileNoticePeriod = function (props) {
                                         uploadResponse = _c.sent();
                                         fileIds_1.push({
                                             index: index,
-                                            id: (_b = (_a = uploadResponse === null || uploadResponse === void 0 ? void 0 : uploadResponse.data) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.id
+                                            id: (_b = (_a = uploadResponse === null || uploadResponse === void 0 ? void 0 : uploadResponse.data) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.id,
                                         });
                                         return [2 /*return*/];
                                 }
@@ -156,7 +156,7 @@ var JobSeekerProfileNoticePeriod = function (props) {
                 case 4:
                     _b.trys.push([4, 6, , 7]);
                     return [4 /*yield*/, updateJobSeekerProfile({
-                            profileId: userDataState.userData.profileId || '1018862574432321536',
+                            profileId: userDataState.userData.profileId || "1018862574432321536",
                             profileData: { noticePeriodInfoMap: noticePeriodInfoMap },
                         })];
                 case 5:
@@ -183,7 +183,10 @@ var JobSeekerProfileNoticePeriod = function (props) {
     }); };
     var validateNoticePeriodInfo = function (data) {
         if (data.noticeStatus === "Serving Notice Period") {
-            if (!data.lastWorkingDate || !data.reasonOfJobChange || !data.offerStatus || !data.negotiableStatus)
+            if (!data.lastWorkingDate ||
+                !data.reasonOfJobChange ||
+                !data.offerStatus ||
+                !data.negotiableStatus)
                 return false;
             if (data.negotiableStatus === "Yes") {
                 if (!data.negotiablePeriod)
@@ -210,9 +213,12 @@ var JobSeekerProfileNoticePeriod = function (props) {
             }
         }
         else {
-            if (!data.noticePeriod || !data.reasonOfJobChange || !data.negotiableStatus || !data.buyoutStatus)
+            if (!data.noticePeriod ||
+                !data.reasonOfJobChange ||
+                !data.negotiableStatus ||
+                !data.buyoutStatus)
                 return false;
-            if (data.negotiableStatus === 'Yes') {
+            if (data.negotiableStatus === "Yes") {
                 if (!data.negotiablePeriod)
                     return false;
             }

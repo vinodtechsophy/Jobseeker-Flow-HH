@@ -84,7 +84,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Phone Number",
-        field: "phoneNumber",
+        field: "mobileNumber",
         hide: false,
         minWidth: 215,
         filterParams: {
@@ -97,7 +97,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Email Address",
-        field: "emailAddress",
+        field: "emailId",
         hide: false,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -123,7 +123,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Interviewed or Applied to this Employer in the Last 6 Months",
-        field: "interviewed",
+        field: "interviewAttended",
         hide: false,
         minWidth: 230,
         filter: "agTextColumnFilter",
@@ -141,7 +141,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "PDC Status",
-        field: "pdcStatus",
+        field: "status",
         hide: false,
         minWidth: 200,
         filter: "agTextColumnFilter",
@@ -154,7 +154,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "DOB",
-        field: "dob",
+        field: "dateOfBirth",
         hide: false,
         minWidth: 200,
         filter: "agDateColumnFilter",
@@ -178,7 +178,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "FDC Status",
-        field: "fdcStatus",
+        field: "status",
         hide: false,
         minWidth: 215,
         filter: "agTextColumnFilter",

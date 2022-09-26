@@ -99,3 +99,35 @@ export var getAggregateData = function (contestId) { return __awaiter(void 0, vo
         }
     });
 }); };
+export var getDuplicationFailedProfiles = function (filterValue, page, size) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, axios
+                    .get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/profile-log?filterColumn=status&filterValue=").concat(filterValue).concat(page ? "&page=" + page : "&page=" + 0).concat(size ? "&size=" + size : ""), {
+                    headers: {
+                        Authorization: "Bearer ".concat(sessionStorage.getItem("react-token")),
+                    },
+                })
+                    .catch(function (error) {
+                    console.log(error);
+                })];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+export var getDuplicationFailedProfilesAggregate = function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, axios
+                    .get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/profile-log/aggregate"), {
+                    headers: {
+                        Authorization: "Bearer ".concat(sessionStorage.getItem("react-token")),
+                    },
+                })
+                    .catch(function (error) {
+                    console.log(error);
+                })];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };

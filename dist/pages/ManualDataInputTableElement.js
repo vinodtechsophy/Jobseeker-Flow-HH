@@ -31,6 +31,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { preDuplicationCheck, fullDuplicationCheck, } from "../services/JobSeekerService";
+import moment from "moment";
 var useStyles = makeStyles(function () { return ({
     buttonContainer: {
         "&.MuiButton-root": {
@@ -302,14 +303,17 @@ export var PDCStatusCheckButton = function (params) {
                         })() })) })) }))] }));
 };
 export var CustomDOBInputBox = function (params) {
-    var _a = React.useState(params.getValue() == "" ? new Date() : params.getValue()), date = _a[0], setDate = _a[1];
+    var _a = React.useState(params.getValue() == "" ? new Date(new Date().setFullYear(new Date().getFullYear() - 18)) : params.getValue()), date = _a[0], setDate = _a[1];
     var handleChange = function (newValue) {
-        setDate("".concat(newValue.$y, "/").concat(newValue.$M + 1, "/").concat(newValue.$D));
-        params.setValue("".concat(newValue.$y, "/").concat(newValue.$M + 1, "/").concat(newValue.$D));
+        var dd = ("0" + newValue.$D).slice(-2);
+        var mm = ("0" + (newValue.$M + 1)).slice(-2);
+        var yy = newValue.$y;
+        setDate("".concat(dd, "/").concat(mm, "/").concat(yy));
+        params.setValue("".concat(dd, "/").concat(mm, "/").concat(yy));
     };
     return (_jsx(LocalizationProvider, __assign({ dateAdapter: AdapterDayjs }, { children: _jsx(DatePicker, { label: "Custom input", views: ["year", "month", "day"], value: date, onChange: function (newValue) {
                 handleChange(newValue);
-            }, renderInput: function (_a) {
+            }, maxDate: moment().subtract(18, "year"), renderInput: function (_a) {
                 var inputRef = _a.inputRef, inputProps = _a.inputProps, InputProps = _a.InputProps;
                 return (_jsxs(Box, __assign({ sx: { display: "flex", alignItems: "center" } }, { children: [_jsx("input", __assign({ ref: inputRef }, inputProps, { style: {
                                 // height: "2vw",

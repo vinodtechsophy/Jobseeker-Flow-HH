@@ -74,3 +74,14 @@ export var openFile = function (id) { return __awaiter(void 0, void 0, void 0, f
         return [2 /*return*/];
     });
 }); };
+export var getFileDetails = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var token;
+    return __generator(this, function (_a) {
+        token = sessionStorage.getItem("react-token");
+        return [2 /*return*/, axios.get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "dms/v1/documents/").concat(id), {
+                headers: {
+                    Authorization: "Bearer ".concat(token),
+                },
+            })];
+    });
+}); };

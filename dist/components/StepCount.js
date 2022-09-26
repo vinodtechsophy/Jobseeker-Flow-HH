@@ -17,7 +17,7 @@ var StepCount = function (props) {
                 var _a;
                 return (_jsx(Tooltip, __assign({ title: props.StepCountList.length < 6 ? "" : button.tooltip, placement: "top", arrow: true }, { children: _jsxs(Button, __assign({ className: button.id === props.selectedButton
                             ? "step-count-wrapper"
-                            : "step-count-outlined", onClick: function () { return props.setSelectedButton(button.id); } }, { children: [_jsx("div", __assign({ className: "step-count-text" }, { children: ((_a = props.countsList.find(function (item) { return item._id === button.id; })) === null || _a === void 0 ? void 0 : _a.count) || "0" })), _jsx("div", __assign({ className: "step-count-label" }, { children: button.label })), _jsx("div", { className: "step-underline", style: {
+                            : "step-count-outlined", onClick: function () { return props.setSelectedButton(button.id, button === null || button === void 0 ? void 0 : button.value); } }, { children: [_jsx("div", __assign({ className: "step-count-text" }, { children: ((_a = props.countsList.find(function (item) { return item._id === button.id; })) === null || _a === void 0 ? void 0 : _a.count) || "0" })), _jsx("div", __assign({ className: "step-count-label" }, { children: button.label })), _jsx("div", { className: "step-underline", style: {
                                     background: MAIN_GREEN,
                                 } })] })) }), button.id));
             }) })) }));

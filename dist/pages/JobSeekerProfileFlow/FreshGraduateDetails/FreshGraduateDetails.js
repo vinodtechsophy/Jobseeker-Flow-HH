@@ -10,7 +10,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React, { useImperativeHandle } from "react";
+import React, { useImperativeHandle, useEffect } from "react";
 import { Stack, Grid, TextField } from '@mui/material';
 import { useStyles } from "../JobSeekerProfileFlowStyles";
 import { CITY_LABEL, WARNING_KEY, COUNTRY_LABEL, HALF_SIZE_GRID, FULL_SIZE_GRID, } from "../../../constants";
@@ -73,6 +73,21 @@ var FreshGraduateDetails = React.forwardRef(function (props, ref) {
         else
             return true;
     };
+    useEffect(function () {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+        if (props.freshGraduateDetails) {
+            if ((_a = props.freshGraduateDetails) === null || _a === void 0 ? void 0 : _a.instituteName)
+                freshGraduateForm.setFieldValue("instituteName", (_b = props.freshGraduateDetails) === null || _b === void 0 ? void 0 : _b.instituteName);
+            if ((_c = props.freshGraduateDetails) === null || _c === void 0 ? void 0 : _c.instituteCity)
+                freshGraduateForm.setFieldValue("instituteCity", (_d = props.freshGraduateDetails) === null || _d === void 0 ? void 0 : _d.instituteCity);
+            if ((_e = props.freshGraduateDetails) === null || _e === void 0 ? void 0 : _e.collegeEndDate)
+                freshGraduateForm.setFieldValue("collegeEndDate", (_f = props.freshGraduateDetails) === null || _f === void 0 ? void 0 : _f.collegeEndDate);
+            if ((_g = props.freshGraduateDetails) === null || _g === void 0 ? void 0 : _g.collegeStartDate)
+                freshGraduateForm.setFieldValue("collegeStartDate", (_h = props.freshGraduateDetails) === null || _h === void 0 ? void 0 : _h.collegeStartDate);
+            if ((_j = props.freshGraduateDetails) === null || _j === void 0 ? void 0 : _j.instituteCountry)
+                freshGraduateForm.setFieldValue("instituteCountry", (_k = props.freshGraduateDetails) === null || _k === void 0 ? void 0 : _k.instituteCountry);
+        }
+    }, []);
     return (_jsx(React.Fragment, { children: _jsx("div", __assign({ className: "experience-details-card" }, { children: _jsxs(Grid, __assign({ container: true, className: classes.muiContainer }, { children: [_jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "add-team-grid" }, { children: [_jsx("p", { children: INSTITUTE_NAME_TEXT }), _jsx(TextField, { disabled: props.disabled, label: COLLEGE_NAME_LABEL, className: classes.boxInputField, size: "small", name: "instituteName", onBlur: freshGraduateForm.handleBlur, onChange: freshGraduateForm.handleChange, value: freshGraduateForm.values.instituteName })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "add-team-grid" }, { children: [_jsx("p", { children: INSTITUTE_LOCATION_TEXT }), _jsxs(Stack, __assign({ direction: "row", spacing: 3 }, { children: [_jsx(TextField, { disabled: props.disabled, label: CITY_LABEL, className: classes.inputField, size: "small", name: "instituteCity", onBlur: freshGraduateForm.handleBlur, onChange: freshGraduateForm.handleChange, value: freshGraduateForm.values.instituteCity }), _jsx(TextField, { disabled: props.disabled, label: COUNTRY_LABEL, className: classes.inputField, size: "small", name: "instituteCountry", onBlur: freshGraduateForm.handleBlur, onChange: freshGraduateForm.handleChange, value: freshGraduateForm.values.instituteCountry })] }))] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "add-team-grid" }, { children: [_jsx("p", { children: COLLEGE_START_TEXT }), _jsx(Calendar, { setDate: handleStartDate })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "add-team-grid" }, { children: [_jsx("p", { children: COLLEGE_END_TEXT }), _jsx(Calendar, { setDate: handleEndDate, status: false })] }))] })) })) }));
 });
 export default FreshGraduateDetails;

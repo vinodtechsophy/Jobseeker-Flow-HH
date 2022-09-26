@@ -58,109 +58,86 @@ import { LIGHT_GREY } from "../../color";
 import BookmarkIcon from "../../assets/bookmark.svg";
 import { PAGE_SIZE_ARRAY } from "../../constants";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
+import { getDuplicationFailedProfiles, getDuplicationFailedProfilesAggregate, } from "../../services/JobSeekerService";
 var DuplicationFailed = function () {
-    var _a = useState(1), selectedButton = _a[0], setSelectedButton = _a[1];
+    var _a = useState(1), selectedButtonId = _a[0], setSelectedButtonId = _a[1];
+    var _b = useState("SUBMITTED"), selectedButtonValue = _b[0], setSelectedButtonValue = _b[1];
     var gridRef = useRef();
-    var _b = useState(LISTING_GENERIC_HEADERS), columnDefs = _b[0], setColumnDefs = _b[1];
-    var _c = useState(10), pageSize = _c[0], setPageSize = _c[1];
-    var _d = useState([]), selectedRows = _d[0], setSelectedRows = _d[1];
-    var _e = useState(2), totalPages = _e[0], setTotalPages = _e[1];
-    var _f = useState(), rowData = _f[0], setRowData = _f[1];
-    var _g = React.useState(false), columnsListOpen = _g[0], setColumnsListOpen = _g[1];
-    var _h = React.useState(true), floatingFilter = _h[0], setFloatingFilter = _h[1];
-    var _j = React.useState(0), pageNo = _j[0], setPageNo = _j[1];
-    var row = [
-        {
-            firstName: "Vinod",
-            lastName: 2,
-            dob: "30-09-2022",
-            recruiterUploading: "",
-            phoneNumber: 9493947123,
-            emailAddress: "test@gmail.com",
-            pdcStatus: "HYD",
-            fdcStatus: "Yes",
-            interviewed: "no",
-            panNumber: "HH-1234",
-        },
-        {
-            firstName: "Harish",
-            lastName: 2,
-            expectedCTC: "7 LPA",
-            dob: "30-09-2022",
-            recruiterUploading: "",
-            phoneNumber: 9493947123,
-            emailAddress: "test@gmail.com",
-            pdcStatus: "HYD",
-            currentlyWorking: "Yes",
-            interviewed: "no",
-            panNumber: "HH-1234",
-        },
-        {
-            firstName: "Joel",
-            lastName: 2,
-            expectedCTC: "7 LPA",
-            dob: "30-09-2022",
-            recruiterUploading: "",
-            phoneNumber: 9493947123,
-            emailAddress: "test@gmail.com",
-            pdcStatus: "HYD",
-            currentlyWorking: "Yes",
-            interviewed: "no",
-            panNumber: "HH-1234",
-        },
-        {
-            firstName: "Sam",
-            lastName: 0,
-            expectedCTC: "",
-            dob: "20-09-2022",
-            recruiterUploading: "",
-            phoneNumber: 0,
-            emailAddress: "",
-            pdcStatus: "",
-            currentlyWorking: "",
-            interviewed: "no",
-            panNumber: "",
-        },
-        {
-            firstName: "Jagadish",
-            lastName: 0,
-            expectedCTC: "",
-            dob: "20-09-2022",
-            recruiterUploading: "",
-            phoneNumber: 0,
-            emailAddress: "",
-            pdcStatus: "",
-            currentlyWorking: "",
-            interviewed: "no",
-            panNumber: "",
-        },
-        {
-            firstName: "Vinod",
-            lastName: 2,
-            expectedCTC: "7 LPA",
-            dob: "30-09-2022",
-            recruiterUploading: "",
-            phoneNumber: 9493947123,
-            emailAddress: "test@gmail.com",
-            pdcStatus: "HYD",
-            currentlyWorking: "Yes",
-            interviewed: "no",
-            panNumber: "HH-1234",
-        },
-        {
-            firstName: "Harish",
-            lastName: 2,
-            expectedCTC: "7 LPA",
-            dob: "30-09-2022",
-            recruiterUploading: "",
-            phoneNumber: 9493947123,
-            emailAddress: "test@gmail.com",
-            pdcStatus: "HYD",
-            currentlyWorking: "Yes",
-            interviewed: "yes",
-            panNumber: "HH-1234",
-        },
-    ];
+    var _c = useState(LISTING_GENERIC_HEADERS), columnDefs = _c[0], setColumnDefs = _c[1];
+    var _d = useState(10), pageSize = _d[0], setPageSize = _d[1];
+    var _e = useState([]), selectedRows = _e[0], setSelectedRows = _e[1];
+    var _f = useState(1), totalPages = _f[0], setTotalPages = _f[1];
+    var _g = useState(), rowData = _g[0], setRowData = _g[1];
+    var _h = React.useState(false), columnsListOpen = _h[0], setColumnsListOpen = _h[1];
+    var _j = React.useState(true), floatingFilter = _j[0], setFloatingFilter = _j[1];
+    var _k = React.useState(0), pageNo = _k[0], setPageNo = _k[1];
+    var _l = useState({}), agCount = _l[0], setAgCount = _l[1];
+    useEffect(function () {
+        fetchToken();
+        apiCallAggregateData();
+        apiCallDuplicationFailedData(selectedButtonValue, pageNo, pageSize);
+    }, []);
+    var fetchToken = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, KeycloakService.fetchTokenOtherUser()];
+                case 1:
+                    token = _a.sent();
+                    sessionStorage.setItem("react-token", token);
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    var setSelectedButton = function (id, filterValue) {
+        setSelectedButtonId(id);
+        setSelectedButtonValue(filterValue);
+        setPageNo(0);
+        setPageSize(10);
+        apiCallDuplicationFailedData(filterValue, pageNo, 10);
+    };
+    var apiCallAggregateData = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response, result, t_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, getDuplicationFailedProfilesAggregate()];
+                case 1:
+                    response = _a.sent();
+                    if (response.data.success) {
+                        result = response.data.data;
+                        t_1 = {};
+                        result.map(function (data) {
+                            var _a;
+                            Object.assign(t_1, (_a = {}, _a[data.status] = data.count, _a));
+                        });
+                        setAgCount(t_1);
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    var apiCallDuplicationFailedData = function (filterValue, page, size) { return __awaiter(void 0, void 0, void 0, function () {
+        var response, duplicationFailedRecords;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+        return __generator(this, function (_k) {
+            switch (_k.label) {
+                case 0: return [4 /*yield*/, getDuplicationFailedProfiles(filterValue, page, size)];
+                case 1:
+                    response = _k.sent();
+                    if ((_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.success) {
+                        duplicationFailedRecords = (_c = (_b = response === null || response === void 0 ? void 0 : response.data) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.content;
+                        setRowData(duplicationFailedRecords);
+                        setTotalPages((_e = (_d = response === null || response === void 0 ? void 0 : response.data) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.totalPages);
+                        setPageNo((_g = (_f = response === null || response === void 0 ? void 0 : response.data) === null || _f === void 0 ? void 0 : _f.data) === null || _g === void 0 ? void 0 : _g.pageNo);
+                        setPageSize((_j = (_h = response === null || response === void 0 ? void 0 : response.data) === null || _h === void 0 ? void 0 : _h.data) === null || _j === void 0 ? void 0 : _j.pageSize);
+                    }
+                    else {
+                        setRowData([]);
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); };
     var defaultColDef = useMemo(function () {
         return {
             flex: 1,
@@ -195,21 +172,6 @@ var DuplicationFailed = function () {
             },
         };
     }, []);
-    useEffect(function () {
-        fetchToken();
-    }, []);
-    var fetchToken = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, KeycloakService.fetchTokenOtherUser()];
-                case 1:
-                    token = _a.sent();
-                    sessionStorage.setItem("react-token", token);
-                    return [2 /*return*/];
-            }
-        });
-    }); };
     var setColumnsDisplay = function (columnList) {
         var newColumnDefs = columnDefs.map(function (colDef) {
             var columnReference = columnList.find(function (col) { return col.headerName === colDef.headerName; });
@@ -237,41 +199,48 @@ var DuplicationFailed = function () {
         }
     }, []);
     var pageChange = function (pageNumber) {
-        setPageNo(pageNumber);
-        // apiCallRelatedFormData(contestStatus, pageNumber - 1);
+        setPageNo(pageNumber - 1);
+        apiCallDuplicationFailedData(selectedButtonValue, pageNumber - 1, pageSize);
     };
     var pageSizeChange = function (pageSizeChanged) {
         setPageSize(pageSizeChanged);
-        // apiCallRelatedFormData(contestStatus, 0, pageSizeChanged);
+        apiCallDuplicationFailedData(selectedButtonValue, pageNo, pageSizeChanged);
     };
     return (_jsxs(Grid, __assign({ container: true, spacing: 3, rowSpacing: 4 }, { children: [_jsx(Grid, __assign({ item: true, xs: 12, p: 2 }, { children: _jsx(Typography, __assign({ fontSize: 30 }, { children: "Previously Failed PDC and FDC Profiles." })) })), _jsx(Grid, __assign({ item: true, xs: 12, p: 2 }, { children: _jsx(StepCount, { StepCountList: [
                         {
                             label: "Submitted",
                             tooltip: "Submitted",
                             id: 1,
+                            value: "SUBMITTED",
                         },
                         {
                             label: "PDC Fail",
                             tooltip: "PDC Fail",
                             id: 2,
+                            value: "PDC_FAIL",
                         },
                         {
                             label: "PDC Pass",
                             tooltip: "PDC Pass",
                             id: 3,
+                            value: "PDC_PASS",
                         },
                         {
                             label: "FDC Fail",
                             tooltip: "FDC Fail",
                             id: 4,
+                            value: "FDC_FAIL",
                         },
                     ], countsList: [
-                        { _id: 1, count: 5 },
-                        { _id: 2, count: 5 },
-                        { _id: 3, count: 5 },
-                        { _id: 4, count: 5 },
-                    ], setSelectedButton: setSelectedButton, selectedButton: selectedButton }) })), _jsx(Grid, __assign({ item: true, xs: 12 }, { children: _jsxs("div", __assign({ className: "forms-button-container" }, { children: [_jsxs("div", { children: [_jsxs(Button, __assign({ variant: "outlined", className: "save-draft-button", onClick: function () { return setColumnsListOpen(true); }, disabled: columnsListOpen }, { children: ["Columns ", _jsx(GridViewOutlinedIcon, { className: "generic-icon" })] })), _jsxs(Button, __assign({ variant: "outlined", className: "save-draft-button", onClick: function () { return toogleFloatingFilter(!floatingFilter); }, sx: { background: floatingFilter ? LIGHT_GREY : "inherit" } }, { children: ["Filters ", _jsx(FilterAltOutlinedIcon, { className: "generic-icon" })] }))] }), _jsx("div", { children: _jsxs(Box, __assign({ display: "inline-block" }, { children: [_jsx(Checkbox, {}), " 10 Selected", _jsx("img", { src: BookmarkIcon })] })) })] })) })), _jsx(ColumnSelection, { AllColumns: columnDefs.map(function (cl) {
+                        {
+                            _id: 1,
+                            count: agCount.PDC_FAIL + agCount.PDC_PASS + agCount.FDC_FAIL,
+                        },
+                        { _id: 2, count: agCount.PDC_FAIL },
+                        { _id: 3, count: agCount.PDC_PASS },
+                        { _id: 4, count: agCount.FDC_FAIL },
+                    ], setSelectedButton: setSelectedButton, selectedButton: selectedButtonId }) })), _jsx(Grid, __assign({ item: true, xs: 12 }, { children: _jsxs("div", __assign({ className: "forms-button-container" }, { children: [_jsxs("div", { children: [_jsxs(Button, __assign({ variant: "outlined", className: "save-draft-button", onClick: function () { return setColumnsListOpen(true); }, disabled: columnsListOpen }, { children: ["Columns ", _jsx(GridViewOutlinedIcon, { className: "generic-icon" })] })), _jsxs(Button, __assign({ variant: "outlined", className: "save-draft-button", onClick: function () { return toogleFloatingFilter(!floatingFilter); }, sx: { background: floatingFilter ? LIGHT_GREY : "inherit" } }, { children: ["Filters ", _jsx(FilterAltOutlinedIcon, { className: "generic-icon" })] }))] }), _jsx("div", { children: _jsxs(Box, __assign({ display: "inline-block" }, { children: [_jsx(Checkbox, {}), " 10 Selected", _jsx("img", { src: BookmarkIcon })] })) })] })) })), _jsx(ColumnSelection, { AllColumns: columnDefs.map(function (cl) {
                     return Object.assign({ headerName: cl.headerName, hide: !cl.hide });
-                }), setColumnsDisplay: setColumnsDisplay, onClose: setColumnsListOpen, open: columnsListOpen }), _jsx(Grid, __assign({ item: true, xs: 12 }, { children: _jsx(AgGridWithPagination, { gridRef: gridRef, rowData: row, columnDefs: columnDefs, defaultColDef: defaultColDef, autoGroupColumnDef: autoGroupColumnDef, suppressRowClickSelection: true, groupSelectsChildren: true, rowSelection: "multiple", rowGroupPanelShow: "always", pivotPanelShow: "always", enableRangeSelection: true, pagination: false, pageSize: pageSize, onSelectionChanged: onSelectionChanged, pageSizeArray: PAGE_SIZE_ARRAY, totalPages: totalPages, pageChange: pageChange, pageSizeChange: pageSizeChange }) }))] })));
+                }), setColumnsDisplay: setColumnsDisplay, onClose: setColumnsListOpen, open: columnsListOpen }), _jsx(Grid, __assign({ item: true, xs: 12 }, { children: _jsx(AgGridWithPagination, { gridRef: gridRef, rowData: rowData, columnDefs: columnDefs, defaultColDef: defaultColDef, autoGroupColumnDef: autoGroupColumnDef, suppressRowClickSelection: true, groupSelectsChildren: true, rowSelection: "multiple", rowGroupPanelShow: "always", pivotPanelShow: "always", enableRangeSelection: true, pagination: false, pageSize: pageSize, onSelectionChanged: onSelectionChanged, pageSizeArray: PAGE_SIZE_ARRAY, totalPages: totalPages, pageChange: pageChange, pageSizeChange: pageSizeChange, currentPage: pageNo + 1 }) }))] })));
 };
 export default DuplicationFailed;

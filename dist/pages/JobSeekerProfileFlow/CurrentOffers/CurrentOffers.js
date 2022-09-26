@@ -87,7 +87,10 @@ var CurrentOffers = function (props) {
             props.setDataMessage("Please upload offer letter");
             props.setOpen(true);
         }
-        else if (fixedCtc.fixedCtcLakh === '' || fixedCtc.fixedCtcThousand === '' || variableCtc.variableCtcLakh === '' || variableCtc.variableCtcThousand === '') {
+        else if (fixedCtc.fixedCtcLakh === "" ||
+            fixedCtc.fixedCtcThousand === "" ||
+            variableCtc.variableCtcLakh === "" ||
+            variableCtc.variableCtcThousand === "") {
             props.setType(WARNING_KEY);
             props.setDataMessage("Please provide CTC details");
             props.setOpen(true);

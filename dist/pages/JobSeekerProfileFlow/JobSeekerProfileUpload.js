@@ -46,15 +46,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Grid, Button, Checkbox, Typography, ButtonGroup, } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useDropzone } from "react-dropzone";
 import DownloadIcon from "@mui/icons-material/Download";
 import PreviousNextButtons from "../../components/PreviousNextButtons/PreviousNextButtons";
-import { UploadFiles, createJobSeekerProfile, } from "../../services/FormDataService";
+import { UploadFiles, getJobSeekerProfile, createJobSeekerProfile, updateJobSeekerProfile, } from "../../services/FormDataService";
 import { ERROR_KEY, SUCCESS_KEY, IMAGE_UPLOAD_ERROR, JOB_SEEKER_RESUME, FORM_SUBMISSION_SUCCESS, } from "../../constants";
 import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
+import KeycloakService from "../../services/KeycloakService";
+import { getFileDetails } from "../../services/DocumentService";
 var useStyles = makeStyles({
     Grid1: {
         marginTop: 50,
@@ -69,8 +71,8 @@ var useStyles = makeStyles({
             //you want this to be the same as the backgroundColor above
             backgroundColor: "#4D6CD9",
         },
-        backgroundColor: "#4D6CD9",
-        color: "white",
+        backgroundColor: "#4D6CD9 !important",
+        color: "white !important",
     },
     manaulUploadDiv: {
         border: "2px solid grey",
@@ -182,13 +184,7 @@ var JobSeekerProfileUpload = function (props) {
     var _a = React.useState(true), manualState = _a[0], setManualState = _a[1];
     var _b = React.useState(false), templateState = _b[0], setTemplateState = _b[1];
     var label = { inputProps: { "aria-label": "Checkbox demo" } };
-    var _c = React.useState(""), iconID = _c[0], setIconID = _c[1];
-    //   const [file, setFile] = React.useState<any>(null);
-    // const onDrop = useCallback((acceptedFiles) => {
-    //   // console.log(acceptedFiles);
-    //   // Do something with the files
-    // }, []);
-    // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+    var _c = React.useState(""), imageName = _c[0], setImageName = _c[1];
     var _d = useDropzone({ onDrop: function () { } }), acceptedFilesTemplate = _d.acceptedFiles, rootPropsTemplate = _d.getRootProps, inputPropsTemplate = _d.getInputProps, openTemplate = _d.isDragActive;
     var _e = useDropzone({ onDrop: function () { } }), acceptedFilesTemplateResume = _e.acceptedFiles, rootPropsTemplateResume = _e.getRootProps, inputPropsTemplateResume = _e.getInputProps, openTemplateResume = _e.isDragActive;
     var _f = useDropzone({ onDrop: function () { } }), acceptedFilesResume = _f.acceptedFiles, rootPropsResume = _f.getRootProps, inputPropsResume = _f.getInputProps, openResume = _f.isDragActive;
@@ -209,15 +205,15 @@ var JobSeekerProfileUpload = function (props) {
         };
     };
     var callResumeUpload = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var uploadResponse, seekerProfile, error_1;
+        var uploadResponse, updateResumeReponse, seekerProfile, error_1;
         var _a, _b, _c, _d, _e, _f, _g, _h;
         return __generator(this, function (_j) {
             switch (_j.label) {
                 case 0:
-                    if (!(acceptedFilesResume.length > 0)) return [3 /*break*/, 6];
+                    if (!(acceptedFilesResume.length > 0)) return [3 /*break*/, 9];
                     _j.label = 1;
                 case 1:
-                    _j.trys.push([1, 5, , 6]);
+                    _j.trys.push([1, 8, , 9]);
                     return [4 /*yield*/, UploadFiles(uploadPayloadBuild()).catch(function (error) {
                             props.setType(ERROR_KEY);
                             props.setDataMessage(IMAGE_UPLOAD_ERROR);
@@ -226,34 +222,45 @@ var JobSeekerProfileUpload = function (props) {
                         })];
                 case 2:
                     uploadResponse = _j.sent();
-                    if (!((_a = uploadResponse === null || uploadResponse === void 0 ? void 0 : uploadResponse.data) === null || _a === void 0 ? void 0 : _a.success)) return [3 /*break*/, 4];
-                    setIconID((_c = (_b = uploadResponse === null || uploadResponse === void 0 ? void 0 : uploadResponse.data) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.id);
-                    return [4 /*yield*/, createJobSeekerProfile({
-                            profileLogId: userDataState.userData.profileLogId,
+                    if (!((_a = uploadResponse === null || uploadResponse === void 0 ? void 0 : uploadResponse.data) === null || _a === void 0 ? void 0 : _a.success)) return [3 /*break*/, 7];
+                    if (!imageName) return [3 /*break*/, 4];
+                    return [4 /*yield*/, updateJobSeekerProfile({
+                            profileId: props.profileDataId || userDataState.userData.profileId,
                             profileData: {
-                                resumeDocumentId: (_e = (_d = uploadResponse === null || uploadResponse === void 0 ? void 0 : uploadResponse.data) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.id,
-                            },
+                                resumeDocumentId: (_c = (_b = uploadResponse === null || uploadResponse === void 0 ? void 0 : uploadResponse.data) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.id,
+                            }
                         })];
                 case 3:
+                    updateResumeReponse = _j.sent();
+                    return [3 /*break*/, 6];
+                case 4: return [4 /*yield*/, createJobSeekerProfile({
+                        profileLogId: userDataState.userData.profileLogId,
+                        profileData: {
+                            resumeDocumentId: (_e = (_d = uploadResponse === null || uploadResponse === void 0 ? void 0 : uploadResponse.data) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.id,
+                        },
+                    })];
+                case 5:
                     seekerProfile = _j.sent();
                     if ((_f = seekerProfile === null || seekerProfile === void 0 ? void 0 : seekerProfile.data) === null || _f === void 0 ? void 0 : _f.success) {
                         dispatchProfileId((_h = (_g = seekerProfile === null || seekerProfile === void 0 ? void 0 : seekerProfile.data) === null || _g === void 0 ? void 0 : _g.data) === null || _h === void 0 ? void 0 : _h.profileId);
                     }
+                    _j.label = 6;
+                case 6:
                     props.setType(SUCCESS_KEY);
                     props.setDataMessage(FORM_SUBMISSION_SUCCESS);
                     props.setOpen(true);
                     props.handleComplete(1);
                     props.handleNext();
-                    _j.label = 4;
-                case 4: return [3 /*break*/, 6];
-                case 5:
+                    _j.label = 7;
+                case 7: return [3 /*break*/, 9];
+                case 8:
                     error_1 = _j.sent();
                     console.log(error_1);
                     props.setType(ERROR_KEY);
                     props.setDataMessage(error_1 === null || error_1 === void 0 ? void 0 : error_1.message);
                     props.setOpen(true);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     }); };
@@ -266,6 +273,33 @@ var JobSeekerProfileUpload = function (props) {
             },
         });
     };
+    useEffect(function () {
+        callPrefillData();
+    }, []);
+    var callPrefillData = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, profileDataFetched, fileResponse;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        return __generator(this, function (_j) {
+            switch (_j.label) {
+                case 0: return [4 /*yield*/, KeycloakService.fetchTokenDifferently()];
+                case 1:
+                    token = _j.sent();
+                    localStorage.setItem('react-token', token);
+                    sessionStorage.setItem('react-token', token);
+                    return [4 /*yield*/, getJobSeekerProfile(props.profileDataId)];
+                case 2:
+                    profileDataFetched = _j.sent();
+                    if (!((_b = (_a = profileDataFetched === null || profileDataFetched === void 0 ? void 0 : profileDataFetched.data) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.resumeDocumentId)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, getFileDetails((_d = (_c = profileDataFetched === null || profileDataFetched === void 0 ? void 0 : profileDataFetched.data) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.resumeDocumentId)];
+                case 3:
+                    fileResponse = _j.sent();
+                    if ((_f = (_e = fileResponse === null || fileResponse === void 0 ? void 0 : fileResponse.data) === null || _e === void 0 ? void 0 : _e.data) === null || _f === void 0 ? void 0 : _f.fileName)
+                        setImageName((_h = (_g = fileResponse === null || fileResponse === void 0 ? void 0 : fileResponse.data) === null || _g === void 0 ? void 0 : _g.data) === null || _h === void 0 ? void 0 : _h.fileName);
+                    _j.label = 4;
+                case 4: return [2 /*return*/];
+            }
+        });
+    }); };
     return (_jsxs("div", __assign({ className: "job-seeker-profile-content" }, { children: [_jsxs(Grid, __assign({ container: true, spacing: 3 }, { children: [_jsx(Grid, __assign({ item: true, xs: 12, className: classes.Grid1 }, { children: _jsxs(ButtonGroup, __assign({ variant: "outlined", "aria-label": "outlined button group" }, { children: [_jsx(Button, __assign({ className: templateState ? classes.bGroup : "", onClick: handleTemplateUpload }, { children: "Template Upload" })), _jsx(Button, __assign({ className: manualState ? classes.bGroup : "", onClick: handleManualUpload }, { children: "Manual Upload" }))] })) })), manualState ? (_jsxs(Grid, __assign({ item: true, xs: 12, margin: 8, className: classes.Grid2 }, { children: [_jsxs(Box, __assign({ display: "inline-flex", marginTop: 3, marginBottom: 3 }, { children: [_jsx(Typography, __assign({ className: classes.uploadResume, variant: "h6" }, { children: "Upload Resume*" })), _jsx(Typography, __assign({ className: classes.maualUploadSubHeading }, { children: "Warning! Make Sure the Job Seeker can Join within 30 days after Profile is entered into the contest" }))] })), _jsxs("div", __assign({}, rootPropsResume(), { className: classes.manaulUploadDiv }, { children: [_jsx("input", __assign({}, inputPropsResume())), " ", _jsx(Typography, __assign({ textAlign: "center" }, { children: openResume ? (_jsx("p", { children: "Drop the files here ..." })) : (_jsx("p", { children: "Drag 'n' drop some files here, or click to select files" })) }))] })), _jsxs(Box, __assign({ marginTop: 3, justifyContent: "space-between", sx: {
                                     display: {
                                         sm: "block",
@@ -273,7 +307,9 @@ var JobSeekerProfileUpload = function (props) {
                                         lg: "flex",
                                         xl: "flex",
                                     },
-                                } }, { children: [_jsx(Box, __assign({ textAlign: "left", className: classes.subText1 }, { children: _jsx(Box, { children: acceptedFilesResume.map(function (file) { return (_jsx(Box, { children: file.path }, file.path || file.name)); }) }) })), _jsxs(Box, __assign({ textAlign: "left", className: classes.subText2 }, { children: [_jsx(Checkbox, __assign({}, label, { defaultChecked: true, color: "success" })), "Duplication Check with Hiringhood Completed"] })), _jsx(Box, __assign({}, rootPropsResume(), { textAlign: "left", className: classes.subText3 }, { children: "Re-Upload" }))] }))] }))) : null, templateState ? (_jsxs(Grid, __assign({ container: true, spacing: 3 }, { children: [_jsxs(Grid, __assign({ item: true, xs: 12, marginLeft: 10 }, { children: [_jsx("h1", { children: "Dear User Template upload is unavailable currently, will be updated in the next iteration" }), _jsxs(Box, __assign({ display: "inline-flex", marginTop: 10, justifyContent: "space-between" }, { children: [_jsxs(Typography, __assign({ variant: "h6", align: "left", className: classes.autoFillTxt }, { children: ["Auto Fill Using Template*", _jsx("p", __assign({ className: classes.tempalteSubText1 }, { children: "Auto fill information for steps 3-6" }))] })), _jsx(Typography, __assign({ className: classes.filledWarning }, { children: "Warning! make sure all information is filled before uploading" }))] }))] })), _jsxs(Grid, __assign({ item: true, xs: 12, display: "inline-flex", justifyContent: "space-between" }, { children: [_jsxs(Box, __assign({ className: classes.fillTemplate }, { children: [_jsx(DownloadIcon, { style: { fontSize: "80px" } }), _jsx(Box, { children: "Auto Fill Template" })] })), _jsxs(Box, __assign({ className: classes.dragBox }, rootPropsTemplate(), { children: [_jsxs(Box, __assign({ className: classes.dashedBox, sx: { p: 1, m: 3 } }, { children: [_jsx("input", __assign({}, inputPropsTemplate())), _jsx(Typography, __assign({ fontSize: 20, color: "blue", textAlign: "center" }, { children: "+" })), _jsxs(Typography, __assign({ variant: "body1", color: "blue", textAlign: "center" }, { children: ["Drag & drop", " "] })), _jsx(Typography, __assign({ textAlign: "center" }, { children: "Your file here or browse" })), _jsx("aside", {})] })), _jsxs(Box, __assign({ sx: {
+                                } }, { children: [_jsx(Box, __assign({ textAlign: "left", className: classes.subText1 }, { children: imageName && acceptedFilesResume.length < 1 ?
+                                            _jsx("span", { children: imageName }) :
+                                            _jsx(Box, { children: acceptedFilesResume.map(function (file) { return (_jsx(Box, { children: file.path }, file.path || file.name)); }) }) })), _jsxs(Box, __assign({ textAlign: "left", className: classes.subText2 }, { children: [_jsx(Checkbox, __assign({}, label, { defaultChecked: true, color: "success" })), "Duplication Check with Hiringhood Completed"] })), _jsx(Box, __assign({}, rootPropsResume(), { textAlign: "left", className: classes.subText3 }, { children: "Re-Upload" }))] }))] }))) : null, templateState ? (_jsxs(Grid, __assign({ container: true, spacing: 3 }, { children: [_jsxs(Grid, __assign({ item: true, xs: 12, marginLeft: 10 }, { children: [_jsx("h1", { children: "Dear User Template upload is unavailable currently, will be updated in the next iteration" }), _jsxs(Box, __assign({ display: "inline-flex", marginTop: 10, justifyContent: "space-between" }, { children: [_jsxs(Typography, __assign({ variant: "h6", align: "left", className: classes.autoFillTxt }, { children: ["Auto Fill Using Template*", _jsx("p", __assign({ className: classes.tempalteSubText1 }, { children: "Auto fill information for steps 3-6" }))] })), _jsx(Typography, __assign({ className: classes.filledWarning }, { children: "Warning! make sure all information is filled before uploading" }))] }))] })), _jsxs(Grid, __assign({ item: true, xs: 12, display: "inline-flex", justifyContent: "space-between" }, { children: [_jsxs(Box, __assign({ className: classes.fillTemplate }, { children: [_jsx(DownloadIcon, { style: { fontSize: "80px" } }), _jsx(Box, { children: "Auto Fill Template" })] })), _jsxs(Box, __assign({ className: classes.dragBox }, rootPropsTemplate(), { children: [_jsxs(Box, __assign({ className: classes.dashedBox, sx: { p: 1, m: 3 } }, { children: [_jsx("input", __assign({}, inputPropsTemplate())), _jsx(Typography, __assign({ fontSize: 20, color: "blue", textAlign: "center" }, { children: "+" })), _jsxs(Typography, __assign({ variant: "body1", color: "blue", textAlign: "center" }, { children: ["Drag & drop", " "] })), _jsx(Typography, __assign({ textAlign: "center" }, { children: "Your file here or browse" })), _jsx("aside", {})] })), _jsxs(Box, __assign({ sx: {
                                                     display: {
                                                         xs: "block",
                                                         sm: "flex",

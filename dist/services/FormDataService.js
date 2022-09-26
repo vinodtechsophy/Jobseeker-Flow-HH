@@ -95,3 +95,17 @@ export var updateJobSeekerProfile = function (bodyPayload) { return __awaiter(vo
             })];
     });
 }); };
+export var getJobSeekerProfile = function (profileId) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/, axios.get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/profile/").concat(profileId), {
+                headers: {
+                    Authorization: "Bearer ".concat(localStorage.getItem('react-token'))
+                }
+            })];
+    });
+}); };
+export var getCityList = function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/, axios.get("https://gist.githubusercontent.com/palimadra/133517e2dca16f31e41af82419d6a50f/raw/bf9d1a603b8edabcdcfdefbdeeafd76f1469da1d/city-list-india")];
+    });
+}); };
