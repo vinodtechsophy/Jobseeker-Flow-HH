@@ -55,7 +55,7 @@ import ColumnSelection from "../../components/ColumnSelection/ColumnSelection";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { LIGHT_GREY } from "../../color";
-import BookmarkIcon from "../../assets/bookmark.svg";
+import BookmarkIcon from "../../src/assets/bookmark.svg";
 import { PAGE_SIZE_ARRAY } from "../../constants";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import { getDuplicationFailedProfiles, getDuplicationFailedProfilesAggregate, } from "../../services/JobSeekerService";
