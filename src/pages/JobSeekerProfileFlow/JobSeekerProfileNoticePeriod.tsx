@@ -30,9 +30,9 @@ import PreviousNextButtons from "../../components/PreviousNextButtons/PreviousNe
 import CurrentOffers from "./CurrentOffers/CurrentOffers";
 import { useStyles } from "./JobSeekerProfileFlowStyles";
 import Calendar from "../../components/Calendar/Calendar";
-import { 
+import {
   updateJobSeekerProfile,
-  UploadFiles
+  UploadFiles,
 } from "../../services/FormDataService";
 import {
   ERROR_KEY,
@@ -85,7 +85,6 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
     };
   };
   const submitNoticePeriodInfo = async () => {
-    
     const noticePeriodInfoMap = buildDetailsPayload();
 
     if (!validateNoticePeriodInfo(noticePeriodInfoMap)) {
@@ -96,30 +95,34 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
     }
     if (noticePeriodInfoMap.offerData.length > 0) {
       try {
-        const fileIds: {index: number, id: string}[] = [];
+        const fileIds: { index: number; id: string }[] = [];
         await Promise.all(
           noticePeriodInfoMap.offerData.map(async (offer, index) => {
-            const uploadResponse = await UploadFiles(uploadPayloadBuild(offer?.letterFiles));
+            const uploadResponse = await UploadFiles(
+              uploadPayloadBuild(offer?.letterFiles)
+            );
             fileIds.push({
               index,
-              id: uploadResponse?.data?.data?.id
-            })
+              id: uploadResponse?.data?.data?.id,
+            });
           })
         );
         noticePeriodInfoMap.offerData.forEach((offer, index) => {
-          const idData = fileIds.find(files => files.index === index);
+          const idData = fileIds.find((files) => files.index === index);
           noticePeriodInfoMap.offerData[index].offerDocumentId = idData?.id;
         });
       } catch (error) {
         props.setOpen(true);
         props.setType(ERROR_KEY);
-        props.setDataMessage("File upload failed, cannot process further, please try again");
+        props.setDataMessage(
+          "File upload failed, cannot process further, please try again"
+        );
         return;
       }
     }
     try {
       const profileDetailsResponse = await updateJobSeekerProfile({
-        profileId: userDataState.userData.profileId || '1018862574432321536',
+        profileId: userDataState.userData.profileId || "1018862574432321536",
         profileData: { noticePeriodInfoMap },
       });
       console.log(profileDetailsResponse?.data);
@@ -138,12 +141,16 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
     }
   };
   const validateNoticePeriodInfo = (data) => {
-    if (data.noticeStatus === "Serving Notice Period"){
-      if(!data.lastWorkingDate || !data.reasonOfJobChange || !data.offerStatus || !data.negotiableStatus)
-      return false;
-      if(data.negotiableStatus === "Yes"){
-        if(!data.negotiablePeriod)
+    if (data.noticeStatus === "Serving Notice Period") {
+      if (
+        !data.lastWorkingDate ||
+        !data.reasonOfJobChange ||
+        !data.offerStatus ||
+        !data.negotiableStatus
+      )
         return false;
+      if (data.negotiableStatus === "Yes") {
+        if (!data.negotiablePeriod) return false;
       }
       if (data.offerStatus === "Yes") {
         if (offerData.length === 0) {
@@ -154,7 +161,7 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
               !row.designation ||
               !row.joiningDate ||
               !row.employerName ||
-              !row.joiningLocation 
+              !row.joiningLocation
             )
               return false;
           });
@@ -164,11 +171,15 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
         if (!data.reasonOfResignation) return false;
       }
     } else {
-      if(!data.noticePeriod || !data.reasonOfJobChange || !data.negotiableStatus || !data.buyoutStatus)
-      return false;
-      if(data.negotiableStatus === 'Yes'){
-        if(!data.negotiablePeriod)
+      if (
+        !data.noticePeriod ||
+        !data.reasonOfJobChange ||
+        !data.negotiableStatus ||
+        !data.buyoutStatus
+      )
         return false;
+      if (data.negotiableStatus === "Yes") {
+        if (!data.negotiablePeriod) return false;
       }
     }
     return true;

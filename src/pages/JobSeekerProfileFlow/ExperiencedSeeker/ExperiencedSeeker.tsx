@@ -1,4 +1,4 @@
-import React, { ReactElement, FC, useImperativeHandle } from "react";
+import React, { ReactElement, FC, useImperativeHandle, useEffect } from "react";
 import {
   Stack,
   Grid,
@@ -42,11 +42,9 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
   (props, ref): ReactElement => {
     const classes: any = useStyles();
 
-    const [jobType, setJobType] = React.useState(JOB_TYPE_OPTIONS[0]);
-
     const experiencedSeekerForm = useFormik({
       initialValues: {
-        jobType: JOB_TYPE_OPTIONS[0],
+        jobDurationType: JOB_TYPE_OPTIONS[0],
         currentEmployer: "",
         country: "",
         city: "",
@@ -63,7 +61,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
           .min(1),
         country: Yup.string().required("Please add Country").min(1),
         city: Yup.string().required("Please add City").min(1),
-        jobType: Yup.string(),
+        jobDurationType: Yup.string(),
         endClient: Yup.string(),
         lastEmployer: Yup.string(),
         payrollEmployer: Yup.string(),
@@ -92,7 +90,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
         return false;
       switch (props.workStatus) {
         case WorkStatusType.JOBLESS:
-          if (jobType === JOB_TYPE_OPTIONS[0]) {
+          if (experiencedSeekerForm.values.jobDurationType === JOB_TYPE_OPTIONS[0]) {
             if (
               !experiencedSeekerForm.values.lastEmployer ||
               !experiencedSeekerForm.values.relievingDate ||
@@ -111,7 +109,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
           }
           break;
         case WorkStatusType.FULL_TIME:
-          if (jobType === JOB_TYPE_OPTIONS[0]) {
+          if (experiencedSeekerForm.values.jobDurationType === JOB_TYPE_OPTIONS[0]) {
             if (
               !experiencedSeekerForm.values.currentEmployer ||
               !experiencedSeekerForm.values.joiningDate
@@ -143,6 +141,19 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
       },
     }));
 
+    useEffect(() => {
+      if(props.experiencedPrefillData) {
+        if(props.experiencedPrefillData?.city) experiencedSeekerForm.setFieldValue("city", props.experiencedPrefillData?.city);
+        if(props.experiencedPrefillData?.country) experiencedSeekerForm.setFieldValue("country", props.experiencedPrefillData?.country);
+        if(props.experiencedPrefillData?.endClient) experiencedSeekerForm.setFieldValue("endClient", props.experiencedPrefillData?.endClient);
+        if(props.experiencedPrefillData?.lastEmployer) experiencedSeekerForm.setFieldValue("lastEmployer", props.experiencedPrefillData?.lastEmployer);
+        if(props.experiencedPrefillData?.relievingDate) experiencedSeekerForm.setFieldValue("relievingDate", props.experiencedPrefillData?.relievingDate);
+        if(props.experiencedPrefillData?.currentEmployer) experiencedSeekerForm.setFieldValue("currentEmployer", props.experiencedPrefillData?.currentEmployer);
+        if(props.experiencedPrefillData?.payrollEmployer) experiencedSeekerForm.setFieldValue("payrollEmployer", props.experiencedPrefillData?.payrollEmployer);
+        if(props.experiencedPrefillData?.notWorkingReason) experiencedSeekerForm.setFieldValue("notWorkingReason", props.experiencedPrefillData?.notWorkingReason);     
+      }
+    }, []);
+
     return (
       <React.Fragment>
         <div className="experienced-div">
@@ -164,12 +175,11 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
                 <div>
                   <FormControl>
                     <RadioGroup
-                      id="jobType"
-                      value={experiencedSeekerForm.values.jobType}
+                      id="jobDurationType"
+                      value={experiencedSeekerForm.values.jobDurationType}
                       onChange={(e) => {
-                        setJobType(e.target.value);
                         experiencedSeekerForm.setFieldValue(
-                          "jobType",
+                          "jobDurationType",
                           e.target.value
                         );
                       }}
@@ -210,7 +220,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
                 ) : null}
               </div>
             </Grid>
-            {jobType === JOB_TYPE_OPTIONS[1] ? (
+            {experiencedSeekerForm.values.jobDurationType === JOB_TYPE_OPTIONS[1] ? (
               <>
                 <Grid
                   item

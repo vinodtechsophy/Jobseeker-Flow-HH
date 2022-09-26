@@ -1,4 +1,4 @@
-import React, { ReactElement, FC, useImperativeHandle } from "react";
+import React, { ReactElement, FC, useImperativeHandle, useEffect } from "react";
 import {
   Stack,
   Grid,
@@ -85,6 +85,16 @@ const FreshGraduateDetails: FC<any> = React.forwardRef(
         ) return false 
         else return true
     }
+
+    useEffect(() => {
+        if(props.freshGraduateDetails) {
+          if(props.freshGraduateDetails?.instituteName) freshGraduateForm.setFieldValue("instituteName", props.freshGraduateDetails?.instituteName);
+          if(props.freshGraduateDetails?.instituteCity) freshGraduateForm.setFieldValue("instituteCity", props.freshGraduateDetails?.instituteCity);
+          if(props.freshGraduateDetails?.collegeEndDate) freshGraduateForm.setFieldValue("collegeEndDate", props.freshGraduateDetails?.collegeEndDate);
+          if(props.freshGraduateDetails?.collegeStartDate) freshGraduateForm.setFieldValue("collegeStartDate", props.freshGraduateDetails?.collegeStartDate);
+          if(props.freshGraduateDetails?.instituteCountry) freshGraduateForm.setFieldValue("instituteCountry", props.freshGraduateDetails?.instituteCountry);
+        }
+    }, []);
 
     return (
         <React.Fragment>

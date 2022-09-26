@@ -34,22 +34,27 @@ const JobSeekerProfileReview: FC<any> = (props): ReactElement => {
                 return null;
             case 2:
                 return <JobSeekerProfileUpload 
+                          profileDataId={'1018862574432321536'}
                           hasButtons={false}
                        />;
             case 3:
                 return <JobSeekerProfileDetails 
+                          profileDataId={'1018862574432321536'}
                           hasButtons={false}
                         />;
             case 4:
                 return <JobSeekerProfileWorkStatus
+                          profileDataId={'1018862574432321536'}
                           hasButtons={false}
                         />;
             case 5:
                 return <JobSeekerProfileNoticePeriod
+                          profileDataId={'1018862574432321536'}
                           hasButtons={false}
                         />;
             default:
                 return <JobSeekerProfileJD
+                          profileDataId={'1018862574432321536'}
                           hasButtons={false}
                        />;
         }

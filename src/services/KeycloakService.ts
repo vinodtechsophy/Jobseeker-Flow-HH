@@ -64,8 +64,8 @@ const hasRole = (roles: string[]) =>
 const fetchTokenDifferently = async () => {
   const params = new URLSearchParams();
   params.append("client_id", process.env.REACT_APP_CLIENT_ID || "tp-ui-core");
-  params.append("username", process.env.REACT_APP_KC_USERNAME || "test");
-  params.append("password", process.env.REACT_APP_KC_PASSWORD || "test");
+  params.append("username", process.env.REACT_APP_KC_USERNAME || "919005464397");
+  params.append("password", process.env.REACT_APP_KC_PASSWORD || "1234");
   params.append("grant_type", "password");
   const tokenData = await axios.post(
     `${process.env.REACT_APP_AUTH_SERVER_URL}realms/techsophy-platform/protocol/openid-connect/token`,

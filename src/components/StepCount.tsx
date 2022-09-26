@@ -25,7 +25,7 @@ const StepCount: FC<any> = (props): ReactElement => {
                   ? "step-count-wrapper"
                   : "step-count-outlined"
               }
-              onClick={() => props.setSelectedButton(button.id)}
+              onClick={() => props.setSelectedButton(button.id, button?.value)}
             >
               <div className="step-count-text">
                 {props.countsList.find(

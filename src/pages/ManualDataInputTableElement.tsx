@@ -21,6 +21,7 @@ import {
   preDuplicationCheck,
   fullDuplicationCheck,
 } from "../services/JobSeekerService";
+import moment from "moment";
 
 const useStyles = makeStyles(() => ({
   buttonContainer: {
@@ -440,12 +441,15 @@ export const PDCStatusCheckButton = (params: any) => {
 
 export const CustomDOBInputBox = (params: any) => {
   const [date, setDate] = React.useState(
-    params.getValue() == "" ? new Date() : params.getValue()
+    params.getValue() == "" ? new Date(new Date().setFullYear(new Date().getFullYear() - 18)) : params.getValue()
   );
 
   const handleChange = (newValue: any) => {
-    setDate(`${newValue.$y}/${newValue.$M + 1}/${newValue.$D}`);
-    params.setValue(`${newValue.$y}/${newValue.$M + 1}/${newValue.$D}`);
+    const dd = ("0" + newValue.$D).slice(-2);
+    const mm = ("0" + (newValue.$M + 1)).slice(-2);
+    const yy = newValue.$y;
+    setDate(`${dd}/${mm}/${yy}`);
+    params.setValue(`${dd}/${mm}/${yy}`);
   };
 
   return (
@@ -457,6 +461,7 @@ export const CustomDOBInputBox = (params: any) => {
         onChange={(newValue) => {
           handleChange(newValue);
         }}
+        maxDate={moment().subtract(18, "year")}
         renderInput={({ inputRef, inputProps, InputProps }) => (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <input
@@ -693,7 +698,6 @@ export const FDCStatusCheckButton = (params: any) => {
 };
 
 export const CustomUploadButton = (params: any) => {
-
   const classes = useStyles();
 
   const navigateUpload = () => {};

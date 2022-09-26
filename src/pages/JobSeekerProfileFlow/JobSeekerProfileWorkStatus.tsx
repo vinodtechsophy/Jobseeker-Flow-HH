@@ -35,13 +35,18 @@ import { WARNING_KEY, WorkStatusType } from "../../constants";
 import FreshGraduateDetails from "./FreshGraduateDetails/FreshGraduateDetails";
 import ExperiencedSeeker from "./ExperiencedSeeker/ExperiencedSeeker";
 import { useStyles } from "./JobSeekerProfileFlowStyles";
-import {updateJobSeekerProfile} from '../../services/FormDataService';
+import {
+    getCityList,
+    getJobSeekerProfile,
+    updateJobSeekerProfile
+} from '../../services/FormDataService';
 import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
 import { 
     ERROR_KEY,
     SUCCESS_KEY,
     FORM_SUBMISSION_SUCCESS
 } from "../../constants";
+import KeycloakService from "../../services/KeycloakService";
 
 const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
 
@@ -50,6 +55,8 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
     const freshGraduateRef = React.useRef<any>();
     const userDataState = useAppSelector((state) => state.currentUser);
 
+    const [gotPatchData, setGotPatchData] = React.useState(false);
+    const [citiesArray, setCitiesArray] = React.useState([]);
     const [jobStatus, setJobStatus] = React.useState(userDataState.userData.workStatus);
     const [currentLocation, setCurrentLocation] = React.useState('');
     const [preferredLocation, setPreferredLocation] = React.useState('');
@@ -60,7 +67,7 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
         currentEmployer: string,
         country: string,
         city: string,
-    }>({
+    } | any>({
         currentEmployer: '',
         country: '',
         city: '',
@@ -102,7 +109,6 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
                 profileId: userDataState.userData.profileId,
                 profileData: {profileWorkStatusMap}
             })
-            console.log(profileDetailsResponse?.data)
             if(profileDetailsResponse?.data?.success) {
                 props.setType(SUCCESS_KEY);
                 props.setDataMessage(FORM_SUBMISSION_SUCCESS);
@@ -150,8 +156,62 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
     const removeCertification = (index) => {
         const list = [...certificationDetails];
         list.splice(index, 1);
-        console.log(list)
         setCertificationDetails(list);
+    }
+
+    useEffect(() => {
+        callPrefillData();
+        fetchCityDetails();
+    }, []);
+
+    const fetchCityDetails = async () => {
+        const cityRawData = await getCityList();
+        setCitiesArray(cityRawData?.data.split('\n'));
+    }
+
+    const callPrefillData = async () => {
+        const token = await KeycloakService.fetchTokenDifferently();
+        localStorage.setItem('react-token', token);
+        sessionStorage.setItem('react-token', token);
+        const profileDataFetched = await getJobSeekerProfile(props.profileDataId);
+        if(profileDataFetched?.data?.data?.profileWorkStatusMap) {
+            patchWorkStatusDetails(profileDataFetched?.data?.data?.profileWorkStatusMap);
+        }
+    }
+
+    const patchWorkStatusDetails = (patchData: any) => {
+        console.log(patchData);
+        setJobStatus(patchData.jobStatus);
+        setCurrentLocation(patchData.currentLocation);
+        setPreferredLocation(patchData.preferredLocation);
+        setProfileFetchLocation(patchData.profileFetchLocation);
+        setCertificationDetails(() => [...patchData.certificationDetails]);
+        setAdditionalCertificationStatus(patchData.additonalCertificationStatus);
+        setStatusSubDetails(patchData);
+        setGotPatchData(true);
+    }
+
+    const setStatusSubDetails = (patchObject: any) => {
+        if(patchObject.instituteName) {
+            setFreshGraduateDetails({
+                instituteName: patchObject.instituteName,
+                instituteCity: patchObject.instituteCity,
+                instituteCountry: patchObject.instituteCountry,
+                collegeEndDate: patchObject.collegeEndDate,
+                collegeStartDate: patchObject.collegeStartDate,
+            })
+        } else {
+            setExperiencedDetails({
+                city: patchObject.city,
+                country: patchObject.country,
+                endClient: patchObject?.endClient,
+                lastEmployer: patchObject?.lastEmployer,
+                relievingDate: patchObject?.relievingDate,
+                currentEmployer: patchObject?.currentEmployer,
+                payrollEmployer: patchObject?.payrollEmployer,
+                notWorkingReason: patchObject?.notWorkingReason,
+            })
+        }
     }
 
     return (
@@ -222,9 +282,9 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
                                 onChange={(e) => setCurrentLocation(e.target.value)}
                             >
                                 {
-                                WorkStatusArray.map((item: string) => (
-                                    <MenuItem key={item} value={item}>{item}</MenuItem>
-                                ))
+                                  citiesArray.map((item: string, index) => (
+                                    <MenuItem key={item+index} value={item}>{item}</MenuItem>
+                                  ))
                                 }
                             </Select>
                         </FormControl>
@@ -246,9 +306,9 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
                                 onChange={(e) => setPreferredLocation(e.target.value)}
                             >
                                 {
-                                WorkStatusArray.map((item: string) => (
-                                    <MenuItem key={item} value={item}>{item}</MenuItem>
-                                ))
+                                  citiesArray.map((item: string, index) => (
+                                    <MenuItem key={item+index} value={item}>{item}</MenuItem>
+                                  ))
                                 }
                             </Select>
                         </FormControl>
@@ -293,6 +353,7 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
                             setType={props.setType}
                             setOpen={props.setOpen}
                             setDataMessage={props.setDataMessage}
+                            prefillDetails={props.profileDataId ? certificationDetails : null}
                         />
                     </div>
 
@@ -314,19 +375,41 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
                           setType={props.setType}
                           setOpen={props.setOpen}
                           setDataMessage={props.setDataMessage}
+                          fresherPrefillData={props.profileDataId ? freshGraduateDetails : null}
                         />
 
-                        :
-
-                        <ExperiencedSeeker 
-                          disabled={!props.hasButtons} 
-                          workStatus={jobStatus} 
-                          ref={experiencedRef}
-                          setParentData={setExperiencedDetails}
-                          setType={props.setType}
-                          setOpen={props.setOpen}
-                          setDataMessage={props.setDataMessage}
-                        />
+                        : null
+                    }
+                </div>
+                <div className="conditional-container">
+                    {
+                        jobStatus !== WorkStatusType.FRESHER ?
+                        <>
+                            {
+                                gotPatchData ? 
+                                <ExperiencedSeeker 
+                                    disabled={!props.hasButtons} 
+                                    workStatus={jobStatus} 
+                                    ref={experiencedRef}
+                                    setParentData={setExperiencedDetails}
+                                    setType={props.setType}
+                                    setOpen={props.setOpen}
+                                    setDataMessage={props.setDataMessage}
+                                    experiencedPrefillData={props.profileDataId ? experiencedDetails: null}
+                                /> :
+                                <ExperiencedSeeker 
+                                    disabled={!props.hasButtons} 
+                                    workStatus={jobStatus} 
+                                    ref={experiencedRef}
+                                    setParentData={setExperiencedDetails}
+                                    setType={props.setType}
+                                    setOpen={props.setOpen}
+                                    setDataMessage={props.setDataMessage}
+                                    experiencedPrefillData={props.profileDataId ? experiencedDetails: null}
+                                />
+                            }
+                        </>
+                        : null
                     }
                 </div>
                 {

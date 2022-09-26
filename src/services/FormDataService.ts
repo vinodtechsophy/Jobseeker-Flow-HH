@@ -74,3 +74,17 @@ export const updateJobSeekerProfile = async (bodyPayload: {profileId: string, pr
         }
     )
 };
+
+export const getJobSeekerProfile = async (profileId: string) => {
+    return axios.get(`${process.env.REACT_APP_MAIN_SERVER_URL}hiringhood/v1/profile/${profileId}`,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('react-token')}`
+            }
+        }
+    )
+};
+
+export const getCityList = async () => {
+    return axios.get(`https://gist.githubusercontent.com/palimadra/133517e2dca16f31e41af82419d6a50f/raw/bf9d1a603b8edabcdcfdefbdeeafd76f1469da1d/city-list-india`);
+}

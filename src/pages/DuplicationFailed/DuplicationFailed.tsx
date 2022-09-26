@@ -19,112 +19,82 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import BookmarkIcon from "../../assets/bookmark.svg";
 import { PAGE_SIZE_ARRAY } from "../../constants";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
+import {
+  getDuplicationFailedProfiles,
+  getDuplicationFailedProfilesAggregate,
+} from "../../services/JobSeekerService";
 
 const DuplicationFailed = () => {
-  const [selectedButton, setSelectedButton] = useState<Number>(1);
+  const [selectedButtonId, setSelectedButtonId] = useState<Number>(1);
+  const [selectedButtonValue, setSelectedButtonValue] = useState("SUBMITTED");
+
   const gridRef = useRef<AgGridReact<any>>();
   const [columnDefs, setColumnDefs] = useState(LISTING_GENERIC_HEADERS);
   const [pageSize, setPageSize] = useState(10);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
-  const [totalPages, setTotalPages] = useState(2);
+  const [totalPages, setTotalPages] = useState(1);
   const [rowData, setRowData] = useState<any[]>();
   const [columnsListOpen, setColumnsListOpen] = React.useState(false);
   const [floatingFilter, setFloatingFilter] = React.useState(true);
   const [pageNo, setPageNo] = React.useState(0);
+  const [agCount, setAgCount] = useState<any>({});
 
-  const row = [
-    {
-      firstName: "Vinod",
-      lastName: 2,
-      dob: "30-09-2022",
-      recruiterUploading: "",
-      phoneNumber: 9493947123,
-      emailAddress: "test@gmail.com",
-      pdcStatus: "HYD",
-      fdcStatus: "Yes",
-      interviewed: "no",
-      panNumber: "HH-1234",
-    },
-    {
-      firstName: "Harish",
-      lastName: 2,
-      expectedCTC: "7 LPA",
-      dob: "30-09-2022",
-      recruiterUploading: "",
-      phoneNumber: 9493947123,
-      emailAddress: "test@gmail.com",
-      pdcStatus: "HYD",
-      currentlyWorking: "Yes",
-      interviewed: "no",
-      panNumber: "HH-1234",
-    },
-    {
-      firstName: "Joel",
-      lastName: 2,
-      expectedCTC: "7 LPA",
-      dob: "30-09-2022",
-      recruiterUploading: "",
-      phoneNumber: 9493947123,
-      emailAddress: "test@gmail.com",
-      pdcStatus: "HYD",
-      currentlyWorking: "Yes",
-      interviewed: "no",
-      panNumber: "HH-1234",
-    },
-    {
-      firstName: "Sam",
-      lastName: 0,
-      expectedCTC: "",
-      dob: "20-09-2022",
-      recruiterUploading: "",
-      phoneNumber: 0,
-      emailAddress: "",
-      pdcStatus: "",
-      currentlyWorking: "",
-      interviewed: "no",
-      panNumber: "",
-    },
-    {
-      firstName: "Jagadish",
-      lastName: 0,
-      expectedCTC: "",
-      dob: "20-09-2022",
-      recruiterUploading: "",
-      phoneNumber: 0,
-      emailAddress: "",
-      pdcStatus: "",
-      currentlyWorking: "",
-      interviewed: "no",
-      panNumber: "",
-    },
-    {
-      firstName: "Vinod",
-      lastName: 2,
-      expectedCTC: "7 LPA",
-      dob: "30-09-2022",
-      recruiterUploading: "",
-      phoneNumber: 9493947123,
-      emailAddress: "test@gmail.com",
-      pdcStatus: "HYD",
-      currentlyWorking: "Yes",
-      interviewed: "no",
-      panNumber: "HH-1234",
-    },
-    {
-      firstName: "Harish",
-      lastName: 2,
-      expectedCTC: "7 LPA",
-      dob: "30-09-2022",
-      recruiterUploading: "",
-      phoneNumber: 9493947123,
-      emailAddress: "test@gmail.com",
-      pdcStatus: "HYD",
-      currentlyWorking: "Yes",
-      interviewed: "yes",
-      panNumber: "HH-1234",
-    },
-  ];
+  useEffect(() => {
+    fetchToken();
+    apiCallAggregateData();
+    apiCallDuplicationFailedData(selectedButtonValue, pageNo, pageSize);
+  }, []);
 
+  const fetchToken = async () => {
+    const token = await KeycloakService.fetchTokenOtherUser();
+    sessionStorage.setItem("react-token", token);
+  };
+  const setSelectedButton = (id: number, filterValue: string) => {
+    setSelectedButtonId(id);
+    setSelectedButtonValue(filterValue);
+    setPageNo(0);
+    setPageSize(10);
+    apiCallDuplicationFailedData(filterValue, pageNo, 10);
+  };
+  const apiCallAggregateData = async () => {
+    const response: any = await getDuplicationFailedProfilesAggregate();
+
+    if (response.data.success) {
+      const result = response.data.data;
+      const t = {};
+      result.map((data: { count: number; status: string }) => {
+        Object.assign(t, { [data.status]: data.count });
+      });
+      setAgCount(t);
+    }
+  };
+
+  const apiCallDuplicationFailedData = async (
+    filterValue: string,
+    page: number,
+    size: number
+  ) => {
+    // if (gridRef.current) {
+    //   gridRef.current.api.showLoadingOverlay();
+    // }
+    const response: any = await getDuplicationFailedProfiles(
+      filterValue,
+      page,
+      size
+    );
+    if (response?.data?.success) {
+      const duplicationFailedRecords = response?.data?.data?.content;
+      setRowData(duplicationFailedRecords);
+      setTotalPages(response?.data?.data?.totalPages);
+      setPageNo(response?.data?.data?.pageNo);
+      setPageSize(response?.data?.data?.pageSize);
+    } else {
+      setRowData([]);
+    }
+    // if (gridRef.current) {
+    //   gridRef.current.api.hideOverlay();
+    // }
+  };
   const defaultColDef = useMemo(() => {
     return {
       flex: 1,
@@ -159,15 +129,6 @@ const DuplicationFailed = () => {
     };
   }, []);
 
-  useEffect(() => {
-    fetchToken();
-  }, []);
-
-  const fetchToken = async () => {
-    const token = await KeycloakService.fetchTokenOtherUser();
-    sessionStorage.setItem("react-token", token);
-  };
-
   const setColumnsDisplay = (columnList) => {
     const newColumnDefs = columnDefs.map((colDef) => {
       const columnReference = columnList.find(
@@ -198,12 +159,12 @@ const DuplicationFailed = () => {
     }
   }, []);
   const pageChange = (pageNumber) => {
-    setPageNo(pageNumber);
-    // apiCallRelatedFormData(contestStatus, pageNumber - 1);
+    setPageNo(pageNumber - 1);
+    apiCallDuplicationFailedData(selectedButtonValue, pageNumber - 1, pageSize);
   };
   const pageSizeChange = (pageSizeChanged) => {
     setPageSize(pageSizeChanged);
-    // apiCallRelatedFormData(contestStatus, 0, pageSizeChanged);
+    apiCallDuplicationFailedData(selectedButtonValue, pageNo, pageSizeChanged);
   };
 
   return (
@@ -220,31 +181,38 @@ const DuplicationFailed = () => {
               label: "Submitted",
               tooltip: "Submitted",
               id: 1,
+              value: "SUBMITTED",
             },
             {
               label: "PDC Fail",
               tooltip: "PDC Fail",
               id: 2,
+              value: "PDC_FAIL",
             },
             {
               label: "PDC Pass",
               tooltip: "PDC Pass",
               id: 3,
+              value: "PDC_PASS",
             },
             {
               label: "FDC Fail",
               tooltip: "FDC Fail",
               id: 4,
+              value: "FDC_FAIL",
             },
           ]}
           countsList={[
-            { _id: 1, count: 5 },
-            { _id: 2, count: 5 },
-            { _id: 3, count: 5 },
-            { _id: 4, count: 5 },
+            {
+              _id: 1,
+              count: agCount.PDC_FAIL + agCount.PDC_PASS + agCount.FDC_FAIL,
+            },
+            { _id: 2, count: agCount.PDC_FAIL },
+            { _id: 3, count: agCount.PDC_PASS },
+            { _id: 4, count: agCount.FDC_FAIL },
           ]}
           setSelectedButton={setSelectedButton}
-          selectedButton={selectedButton}
+          selectedButton={selectedButtonId}
         />
       </Grid>
       <Grid item xs={12}>
@@ -287,7 +255,7 @@ const DuplicationFailed = () => {
       <Grid item xs={12}>
         <AgGridWithPagination
           gridRef={gridRef}
-          rowData={row}
+          rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           autoGroupColumnDef={autoGroupColumnDef}
@@ -304,6 +272,7 @@ const DuplicationFailed = () => {
           totalPages={totalPages}
           pageChange={pageChange}
           pageSizeChange={pageSizeChange}
+          currentPage={pageNo + 1}
           // onCellValueChanged={onCellValueChanged}
         />
       </Grid>

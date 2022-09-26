@@ -106,40 +106,15 @@ const CertificationDetails: FC<any> = (props): ReactElement => {
         .required("offr details required")
         .min(1, "add at least one offer"),
     }),
-    onSubmit: (values, { setSubmitting }) => {
-      handleSubmit(values, setSubmitting);
-    },
+    onSubmit: (values, { setSubmitting }) => {},
     enableReinitialize: true,
   });
 
-  const handleSubmit = async (values: any, setSubmitting: any) => {
-    const { members } = values;
-
-    const userPayload = members.map((item: any) => ({
-      joiningDate: item.joiningDate,
-      joiningLocation: item.joiningLocation,
-      userName: item.countryCode + item.designation,
-      mobileNumber: item.countryCode + item.designation,
-      employerName: item.employerName,
-      department: "dummy",
-      channel: "Company Onboard",
-      otherChannel: "",
-    }));
-    props.handleComplete();
-    props.handleNext();
-    if (serviceList.length > 0) {
-      //   setShowNofitication(true);
-      //   setNotificationType(ERROR_KEY);
-      //   setNoticationMessage(USER_ADD_ERR_MSG);
-    }
-    setSubmitting(false);
-  };
-
-  const handleServiceAdd = () => {
+  const handleServiceAdd = (prefillValue?: any) => {
     certificationDetailsForm.setValues((prevValues) => ({
-      members: [...prevValues.members, { ...initialValuesForForm }],
+      members: [...prevValues.members, { ...initialValuesForForm, ...prefillValue }],
     }));
-    setServiceList((prevState: any) => [...prevState, { ...initialValuesForForm }]);
+    setServiceList((prevState: any) => [...prevState, { ...initialValuesForForm, ...prefillValue }]);
   };
 
   const getError = (name: string) => {
@@ -149,7 +124,9 @@ const CertificationDetails: FC<any> = (props): ReactElement => {
   };
 
   useEffect(() => {
-    if (serviceList.length === 0) handleServiceAdd();
+    if (props.prefillDetails) {
+      props.prefillDetails.forEach((certification) => handleServiceAdd(certification));
+    } else if (serviceList.length === 0) handleServiceAdd();
   }, []);
 
   const handleIssueDate = (date, index) => {

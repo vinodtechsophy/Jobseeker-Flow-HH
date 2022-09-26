@@ -103,12 +103,16 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
       props.setType(WARNING_KEY);
       props.setDataMessage("Please upload offer letter");
       props.setOpen(true);
-    } else if (fixedCtc.fixedCtcLakh === '' || fixedCtc.fixedCtcThousand === '' || variableCtc.variableCtcLakh === '' || variableCtc.variableCtcThousand === ''){
+    } else if (
+      fixedCtc.fixedCtcLakh === "" ||
+      fixedCtc.fixedCtcThousand === "" ||
+      variableCtc.variableCtcLakh === "" ||
+      variableCtc.variableCtcThousand === ""
+    ) {
       props.setType(WARNING_KEY);
       props.setDataMessage("Please provide CTC details");
       props.setOpen(true);
-    }
-    else {
+    } else {
       offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
       offerAddForm.setFieldValue(`members[${index}].fieldDisabled`, true);
       props.setOfferData(offerAddForm.values.members);
@@ -202,10 +206,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
     const tempArray = serviceListFiles;
     tempArray[index] = files;
     setServiceListFiles(() => [...tempArray]);
-    offerAddForm.setFieldValue(
-      `members[${index}].letterFiles`,
-      files
-    );
+    offerAddForm.setFieldValue(`members[${index}].letterFiles`, files);
   };
 
   const removeFile = (index: number) => {

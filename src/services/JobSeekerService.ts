@@ -78,3 +78,39 @@ export const getAggregateData = async (contestId: string) => {
       console.log(error);
     });
 };
+export const getDuplicationFailedProfiles = async (
+  filterValue: string,
+  page: number,
+  size: number
+) => {
+  return await axios
+    .get(
+      `${
+        process.env.REACT_APP_MAIN_SERVER_URL
+      }hiringhood/v1/profile-log?filterColumn=status&filterValue=${filterValue}${
+        page ? "&page=" + page : "&page=" + 0
+      }${size ? "&size=" + size : ""}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,
+        },
+      }
+    )
+    .catch((error) => {
+      console.log(error);
+    });
+};
+export const getDuplicationFailedProfilesAggregate = async () => {
+  return await axios
+    .get(
+      `${process.env.REACT_APP_MAIN_SERVER_URL}hiringhood/v1/profile-log/aggregate`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,
+        },
+      }
+    )
+    .catch((error) => {
+      console.log(error);
+    });
+};

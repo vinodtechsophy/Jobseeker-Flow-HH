@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC, ReactElement, useEffect } from "react";
 import {
   Box,
   Grid,
@@ -13,7 +13,9 @@ import DownloadIcon from "@mui/icons-material/Download";
 import PreviousNextButtons from "../../components/PreviousNextButtons/PreviousNextButtons";
 import {
   UploadFiles,
+  getJobSeekerProfile,
   createJobSeekerProfile,
+  updateJobSeekerProfile,
 } from "../../services/FormDataService";
 import {
   ERROR_KEY,
@@ -23,6 +25,8 @@ import {
   FORM_SUBMISSION_SUCCESS,
 } from "../../constants";
 import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
+import KeycloakService from "../../services/KeycloakService";
+import { getFileDetails } from "../../services/DocumentService";
 
 const useStyles = makeStyles({
   Grid1: {
@@ -38,8 +42,8 @@ const useStyles = makeStyles({
       //you want this to be the same as the backgroundColor above
       backgroundColor: "#4D6CD9",
     },
-    backgroundColor: "#4D6CD9",
-    color: "white",
+    backgroundColor: "#4D6CD9 !important",
+    color: "white !important",
   },
   manaulUploadDiv: {
     border: "2px solid grey",
@@ -155,14 +159,7 @@ const JobSeekerProfileUpload: FC<any> = (props): ReactElement => {
   const [manualState, setManualState] = React.useState(true);
   const [templateState, setTemplateState] = React.useState(false);
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
-  const [iconID, setIconID] = React.useState("");
-  //   const [file, setFile] = React.useState<any>(null);
-
-  // const onDrop = useCallback((acceptedFiles) => {
-  //   // console.log(acceptedFiles);
-  //   // Do something with the files
-  // }, []);
-  // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const [imageName, setImageName] = React.useState("");
 
   const {
     acceptedFiles: acceptedFilesTemplate,
@@ -216,15 +213,23 @@ const JobSeekerProfileUpload: FC<any> = (props): ReactElement => {
           }
         );
         if (uploadResponse?.data?.success) {
-          setIconID(uploadResponse?.data?.data?.id);
-          const seekerProfile = await createJobSeekerProfile({
-            profileLogId: userDataState.userData.profileLogId,
-            profileData: {
-              resumeDocumentId: uploadResponse?.data?.data?.id,
-            },
-          });
-          if (seekerProfile?.data?.success) {
-            dispatchProfileId(seekerProfile?.data?.data?.profileId);
+          if(imageName) {
+            const updateResumeReponse = await updateJobSeekerProfile({
+                profileId: props.profileDataId || userDataState.userData.profileId,
+                profileData: {
+                  resumeDocumentId: uploadResponse?.data?.data?.id,
+                }
+            })
+          } else {
+            const seekerProfile = await createJobSeekerProfile({
+              profileLogId: userDataState.userData.profileLogId,
+              profileData: {
+                resumeDocumentId: uploadResponse?.data?.data?.id,
+              },
+            });
+            if (seekerProfile?.data?.success) {
+              dispatchProfileId(seekerProfile?.data?.data?.profileId);
+            }
           }
           props.setType(SUCCESS_KEY);
           props.setDataMessage(FORM_SUBMISSION_SUCCESS);
@@ -253,6 +258,21 @@ const JobSeekerProfileUpload: FC<any> = (props): ReactElement => {
       },
     });
   };
+
+  useEffect(() => {
+    callPrefillData();
+  }, []);
+
+  const callPrefillData = async () => {
+    const token = await KeycloakService.fetchTokenDifferently();
+    localStorage.setItem('react-token', token);
+    sessionStorage.setItem('react-token', token);
+    const profileDataFetched = await getJobSeekerProfile(props.profileDataId);
+    if(profileDataFetched?.data?.data?.resumeDocumentId) {
+      let fileResponse = await getFileDetails(profileDataFetched?.data?.data?.resumeDocumentId);
+      if(fileResponse?.data?.data?.fileName) setImageName(fileResponse?.data?.data?.fileName);
+    }
+  }
 
   return (
     <div className="job-seeker-profile-content">
@@ -307,11 +327,15 @@ const JobSeekerProfileUpload: FC<any> = (props): ReactElement => {
               }}
             >
               <Box textAlign="left" className={classes.subText1}>
+              {
+                imageName && acceptedFilesResume.length < 1 ? 
+                <span>{imageName}</span> :
                 <Box>
                   {acceptedFilesResume.map((file: any) => (
                     <Box key={file.path || file.name}>{file.path}</Box>
                   ))}
                 </Box>
+              }
               </Box>
               <Box textAlign="left" className={classes.subText2}>
                 <Checkbox {...label} defaultChecked color="success" />

@@ -34,3 +34,15 @@ export const openFile = async (id: string) => {
       pdfWindow.location.href = fileURL;
     });
 };
+
+export const getFileDetails = async (id: string) => {
+  let token = sessionStorage.getItem("react-token");
+  return axios.get(
+    `${process.env.REACT_APP_MAIN_SERVER_URL}dms/v1/documents/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};

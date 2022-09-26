@@ -77,6 +77,7 @@ const AgGridWithPagination: FC<any> = (props): ReactElement => {
             shape="rounded"
             color="primary"
             onChange={handleChange}
+            page={props.currentPage}
           />
         </ThemeProvider>
       </div>
