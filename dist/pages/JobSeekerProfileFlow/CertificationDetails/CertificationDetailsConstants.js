@@ -18,7 +18,7 @@ export var FormAttributes = {
     credentialId: {
         maxLength: 45,
         placeholder: '20WASEQNDH32J',
-        label: 'Name of the Company',
+        label: 'Credential Id',
         id: 'credentialId',
         stateValue: 'credentialId',
         required: 'Credential ID is required'
@@ -26,7 +26,7 @@ export var FormAttributes = {
     credentialURL: {
         maxLength: 100,
         placeholder: 'https://www.coursera.org/learn/found',
-        label: 'Job Title',
+        label: 'Credential URL',
         id: 'credentialURL',
         stateValue: 'credentialURL',
         required: 'Credential URL is required'

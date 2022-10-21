@@ -48,286 +48,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useEffect, useRef, useState, useMemo, useCallback, } from "react";
 import Checkbox from "@mui/material/Checkbox";
-import { Button, Grid, Typography, Box } from "@mui/material";
+import { Button, Grid, Typography, Box, Tooltip } from "@mui/material";
 import { LISTING_GENERIC_HEADERS } from "./ColumnHeaders";
 import StepCount from "../../components/StepCount";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { LIGHT_GREY } from "../../color";
 import ColumnSelection from "../../components/ColumnSelection/ColumnSelection";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import { PAGE_SIZE_ARRAY } from "../../constants";
-import { contestLinkedJobsekeers, getAggregateData, } from "../../services/JobSeekerService";
-import KeycloakService from "../../services/KeycloakService";
+import { getAggregateData, consentStatusFilterContestLinkedJobsekeers, JobSeekersStagefilterWithContest, JobSeekersInCoolingPeriodWithContest, } from "../../services/JobSeekerService";
 import moment from "moment";
 import { makeStyles } from "@mui/styles";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
 var useStyles = makeStyles(function () { return ({
-    deleteIcon: { color: "#4D6CD9", margin: "10px" },
+    mailIcon: { color: "#4D6CD9", margin: "10px" },
     actions1: { fontSize: "15px !important" },
     bookmarkIcon: { color: "#4D6CD9" },
 }); });
-// const rowData = [
-//   {
-//     jobSeekerName: "Vinod",
-//     experience: 2,
-//     expectedCTC: "7 LPA",
-//     profileUploaded: "30-09-2022",
-//     recruiterUploading: "HiringHood",
-//     phoneNumber: 9493947123,
-//     emailAddress: "test@gmail.com",
-//     currentLocation: "HYD",
-//     currentlyWorking: "Yes",
-//     resumeUploaded: "No",
-//     changeConsentStatus: "passed",
-//     jobSeekerID: "HH-1234",
-//     changeHHShortlisting: "passed",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Harish",
-//     experience: 2,
-//     expectedCTC: "7 LPA",
-//     profileUploaded: "30-09-2022",
-//     recruiterUploading: "ABC Hiring",
-//     phoneNumber: 9493947123,
-//     emailAddress: "test@gmail.com",
-//     currentLocation: "HYD",
-//     currentlyWorking: "Yes",
-//     resumeUploaded: "No",
-//     changeConsentStatus: "passed",
-//     jobSeekerID: "HH-1234",
-//     changeHHShortlisting: "passed",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Joel",
-//     experience: 2,
-//     expectedCTC: "7 LPA",
-//     profileUploaded: "30-09-2022",
-//     recruiterUploading: "",
-//     phoneNumber: 9493947123,
-//     emailAddress: "test@gmail.com",
-//     currentLocation: "HYD",
-//     currentlyWorking: "Yes",
-//     resumeUploaded: "No",
-//     changeConsentStatus: "passed",
-//     jobSeekerID: "HH-1234",
-//     changeHHShortlisting: "failed",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Sam",
-//     experience: 0,
-//     expectedCTC: "",
-//     profileUploaded: "20-09-2022",
-//     recruiterUploading: "",
-//     phoneNumber: 0,
-//     emailAddress: "",
-//     currentLocation: "",
-//     currentlyWorking: "",
-//     resumeUploaded: "",
-//     changeConsentStatus: "pending",
-//     jobSeekerID: "",
-//     changeHHShortlisting: "",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Jagadish",
-//     experience: 0,
-//     expectedCTC: "",
-//     profileUploaded: "20-09-2022",
-//     recruiterUploading: "",
-//     phoneNumber: 0,
-//     emailAddress: "",
-//     currentLocation: "",
-//     currentlyWorking: "",
-//     resumeUploaded: "",
-//     changeConsentStatus: "failed",
-//     jobSeekerID: "",
-//     changeHHShortlisting: "",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Vinod",
-//     experience: 2,
-//     expectedCTC: "7 LPA",
-//     profileUploaded: "30-09-2022",
-//     recruiterUploading: "HiringHood",
-//     phoneNumber: 9493947123,
-//     emailAddress: "test@gmail.com",
-//     currentLocation: "HYD",
-//     currentlyWorking: "Yes",
-//     resumeUploaded: "No",
-//     changeConsentStatus: "passed",
-//     jobSeekerID: "HH-1234",
-//     changeHHShortlisting: "passed",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Harish",
-//     experience: 2,
-//     expectedCTC: "7 LPA",
-//     profileUploaded: "30-09-2022",
-//     recruiterUploading: "ABC Hiring",
-//     phoneNumber: 9493947123,
-//     emailAddress: "test@gmail.com",
-//     currentLocation: "HYD",
-//     currentlyWorking: "Yes",
-//     resumeUploaded: "No",
-//     changeConsentStatus: "passed",
-//     jobSeekerID: "HH-1234",
-//     changeHHShortlisting: "passed",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Joel",
-//     experience: 2,
-//     expectedCTC: "7 LPA",
-//     profileUploaded: "30-09-2022",
-//     recruiterUploading: "",
-//     phoneNumber: 9493947123,
-//     emailAddress: "test@gmail.com",
-//     currentLocation: "HYD",
-//     currentlyWorking: "Yes",
-//     resumeUploaded: "No",
-//     changeConsentStatus: "passed",
-//     jobSeekerID: "HH-1234",
-//     changeHHShortlisting: "failed",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Sam",
-//     experience: 0,
-//     expectedCTC: "",
-//     profileUploaded: "20-09-2022",
-//     recruiterUploading: "",
-//     phoneNumber: 0,
-//     emailAddress: "",
-//     currentLocation: "",
-//     currentlyWorking: "",
-//     resumeUploaded: "",
-//     changeConsentStatus: "pending",
-//     jobSeekerID: "",
-//     changeHHShortlisting: "",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Jagadish",
-//     experience: 0,
-//     expectedCTC: "",
-//     profileUploaded: "20-09-2022",
-//     recruiterUploading: "",
-//     phoneNumber: 0,
-//     emailAddress: "",
-//     currentLocation: "",
-//     currentlyWorking: "",
-//     resumeUploaded: "",
-//     changeConsentStatus: "failed",
-//     jobSeekerID: "",
-//     changeHHShortlisting: "",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Vinod",
-//     experience: 2,
-//     expectedCTC: "7 LPA",
-//     profileUploaded: "30-09-2022",
-//     recruiterUploading: "HiringHood",
-//     phoneNumber: 9493947123,
-//     emailAddress: "test@gmail.com",
-//     currentLocation: "HYD",
-//     currentlyWorking: "Yes",
-//     resumeUploaded: "No",
-//     changeConsentStatus: "passed",
-//     jobSeekerID: "HH-1234",
-//     changeHHShortlisting: "passed",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Harish",
-//     experience: 2,
-//     expectedCTC: "7 LPA",
-//     profileUploaded: "30-09-2022",
-//     recruiterUploading: "ABC Hiring",
-//     phoneNumber: 9493947123,
-//     emailAddress: "test@gmail.com",
-//     currentLocation: "HYD",
-//     currentlyWorking: "Yes",
-//     resumeUploaded: "No",
-//     changeConsentStatus: "passed",
-//     jobSeekerID: "HH-1234",
-//     changeHHShortlisting: "passed",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Joel",
-//     experience: 2,
-//     expectedCTC: "7 LPA",
-//     profileUploaded: "30-09-2022",
-//     recruiterUploading: "",
-//     phoneNumber: 9493947123,
-//     emailAddress: "test@gmail.com",
-//     currentLocation: "HYD",
-//     currentlyWorking: "Yes",
-//     resumeUploaded: "No",
-//     changeConsentStatus: "passed",
-//     jobSeekerID: "HH-1234",
-//     changeHHShortlisting: "failed",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Sam",
-//     experience: 0,
-//     expectedCTC: "",
-//     profileUploaded: "20-09-2022",
-//     recruiterUploading: "",
-//     phoneNumber: 0,
-//     emailAddress: "",
-//     currentLocation: "",
-//     currentlyWorking: "",
-//     resumeUploaded: "",
-//     changeConsentStatus: "pending",
-//     jobSeekerID: "",
-//     changeHHShortlisting: "",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-//   {
-//     jobSeekerName: "Jagadish",
-//     experience: 0,
-//     expectedCTC: "",
-//     profileUploaded: "20-09-2022",
-//     recruiterUploading: "",
-//     phoneNumber: 0,
-//     emailAddress: "",
-//     currentLocation: "",
-//     currentlyWorking: "",
-//     resumeUploaded: "",
-//     changeConsentStatus: "failed",
-//     jobSeekerID: "",
-//     changeHHShortlisting: "",
-//     changeEmployerDuplication: "",
-//     changeEmployerShortlisting: "",
-//   },
-// ];
 var Manage = function (props) {
     var classes = useStyles();
-    var contestId = props.contestId;
+    var contestId = props.contestId, id = props.id;
     var gridRef = useRef();
     var _a = useState(LISTING_GENERIC_HEADERS), columnDefs = _a[0], setColumnDefs = _a[1];
     var _b = useState(10), pageSize = _b[0], setPageSize = _b[1];
@@ -335,42 +77,37 @@ var Manage = function (props) {
     var _d = useState([]), selectedRows = _d[0], setSelectedRows = _d[1];
     var _e = useState(0), totalPages = _e[0], setTotalPages = _e[1];
     var _f = React.useState(), rowData = _f[0], setRowData = _f[1];
-    var _g = React.useState(1), selectedButton = _g[0], setSelectedButton = _g[1];
-    var _h = React.useState(false), columnsListOpen = _h[0], setColumnsListOpen = _h[1];
-    var _j = React.useState(true), floatingFilter = _j[0], setFloatingFilter = _j[1];
+    var _g = React.useState(false), columnsListOpen = _g[0], setColumnsListOpen = _g[1];
+    var _h = React.useState(true), floatingFilter = _h[0], setFloatingFilter = _h[1];
     var label = { inputProps: { "aria-label": "Checkbox demo" } };
-    var _k = useState({
+    var _j = useState({
         vetted: 0,
         phaseL1: 0,
         phaseL2: 0,
         phaseHR: 0,
         offerRolled: 0,
         coolingPeriod: 0,
-    }), agCount = _k[0], setAgCount = _k[1];
+    }), agCount = _j[0], setAgCount = _j[1];
+    var _k = useState([]), selectedEmails = _k[0], setSelectedEmails = _k[1];
+    var _l = useState(false), isMailCheckEnable = _l[0], setIsMailCheckEnable = _l[1];
+    var _m = useState("JOB_SEEKER_CONSENT_PASS"), selectedButtonValue = _m[0], setSelectedButtonValue = _m[1];
+    var _o = React.useState(1), selectedButtonId = _o[0], setSelectedButtonId = _o[1];
+    var setSelectedButton = function (id, filterValue) {
+        setSelectedButtonId(id);
+        setSelectedButtonValue(filterValue);
+        setPageNo(0);
+        setPageSize(10);
+        // getTableRowData(0, 10, id, filterValue);
+    };
     useEffect(function () {
-        fetchToken();
-    }, [contestId]);
-    var fetchToken = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, KeycloakService.fetchTokenOtherUser()];
-                case 1:
-                    token = _a.sent();
-                    sessionStorage.setItem("react-token", token);
-                    return [2 /*return*/];
-            }
-        });
-    }); };
-    useEffect(function () {
-        getTableRowData(pageNo, pageSize, contestId);
-        handleAggregateData(contestId);
-    }, []);
-    var handleAggregateData = function (contestId) { return __awaiter(void 0, void 0, void 0, function () {
+        handleAggregateData(id);
+        getTableRowData(pageNo, pageSize, id, selectedButtonValue);
+    }, [pageNo, pageSize, id, selectedButtonValue]);
+    var handleAggregateData = function (id) { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, getAggregateData(contestId)];
+                case 0: return [4 /*yield*/, getAggregateData(id)];
                 case 1:
                     response = _a.sent();
                     if (response.data.success) {
@@ -397,18 +134,27 @@ var Manage = function (props) {
             }
         });
     }); };
-    var getTableRowData = function (pageNo, pageSize, contestId) { return __awaiter(void 0, void 0, void 0, function () {
+    var handleconsentStatusFilterContestLinkedJobsekeers = function (pageNo, pageSize, id, selectedButtonValue) { return __awaiter(void 0, void 0, void 0, function () {
         var response, mapData, result;
         var _a, _b, _c, _d, _e, _f;
         return __generator(this, function (_g) {
             switch (_g.label) {
-                case 0: return [4 /*yield*/, contestLinkedJobsekeers(contestId, pageNo, pageSize)];
+                case 0: return [4 /*yield*/, consentStatusFilterContestLinkedJobsekeers(id, selectedButtonValue, pageNo, pageSize)];
                 case 1:
                     response = _g.sent();
                     if (response.data.success) {
                         mapData = response.data.data.content;
                         result = mapData.map(function (item, index) {
                             item.appliedDate = moment(item.appliedDate).format("DD-MM-YYYY");
+                            if (item.nextInterviewDate) {
+                                item.nextInterviewDate = moment(item.nextInterviewDate).format("DD-MM-YYYY");
+                            }
+                            if (item.jobSeekerJoinedDate) {
+                                item.jobSeekerJoinedDate = moment(item.jobSeekerJoinedDate).format("DD-MM-YYYY");
+                            }
+                            if (item.consentDate) {
+                                item.consentDate = moment(item.consentDate).format("DD-MM-YYYY");
+                            }
                             var Data = __assign(__assign(__assign({}, item), item.matchedProfileLogsList[0]), item.matchedProfilesList[0]);
                             return Data;
                         });
@@ -423,6 +169,94 @@ var Manage = function (props) {
                     }
                     return [2 /*return*/];
             }
+        });
+    }); };
+    var handleJobSeekersStagefilterWithContest = function (pageNo, pageSize, id, selectedButtonValue) { return __awaiter(void 0, void 0, void 0, function () {
+        var response, mapData, result;
+        var _a, _b, _c, _d, _e, _f;
+        return __generator(this, function (_g) {
+            switch (_g.label) {
+                case 0: return [4 /*yield*/, JobSeekersStagefilterWithContest(id, selectedButtonValue, pageNo, pageSize)];
+                case 1:
+                    response = _g.sent();
+                    if (response.data.success) {
+                        mapData = response.data.data.content;
+                        result = mapData.map(function (item, index) {
+                            item.appliedDate = moment(item.appliedDate).format("DD-MM-YYYY");
+                            if (item.nextInterviewDate) {
+                                item.nextInterviewDate = moment(item.nextInterviewDate).format("DD-MM-YYYY");
+                            }
+                            if (item.jobSeekerJoinedDate) {
+                                item.jobSeekerJoinedDate = moment(item.jobSeekerJoinedDate).format("DD-MM-YYYY");
+                            }
+                            if (item.consentDate) {
+                                item.consentDate = moment(item.consentDate).format("DD-MM-YYYY");
+                            }
+                            var Data = __assign(__assign(__assign({}, item), item.matchedProfileLogsList[0]), item.matchedProfilesList[0]);
+                            return Data;
+                        });
+                        setRowData(result);
+                        setTotalPages((_b = (_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.totalPages);
+                        setPageNo((_d = (_c = response === null || response === void 0 ? void 0 : response.data) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.pageNo);
+                        setPageSize((_f = (_e = response === null || response === void 0 ? void 0 : response.data) === null || _e === void 0 ? void 0 : _e.data) === null || _f === void 0 ? void 0 : _f.pageSize);
+                    }
+                    else {
+                        console.log("false");
+                        setRowData([]);
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    var handleJobSeekersInCoolingPeriodWithContest = function (pageNo, pageSize, id, selectedButtonValue) { return __awaiter(void 0, void 0, void 0, function () {
+        var response, mapData, result;
+        var _a, _b, _c, _d, _e, _f;
+        return __generator(this, function (_g) {
+            switch (_g.label) {
+                case 0: return [4 /*yield*/, JobSeekersInCoolingPeriodWithContest(id, selectedButtonValue, pageNo, pageSize)];
+                case 1:
+                    response = _g.sent();
+                    if (response.data.success) {
+                        mapData = response.data.data.content;
+                        result = mapData.map(function (item, index) {
+                            item.appliedDate = moment(item.appliedDate).format("DD-MM-YYYY");
+                            if (item.nextInterviewDate) {
+                                item.nextInterviewDate = moment(item.nextInterviewDate).format("DD-MM-YYYY");
+                            }
+                            if (item.jobSeekerJoinedDate) {
+                                item.jobSeekerJoinedDate = moment(item.jobSeekerJoinedDate).format("DD-MM-YYYY");
+                            }
+                            if (item.consentDate) {
+                                item.consentDate = moment(item.consentDate).format("DD-MM-YYYY");
+                            }
+                            var Data = __assign(__assign(__assign({}, item), item.matchedProfileLogsList[0]), item.matchedProfilesList[0]);
+                            return Data;
+                        });
+                        setRowData(result);
+                        setTotalPages((_b = (_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.totalPages);
+                        setPageNo((_d = (_c = response === null || response === void 0 ? void 0 : response.data) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.pageNo);
+                        setPageSize((_f = (_e = response === null || response === void 0 ? void 0 : response.data) === null || _e === void 0 ? void 0 : _e.data) === null || _f === void 0 ? void 0 : _f.pageSize);
+                    }
+                    else {
+                        console.log("false");
+                        setRowData([]);
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    var getTableRowData = function (pageNo, pageSize, id, selectedButtonValue) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            if (selectedButtonValue === "JOB_SEEKER_CONSENT_PASS") {
+                handleconsentStatusFilterContestLinkedJobsekeers(pageNo, pageSize, id, selectedButtonValue);
+            }
+            else if (selectedButtonValue === "notNull") {
+                handleJobSeekersInCoolingPeriodWithContest(pageNo, pageSize, id, selectedButtonValue);
+            }
+            else {
+                handleJobSeekersStagefilterWithContest(pageNo, pageSize, id, selectedButtonValue);
+            }
+            return [2 /*return*/];
         });
     }); };
     var autoGroupColumnDef = useMemo(function () {
@@ -449,14 +283,14 @@ var Manage = function (props) {
         return {
             flex: 1,
             minWidth: 170,
-            maxWidth: 250,
+            maxWidth: 480,
             sortable: true,
             floatingFilter: true,
             enableRowGroup: true,
             enablePivot: true,
             enableValue: true,
             resizable: true,
-            cellStyle: { "border-right-color": "#DFE5FF" },
+            cellStyle: { borderRightColor: "#DFE5FF" },
         };
     }, []);
     var setColumnsDisplay = function (columnList) {
@@ -475,10 +309,6 @@ var Manage = function (props) {
         });
         onUpdateColumns(newColumnDefs);
     };
-    useEffect(function () {
-        // call api with new pagenumber
-        getTableRowData(pageNo, pageSize, contestId);
-    }, [pageNo, pageSize, contestId]);
     var onUpdateColumns = useCallback(function (data) {
         if (gridRef === null || gridRef === void 0 ? void 0 : gridRef.current)
             gridRef.current.api.setColumnDefs(data);
@@ -493,38 +323,52 @@ var Manage = function (props) {
         setPageNo(pageNumber - 1);
     };
     var pageSizeChange = function (pageSizeChanged) {
+        setPageNo(0);
         setPageSize(pageSizeChanged);
     };
+    var filterEmailIds = function () {
+        var emails = selectedRows.map(function (item) { return item.emailId; });
+        setSelectedEmails(emails);
+    };
+    useEffect(function () {
+        filterEmailIds();
+    }, [selectedRows]);
     return (_jsxs(Grid, __assign({ container: true, spacing: 3 }, { children: [_jsxs(Grid, __assign({ item: true, xs: 12, p: 2 }, { children: [_jsx(Typography, __assign({ fontSize: 30 }, { children: "Profiles" })), _jsx(StepCount, { StepCountList: [
                             {
                                 label: "Vetted",
                                 tooltip: "Vetted",
                                 id: 1,
+                                value: "JOB_SEEKER_CONSENT_PASS",
                             },
                             {
                                 label: "Phase-L1",
                                 tooltip: "Phase-L1",
                                 id: 2,
+                                value: "phaseL1",
                             },
                             {
                                 label: "Phase-L2",
                                 tooltip: "Phase-L2",
                                 id: 3,
+                                value: "phaseL2",
                             },
                             {
                                 label: "Phase-HR",
                                 tooltip: "Phase-HR",
                                 id: 4,
+                                value: "phaseHr",
                             },
                             {
                                 label: "Offer Rolled",
                                 tooltip: "Offer Rolled",
                                 id: 5,
+                                value: "offerRolled",
                             },
                             {
                                 label: "Cooling Period",
                                 tooltip: "Cooling Period",
                                 id: 6,
+                                value: "notNull",
                             },
                         ], countsList: [
                             { _id: 1, count: agCount.vetted },
@@ -533,7 +377,10 @@ var Manage = function (props) {
                             { _id: 4, count: agCount.phaseHR },
                             { _id: 5, count: agCount.offerRolled },
                             { _id: 6, count: agCount.coolingPeriod },
-                        ], setSelectedButton: setSelectedButton, selectedButton: selectedButton })] })), _jsx(Grid, __assign({ item: true, xs: 12 }, { children: _jsxs("div", __assign({ className: "forms-button-container" }, { children: [_jsxs("div", { children: [_jsxs(Button, __assign({ variant: "outlined", className: "save-draft-button", onClick: function () { return setColumnsListOpen(true); }, disabled: columnsListOpen }, { children: ["Columns ", _jsx(GridViewOutlinedIcon, { className: "generic-icon" })] })), _jsxs(Button, __assign({ variant: "outlined", className: "save-draft-button", onClick: function () { return toogleFloatingFilter(!floatingFilter); }, sx: { background: floatingFilter ? LIGHT_GREY : "inherit" } }, { children: ["Filters ", _jsx(FilterAltOutlinedIcon, { className: "generic-icon" })] }))] }), _jsx("div", { children: _jsxs(Box, __assign({ display: "inline-block", className: classes.actions1 }, { children: [_jsx(Checkbox, {}), " ", selectedRows.length, " Selected", _jsx(DeleteOutlineIcon, { className: classes.deleteIcon }), _jsx(BookmarkBorderIcon, { className: classes.bookmarkIcon })] })) })] })) })), _jsx(ColumnSelection, { AllColumns: columnDefs.map(function (cl) {
+                        ], setSelectedButton: setSelectedButton, selectedButton: selectedButtonId })] })), _jsx(Grid, __assign({ item: true, xs: 12 }, { children: _jsxs("div", __assign({ className: "forms-button-container" }, { children: [_jsxs("div", { children: [_jsxs(Button, __assign({ variant: "outlined", className: "save-draft-button", onClick: function () { return setColumnsListOpen(true); }, disabled: columnsListOpen }, { children: ["Columns ", _jsx(GridViewOutlinedIcon, { className: "generic-icon" })] })), _jsxs(Button, __assign({ variant: "outlined", className: "save-draft-button", onClick: function () { return toogleFloatingFilter(!floatingFilter); }, sx: { background: floatingFilter ? LIGHT_GREY : "inherit" } }, { children: ["Filters ", _jsx(FilterAltOutlinedIcon, { className: "generic-icon" })] }))] }), _jsx("div", { children: _jsxs(Box, __assign({ display: "inline-block", className: classes.actions1 }, { children: [_jsx(Checkbox, { disabled: selectedRows.length > 0 ? false : true, checked: isMailCheckEnable, onChange: function () { return setIsMailCheckEnable(!isMailCheckEnable); } }), " ", selectedRows.length, " Selected", _jsx(Tooltip, __assign({ title: "Mail All Jobseekers", placement: "top", arrow: true }, { children: _jsx(MailOutlineIcon, { className: classes.mailIcon, onClick: function () {
+                                                return isMailCheckEnable &&
+                                                    window.open("https://mail.google.com/mail/?view=cm&fs=1&to=".concat(selectedEmails.toString()));
+                                            } }) })), _jsx(Tooltip, __assign({ title: "Bookmark", placement: "top", arrow: true }, { children: _jsx(BookmarkBorderIcon, { className: classes.bookmarkIcon }) }))] })) })] })) })), _jsx(ColumnSelection, { AllColumns: columnDefs.map(function (cl) {
                     return Object.assign({ headerName: cl.headerName, hide: !cl.hide });
                 }), setColumnsDisplay: setColumnsDisplay, onClose: setColumnsListOpen, open: columnsListOpen }), _jsx(Grid, __assign({ item: true, xs: 12 }, { children: _jsx(AgGridWithPagination, { gridRef: gridRef, rowData: rowData, columnDefs: columnDefs, defaultColDef: defaultColDef, autoGroupColumnDef: autoGroupColumnDef, suppressRowClickSelection: true, groupSelectsChildren: true, rowSelection: "multiple", rowGroupPanelShow: "always", pivotPanelShow: "always", enableRangeSelection: true, pagination: false, pageSize: pageSize, onSelectionChanged: onSelectionChanged, pageSizeArray: PAGE_SIZE_ARRAY, totalPages: totalPages, pageChange: pageChange, pageSizeChange: pageSizeChange }) }))] })));
 };

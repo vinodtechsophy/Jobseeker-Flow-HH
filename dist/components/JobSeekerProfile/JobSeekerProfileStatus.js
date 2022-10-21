@@ -53,7 +53,7 @@ import Card from "../ContestDetailsCard/contestCard";
 import "../ContestDetailsCard/contestDetailsStyles.css";
 import { getImageForTag, } from "../ContestDetailsCard/getBadges";
 import { patchContestDetails, getContestDetails, } from "../../services/ContestService";
-import { CONTEST_DETAILS, JOB_SEEKER_STATUS } from "../../constants";
+import { CONTEST_DETAILS } from "../../constants";
 import JobSeekerProfileStatusDetails from "./JobSeekerProfileStatusDetails";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import companyImage from "../../assets/company.svg";
@@ -69,7 +69,7 @@ var skillsImage = "assets/skills.svg";
 var degreeImage = "assets/degree.svg";
 var tagImage = "assets/tag.svg";
 var renderDetails = function (image, text, tooltip) {
-    return (text && (_jsxs(_Fragment, { children: [_jsx("div", __assign({ style: { padding: "5%", marginTop: ".5vw" } }, { children: _jsx("img", { src: image, alt: "Icon" }) })), _jsx("div", __assign({ style: { color: "#626880" } }, { children: _jsx("p", { children: text }) }))] })));
+    return (text && (_jsxs(_Fragment, { children: [_jsx("div", __assign({ style: { padding: "5%", marginTop: "0" } }, { children: _jsx("img", { src: image, alt: "Icon" }) })), _jsx("div", __assign({ style: { color: "#626880", marginTop: ".4vw" } }, { children: _jsx("p", { children: text }) }))] })));
 };
 var JobSeekerProfileStatus = function (props) {
     var _a = React.useState(""), subStatus = _a[0], setSubStatus = _a[1];
@@ -105,7 +105,6 @@ var JobSeekerProfileStatus = function (props) {
                     return [4 /*yield*/, patchContestDetails(data)];
                 case 1:
                     response = _a.sent();
-                    console.log("Settingspostdata", response);
                     return [2 /*return*/];
             }
         });
@@ -125,12 +124,29 @@ var JobSeekerProfileStatus = function (props) {
         }); };
         apiData(contestDetails.id);
     }, [contestDetails.id]);
-    return (_jsx(Card, { children: _jsxs("div", __assign({ style: { display: "block", padding: "1vw 2vw 1vw 1vw" } }, { children: [_jsxs("div", __assign({ className: "contest-detail-card-header-container" }, { children: [_jsx("div", { children: getImageForTag(contestDetails.tag) && (_jsx("img", { src: getImageForTag(contestDetails === null || contestDetails === void 0 ? void 0 : contestDetails.tag), alt: "tag", className: "contest-detail-tag-image" })) }), _jsx(IconButton, __assign({ color: "primary", "aria-label": "bookmark" }, { children: _jsx(BookmarkIcon, {}) }))] })), _jsxs("div", __assign({ className: "contest-detail-card-body-container" }, { children: [_jsx("div", __assign({ style: { borderRight: "1px solid #DFE5FF" } }, { children: _jsx(ContestDetail, { contestDetails: contestDetails }) })), _jsxs("div", __assign({ className: "contest-details-container" }, { children: [_jsx("div", __assign({ className: "contest-status-details-container" }, { children: JOB_SEEKER_STATUS.map(function (status) { return (_jsx("div", __assign({ style: { height: "100%", width: "100%" } }, { children: _jsx(JobSeekerProfileStatusDetails, { iconFileName: status.iconFileName, title: status.title, data: status.data }) }))); }) })), _jsxs("div", __assign({ className: "job-details-container" }, { children: [_jsxs("div", __assign({ className: "job-details-container-container" }, { children: [_jsx("div", __assign({ className: "job-details-container-container-container" }, { children: renderDetails(companyImage, contestDetails.company, "company") })), _jsxs("div", __assign({ style: {
+    var JOB_SEEKER_STATUS = [
+        {
+            iconFileName: "Group 3474",
+            title: "Bounty",
+            data: contestDetails.bounty,
+        },
+        { iconFileName: "Group 99", title: "Matching Profiles", data: " 0" },
+        { iconFileName: "Group 108", title: "Total Quota", data: " 0" },
+        { iconFileName: "Group 3369", title: "Days Left", data: " 0" },
+    ];
+    return (_jsx(Card, { children: _jsxs("div", __assign({ style: { display: "block", padding: "1vw 2vw 1vw 1vw" } }, { children: [_jsxs("div", __assign({ className: "contest-detail-card-header-container" }, { children: [_jsx("div", { children: getImageForTag(contestDetails.tag) && (_jsx("img", { src: getImageForTag(contestDetails === null || contestDetails === void 0 ? void 0 : contestDetails.tag), alt: "tag", className: "contest-detail-tag-image-jobSeekerFlow" })) }), _jsx(IconButton, __assign({ color: "primary", "aria-label": "bookmark" }, { children: _jsx(BookmarkIcon, {}) }))] })), _jsxs("div", __assign({ className: "contest-detail-card-body-container" }, { children: [_jsx("div", __assign({ style: { borderRight: "1px solid #DFE5FF" } }, { children: _jsx(ContestDetail, { contestDetails: props.contestDetails }) })), _jsxs("div", __assign({ className: "contest-details-container" }, { children: [_jsx("div", __assign({ className: "contest-status-details-container" }, { children: JOB_SEEKER_STATUS.map(function (status) { return (_jsx("div", __assign({ style: { height: "100%", width: "100%" } }, { children: _jsx(JobSeekerProfileStatusDetails, { iconFileName: status.iconFileName, title: status.title, data: status.data }) }))); }) })), _jsxs("div", __assign({ className: "job-details-container" }, { children: [_jsxs("div", __assign({ className: "job-details-container-container" }, { children: [_jsx("div", __assign({ className: "job-details-container-container-container" }, { children: renderDetails(companyImage, contestDetails.company, "company") })), _jsxs("div", __assign({ style: {
                                                         justifyContent: "center",
                                                         textAlign: "center",
-                                                    } }, { children: [_jsx("img", { src: ratingStar, alt: "Icon" }), _jsx("p", __assign({ style: { display: "inline", color: "#626880" } }, { children: "\u00a0 4.5" }))] }))] })), _jsxs("div", __assign({ className: "job-details-container-container" }, { children: [_jsx("div", __assign({ className: "job-details-container-container-container" }, { children: renderDetails(experienceImage, contestDetails.experience, "Experience") })), _jsx("div", __assign({ className: "job-details-container-container-container" }, { children: renderDetails(positionsImage, "25", "positions") }))] })), _jsxs("div", __assign({ className: "job-details-container-container" }, { children: [_jsx("div", __assign({ className: "job-details-container-container-container" }, { children: renderDetails(ctcImage, "7 to 8", "ctc") })), _jsx("div", __assign({ className: "job-details-container-container-container" }, { children: renderDetails(locationImage, contestDetails.locations, "location") }))] })), _jsx("div", __assign({ className: "job-details-container-container" }, { children: _jsx("div", __assign({ style: { width: "85%", margin: "2vw 1vw 0vw 1vw" } }, { children: _jsx(Button, __assign({ sx: {
-                                                        borderRadius: "1vw",
-                                                        fontSize: "1vw",
-                                                    }, variant: "contained" }, { children: "View All Uploaded Resumes" })) })) }))] }))] }))] }))] })) }));
+                                                    } }, { children: [_jsx("img", { src: ratingStar, alt: "Icon" }), _jsx("p", __assign({ style: { display: "inline", color: "#626880" } }, { children: "\u00a0 __" }))] }))] })), _jsxs("div", __assign({ className: "job-details-container-container" }, { children: [_jsx("div", __assign({ className: "job-details-container-container-container" }, { children: renderDetails(experienceImage, contestDetails.experience, "Experience") })), _jsx("div", __assign({ className: "job-details-container-container-container" }, { children: renderDetails(positionsImage, contestDetails.numberOfPositions, "positions") }))] })), _jsxs("div", __assign({ className: "job-details-container-container" }, { children: [_jsx("div", __assign({ className: "job-details-container-container-container" }, { children: renderDetails(ctcImage, contestDetails.ctc, "ctc") })), _jsx("div", __assign({ className: "job-details-container-container-container" }, { children: renderDetails(locationImage, contestDetails.locations[0], "location") }))] })), _jsxs("div", __assign({ className: "job-details-container-container" }, { children: [_jsx("div", __assign({ style: { margin: ".5vw" } }, { children: _jsx(Button, __assign({ sx: {
+                                                            borderRadius: "1vw",
+                                                            fontSize: ".8vw",
+                                                            height: "3vw",
+                                                            width: "100%",
+                                                        }, variant: "contained" }, { children: "View All Uploaded Profiles" })) })), _jsx("div", __assign({ style: { width: "90%", margin: ".5vw" } }, { children: _jsx(Button, __assign({ sx: {
+                                                            borderRadius: "1vw",
+                                                            fontSize: ".8vw",
+                                                            height: "3vw",
+                                                            width: "100%",
+                                                        }, variant: "contained" }, { children: "Add More Profiles" })) }))] }))] }))] }))] }))] })) }));
 };
 export default JobSeekerProfileStatus;

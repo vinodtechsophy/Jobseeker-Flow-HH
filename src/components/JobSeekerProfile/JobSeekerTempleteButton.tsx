@@ -21,38 +21,38 @@ const JobSeekerTempleteButton: FC<any> = (props): ReactElement => {
             margin: "2vw",
             width: "9vw",
             height: "9vw",
-            position: "static",
-            display: "inline-grid",
+            display: "inline-flex",
+            flexDirection: "column",
             borderWidth: "2px",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: "1vw",
           }}
         >
           <div
             style={{
               display: "block",
-              height: "49%",
+              height: "45%",
+              padding: "10%",
+              width: "100%",
             }}
           >
-            <img
-              src={`assets/images/${props.fileName}`}
-              width={"40%"}
-              height={"120%"}
-            />
+            <props.fileName sx={{ fontSize: "2.5rem" }} />
           </div>
-          {/* <hr
+          <hr
             style={{
               display: "block",
               width: "1vw",
-              color: "black",
               margin: "auto 0px",
               padding: "0",
               border: "1px solid #4D6CD9",
               alignItems: "center",
             }}
-          /> */}
+          />
           <div
             style={{
               display: "block",
-              height: "49%",
+              height: "45%",
             }}
           >
             <Typography

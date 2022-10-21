@@ -7,11 +7,12 @@ import {
 } from "../ContestDetailsCard/getBadges";
 
 interface ContestDetails {
+  positions: string;
   id: string;
   contestCreatedDuration?: string;
   employmentType: string;
   jobTitle: string;
-  cashReward: string;
+  bounty?: any;
   company?: string;
   experience?: string;
   badge?: string;
@@ -33,9 +34,9 @@ const ContestDetail: React.FC<Props> = (props) => {
               <img
                 src={getImageForBadge(contestDetails?.badge)}
                 alt="Badge"
-                className="contest-detail-badge"
-                width="85w"
-                height="85vw"
+                className="contest-detail-badge-jobSeekerFlow"
+                width="90vw"
+                height="90vw"
               />
             )}
           </div>
@@ -50,19 +51,19 @@ const ContestDetail: React.FC<Props> = (props) => {
           </div>
           <div></div>
         </div>
-        <div style={{ width: "18vw", paddingLeft: ".5vw" }}>
+        <div style={{ width: "18vw" }}>
           <p className="contest-detail-job-type">
             {contestDetails.employmentType}
           </p>
+        </div>
+        <div style={{ width: "18vw" }}>
           <div
             style={{
               minWidth: "12rem",
-              // marginTop: "0.75rem",
             }}
           >
             <p className="contest-detail-job-title">
-              {/* {contestDetails.jobTitle} */}
-              Ruby On Rails Devloper
+              {props.contestDetails.positions || contestDetails.jobTitle}
             </p>
           </div>
         </div>

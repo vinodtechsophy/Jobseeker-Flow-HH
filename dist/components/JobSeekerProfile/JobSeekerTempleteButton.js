@@ -25,15 +25,27 @@ var JobSeekerTempleteButton = function (props) {
                     margin: "2vw",
                     width: "9vw",
                     height: "9vw",
-                    position: "static",
-                    display: "inline-grid",
+                    display: "inline-flex",
+                    flexDirection: "column",
                     borderWidth: "2px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "1vw",
                 } }, { children: [_jsx("div", __assign({ style: {
                             display: "block",
-                            height: "49%",
-                        } }, { children: _jsx("img", { src: "assets/images/".concat(props.fileName), width: "40%", height: "120%" }) })), _jsx("div", __assign({ style: {
+                            height: "45%",
+                            padding: "10%",
+                            width: "100%",
+                        } }, { children: _jsx(props.fileName, { sx: { fontSize: "2.5rem" } }) })), _jsx("hr", { style: {
                             display: "block",
-                            height: "49%",
+                            width: "1vw",
+                            margin: "auto 0px",
+                            padding: "0",
+                            border: "1px solid #4D6CD9",
+                            alignItems: "center",
+                        } }), _jsx("div", __assign({ style: {
+                            display: "block",
+                            height: "45%",
                         } }, { children: _jsx(Typography, __assign({ variant: "caption", display: "block", gutterBottom: true, fontSize: ".8vw" }, { children: props.title })) }))] })) })) }));
 };
 export default JobSeekerTempleteButton;

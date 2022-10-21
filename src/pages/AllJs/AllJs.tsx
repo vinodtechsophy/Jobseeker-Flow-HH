@@ -1,5 +1,4 @@
 import React, {
-  FC,
   useEffect,
   useRef,
   useState,
@@ -8,7 +7,6 @@ import React, {
 } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import { Button, Grid, Typography, Box } from "@mui/material";
-import GridItem from "../GridItem/GridItem";
 import { AgGridReact } from "ag-grid-react";
 import { ColDef } from "ag-grid-community";
 import StepCount from "../../components/StepCount";
@@ -16,12 +14,12 @@ import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { LIGHT_GREY } from "../../color";
 import ColumnSelection from "../../components/ColumnSelection/ColumnSelection";
-import BookmarkIcon from "../../assets/bookmark.svg";
-import { relations, LISTING_GENERIC_HEADERS } from "./ColumnHeader";
+import BookmarkIcon from "../../../src/assets/bookmark.svg";
+import { LISTING_GENERIC_HEADERS } from "./ColumnHeader";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import { PAGE_SIZE_ARRAY } from "../../constants";
 import { 
-  contestLinkedJobsekeers,
+  statusFilterContestLinkedJobsekeers,
   getAggregateData,
 } from "../../services/JobSeekerService";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -78,7 +76,7 @@ const AllJs = (props) => {
       enablePivot: true,
       enableValue: true,
       resizable: true,
-      cellStyle: { "border-right-color": "#DFE5FF" },
+      cellStyle: { "borderRightColor": "#DFE5FF" },
     };
   }, []);
 
@@ -122,8 +120,9 @@ const AllJs = (props) => {
   };
 
   const getTableRowData = async (pageNo, pageSize, contestId) => {
-    const response: any = await contestLinkedJobsekeers(
+    const response: any = await statusFilterContestLinkedJobsekeers(
       contestId,
+      "",
       pageNo,
       pageSize
     );
@@ -162,21 +161,6 @@ const AllJs = (props) => {
       const result1 = response.data.data.filter(
         (data) => data.status === "JOB_SEEKER_DUPLICATE"
       );
-      // setAgCount({
-      //   submitted: result[0].count,
-      //   consent: 0,
-      //   hhShortlisting: 0,
-      //   employerDuplication: result1[0].count,
-      //   employerShortlisting: 0,
-      // });
-    } else {
-      // setAgCount({
-      //   submitted: 0,
-      //   consent: 0,
-      //   hhShortlisting: 0,
-      //   employerDuplication: 0,
-      //   employerShortlisting: 0,
-      // });
     }
   };
 

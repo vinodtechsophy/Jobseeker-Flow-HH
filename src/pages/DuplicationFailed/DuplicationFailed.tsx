@@ -4,19 +4,19 @@ import React, {
   useMemo,
   useEffect,
   useCallback,
+  FC
 } from "react";
 import { Button, Grid, Typography, Box, Checkbox } from "@mui/material";
 import StepCount from "../../components/StepCount";
 import { AgGridReact } from "ag-grid-react";
 import { ColDef } from "ag-grid-community";
 import { LISTING_GENERIC_HEADERS } from "./DuplicationFailedColumnHeaders";
-import KeycloakService from "../../services/KeycloakService";
 import ColumnSelection from "../../components/ColumnSelection/ColumnSelection";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { LIGHT_GREY } from "../../color";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import BookmarkIcon from "../../assets/bookmark.svg";
+import BookmarkIcon from "../../../src/assets/bookmark.svg";
 import { PAGE_SIZE_ARRAY } from "../../constants";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import {
@@ -24,7 +24,7 @@ import {
   getDuplicationFailedProfilesAggregate,
 } from "../../services/JobSeekerService";
 
-const DuplicationFailed = () => {
+const DuplicationFailed: FC<any> = (props) => {
   const [selectedButtonId, setSelectedButtonId] = useState<Number>(1);
   const [selectedButtonValue, setSelectedButtonValue] = useState("SUBMITTED");
 
@@ -40,24 +40,17 @@ const DuplicationFailed = () => {
   const [agCount, setAgCount] = useState<any>({});
 
   useEffect(() => {
-    fetchToken();
     apiCallAggregateData();
     apiCallDuplicationFailedData(selectedButtonValue, pageNo, pageSize);
   }, []);
 
-  const fetchToken = async () => {
-    const token = await KeycloakService.fetchTokenOtherUser();
-    sessionStorage.setItem("react-token", token);
-  };
   const setSelectedButton = (id: number, filterValue: string) => {
     setSelectedButtonId(id);
     setSelectedButtonValue(filterValue);
-    setPageNo(0);
-    setPageSize(10);
-    apiCallDuplicationFailedData(filterValue, pageNo, 10);
+    apiCallDuplicationFailedData(filterValue, 0, 10);
   };
   const apiCallAggregateData = async () => {
-    const response: any = await getDuplicationFailedProfilesAggregate();
+    const response: any = await getDuplicationFailedProfilesAggregate(props.contestId);
 
     if (response.data.success) {
       const result = response.data.data;
@@ -80,7 +73,8 @@ const DuplicationFailed = () => {
     const response: any = await getDuplicationFailedProfiles(
       filterValue,
       page,
-      size
+      size,
+      props.contestId
     );
     if (response?.data?.success) {
       const duplicationFailedRecords = response?.data?.data?.content;
@@ -106,7 +100,7 @@ const DuplicationFailed = () => {
       enablePivot: true,
       enableValue: true,
       resizable: true,
-      cellStyle: { "border-right-color": "#DFE5FF" },
+      cellStyle: { "borderRightColor": "#DFE5FF" },
     };
   }, []);
   const autoGroupColumnDef = useMemo<ColDef>(() => {
@@ -205,7 +199,7 @@ const DuplicationFailed = () => {
           countsList={[
             {
               _id: 1,
-              count: agCount.PDC_FAIL + agCount.PDC_PASS + agCount.FDC_FAIL,
+              count: (agCount?.PDC_PASS ? agCount?.PDC_PASS : 0) + (agCount?.FDC_FAIL ? agCount?.FDC_FAIL :  0) + (agCount?.PDC_FAIL ? agCount?.PDC_FAIL : 0),
             },
             { _id: 2, count: agCount.PDC_FAIL },
             { _id: 3, count: agCount.PDC_PASS },

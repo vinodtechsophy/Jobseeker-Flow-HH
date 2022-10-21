@@ -15,7 +15,8 @@ var UserType;
     UserType["RECRUITMENT_COMPANY"] = "Recruitment Company";
 })(UserType || (UserType = {}));
 var initial = {
-    userId: '', userData: {
+    userId: "",
+    userData: {
         userName: "",
         workStatus: "",
         mobileNumber: "",
@@ -26,13 +27,14 @@ var initial = {
         realm: "techsophy-platform",
         userType: UserType.FREELANCE_RECRUITER,
         profileLogId: "",
-        profileId: ""
-    }
+        profileId: "",
+        jobSeekerId: "",
+    },
 };
 export default (function (state, event) {
     if (state === void 0) { state = initial; }
     switch (event.type) {
-        case 'USER_ADD':
+        case "USER_ADD":
             return __assign(__assign({}, state), { userData: event.data.userData, userId: event.data.userId });
         default:
             return state;

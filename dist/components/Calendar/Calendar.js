@@ -9,7 +9,8 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useEffect } from "react";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -24,6 +25,12 @@ var Calendar = function (props) {
     var _c = useState(value.getMonth() + 1), monthValue = _c[0], setMonthValue = _c[1];
     var _d = useState(value.getFullYear()), yearValue = _d[0], setYearValue = _d[1];
     var classes = useStyles();
+    useEffect(function () {
+        if (props.value) {
+            var date = new Date(props.value);
+            handleDatePicker(date);
+        }
+    }, []);
     var handleDatePicker = function (val) {
         setDayValue(val.getDate());
         setMonthValue(val.getMonth() + 1);
@@ -48,18 +55,30 @@ var Calendar = function (props) {
         setValue(new Date(event.target.value, monthValue - 1, dayValue));
         props.setDate(new Date(event.target.value, monthValue - 1, dayValue));
     };
-    return (_jsx("div", __assign({ className: "row datePicker" }, { children: props.status ? (_jsxs(_Fragment, { children: [_jsx(TextField, { className: classes.date, id: "outlined-date", label: "Date", size: "small", variant: "outlined", value: dayValue, onChange: handleDayChange, disabled: props.disabled }), _jsx(TextField, { className: classes.date, id: "outlined-month", label: "Month", size: "small", value: monthValue, onChange: handleMonthChange, disabled: props.disabled }), _jsx(TextField, { className: classes.year, id: "outlined-year", label: "Year", size: "small", value: yearValue, onChange: handleYearChange, disabled: props.disabled }), _jsx(LocalizationProvider, __assign({ dateAdapter: AdapterDateFns }, { children: _jsx(DatePicker, { label: "Custom input", value: value, onChange: handleDatePicker, disabled: props.disabled, renderInput: function (_a) {
+    return (_jsx("div", __assign({ className: "row datePicker" }, { children: props.status ? (_jsxs("div", __assign({ style: { position: "relative", display: "flex" } }, { children: [_jsx(TextField, { className: classes.date, id: "outlined-date", label: "Date", size: "small", variant: "outlined", value: dayValue, onChange: handleDayChange, disabled: props.calendarDisabled }), _jsx(TextField, { className: classes.date, id: "outlined-month", label: "Month", size: "small", value: monthValue, onChange: handleMonthChange, disabled: props.calendarDisabled }), _jsx(TextField, { className: classes.year, id: "outlined-year", label: "Year", size: "small", value: yearValue, onChange: handleYearChange, disabled: props.calendarDisabled }), _jsx(LocalizationProvider, __assign({ dateAdapter: AdapterDateFns }, { children: _jsx(DatePicker, __assign({ label: "Custom input", value: value, onChange: handleDatePicker, disabled: props.calendarDisabled, PopperProps: {
+                            disablePortal: true,
+                            sx: {
+                                transform: "unset !important",
+                                inset: "50px auto auto 0px !important",
+                            },
+                        }, renderInput: function (_a) {
                             var inputRef = _a.inputRef, inputProps = _a.inputProps, InputProps = _a.InputProps;
                             return (_jsxs(Box, __assign({ sx: {
                                     display: "flex",
                                     alignItems: "center",
                                 } }, { children: [_jsx("input", __assign({ ref: inputRef }, inputProps)), InputProps === null || InputProps === void 0 ? void 0 : InputProps.endAdornment] })));
-                        } }) }))] })) : (_jsxs(_Fragment, { children: [_jsx(TextField, { className: classes.date, id: "outlined-month-one", label: "Month", size: "small", value: monthValue, onChange: handleMonthChange }), _jsx(TextField, { className: classes.year, id: "outlined-year-one", label: "Year", size: "small", value: yearValue, onChange: handleYearChange }), _jsx(LocalizationProvider, __assign({ dateAdapter: AdapterDateFns }, { children: _jsx(DatePicker, { views: ["year", "month"], label: "Custom input", value: value, onChange: handleDatePicker, renderInput: function (_a) {
+                        } }, props)) }))] }))) : (_jsxs("div", __assign({ style: { position: "relative", display: "flex" } }, { children: [_jsx(TextField, { className: classes.date, id: "outlined-month-one", label: "Month", size: "small", value: monthValue, disabled: props.calendarDisabled, onChange: handleMonthChange }), _jsx(TextField, { className: classes.year, id: "outlined-year-one", label: "Year", size: "small", value: yearValue, disabled: props.calendarDisabled, onChange: handleYearChange }), _jsx(LocalizationProvider, __assign({ dateAdapter: AdapterDateFns }, { children: _jsx(DatePicker, __assign({ views: ["year", "month"], label: "Custom input", value: value, onChange: handleDatePicker, disabled: props.calendarDisabled, PopperProps: {
+                            disablePortal: true,
+                            sx: {
+                                transform: "unset !important",
+                                inset: "50px auto auto 0px !important",
+                            },
+                        }, renderInput: function (_a) {
                             var inputRef = _a.inputRef, inputProps = _a.inputProps, InputProps = _a.InputProps;
                             return (_jsxs(Box, __assign({ sx: {
                                     display: "flex",
                                     alignItems: "center",
                                 } }, { children: [_jsx("input", __assign({ ref: inputRef }, inputProps)), InputProps === null || InputProps === void 0 ? void 0 : InputProps.endAdornment] })));
-                        } }) }))] })) })));
+                        } }, props)) }))] }))) })));
 };
 export default Calendar;

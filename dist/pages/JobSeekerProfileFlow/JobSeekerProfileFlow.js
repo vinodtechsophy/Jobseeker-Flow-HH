@@ -9,8 +9,8 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React, { useEffect } from "react";
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import React, { useEffect, useState } from "react";
 import { Step, Stack, Stepper, StepLabel } from "@mui/material";
 import "../../App.css";
 import { JobSeekerAddStepper, ColorlibConnector } from "../StepIcons";
@@ -28,6 +28,7 @@ var JobSeekerProfileFlow = function (props) {
     var _a = React.useState(0), activeStep = _a[0], setActiveStep = _a[1];
     var _b = React.useState({}), completed = _b[0], setCompleted = _b[1];
     var _c = React.useState(false), gotData = _c[0], setGotData = _c[1];
+    var _d = useState(true), progressBar = _d[0], setProgressBar = _d[1];
     var userDataState = useAppSelector(function (state) { return state.currentUser; });
     useEffect(function () { }, [gotData]);
     var steps = [
@@ -37,6 +38,7 @@ var JobSeekerProfileFlow = function (props) {
         "Work Status",
         "Notice Period",
         "JD Specific Questions",
+        "Review and Submit",
     ];
     var isLastStep = function () {
         return activeStep === steps.length - 1;
@@ -56,6 +58,6 @@ var JobSeekerProfileFlow = function (props) {
         newCompleted[position || activeStep] = true;
         setCompleted(newCompleted);
     };
-    return (_jsxs("div", { children: [_jsx("div", __assign({ className: "stepper-container" }, { children: _jsx(Stack, __assign({ sx: { width: FULL_WIDTH_PERCENT }, spacing: 4 }, { children: _jsx(Stepper, __assign({ alternativeLabel: true, activeStep: activeStep, connector: _jsx(ColorlibConnector, {}) }, { children: steps.map(function (label, index) { return (_jsx(Step, __assign({ completed: completed[index] === true }, { children: _jsx(StepLabel, __assign({ StepIconComponent: JobSeekerAddStepper }, { children: label })) }), label)); }) })) })) })), activeStep + 1 === 1 ? (_jsx(JobSeekerAddProfile, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, contestId: props.contestId, handleComplete: handleComplete, setDataMessage: props.setDataMessage })) : activeStep + 1 === 2 ? (_jsx(JobSeekerProfileUpload, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, handleComplete: handleComplete, setDataMessage: props.setDataMessage })) : activeStep + 1 === 3 ? (_jsx(JobSeekerProfileDetails, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, handleComplete: handleComplete, setDataMessage: props.setDataMessage })) : activeStep + 1 === 4 ? (_jsx(JobSeekerProfileWorkStatus, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, handleComplete: handleComplete, setDataMessage: props.setDataMessage })) : activeStep + 1 === 5 ? (_jsx(JobSeekerProfileNoticePeriod, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, handleComplete: handleComplete, setDataMessage: props.setDataMessage })) : activeStep + 1 === 6 ? (_jsx(JobSeekerProfileJD, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, contestId: props.contestId, handleComplete: handleComplete, setDataMessage: props.setDataMessage })) : (_jsx(JobSeekerProfileReview, { setOpen: props.setOpen, setType: props.setType, setActiveStep: setActiveStep, setDataMessage: props.setDataMessage }))] }));
+    return (_jsxs("div", { children: [progressBar ? (_jsx(_Fragment, { children: _jsx("div", __assign({ className: "stepper-container" }, { children: _jsx(Stack, __assign({ sx: { width: FULL_WIDTH_PERCENT }, spacing: 4 }, { children: _jsx(Stepper, __assign({ alternativeLabel: true, activeStep: activeStep, connector: _jsx(ColorlibConnector, {}) }, { children: steps.map(function (label, index) { return (_jsx(Step, __assign({ completed: completed[index] === true }, { children: _jsx(StepLabel, __assign({ StepIconComponent: JobSeekerAddStepper }, { children: label })) }), label)); }) })) })) })) })) : (_jsx(_Fragment, {})), activeStep + 1 === 1 ? (_jsx(JobSeekerAddProfile, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, contestId: props.contestId, handleComplete: handleComplete, setDataMessage: props.setDataMessage })) : activeStep + 1 === 2 ? (_jsx(JobSeekerProfileUpload, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, handleComplete: handleComplete, setDataMessage: props.setDataMessage })) : activeStep + 1 === 3 ? (_jsx(JobSeekerProfileDetails, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, handleComplete: handleComplete, setDataMessage: props.setDataMessage })) : activeStep + 1 === 4 ? (_jsx(JobSeekerProfileWorkStatus, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, handleComplete: handleComplete, setDataMessage: props.setDataMessage, setActiveStep: setActiveStep })) : activeStep + 1 === 5 ? (_jsx(JobSeekerProfileNoticePeriod, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, handleComplete: handleComplete, setDataMessage: props.setDataMessage })) : activeStep + 1 === 6 ? (_jsx(JobSeekerProfileJD, { hasButtons: true, setOpen: props.setOpen, setType: props.setType, handleNext: handleNext, handleBack: handleBack, contestId: props.contestId, handleComplete: handleComplete, setDataMessage: props.setDataMessage, setActiveStep: setActiveStep })) : (_jsx(JobSeekerProfileReview, { contestId: props.contestId, setOpen: props.setOpen, setType: props.setType, setActiveStep: setActiveStep, setDataMessage: props.setDataMessage, setProgressBar: setProgressBar }))] }));
 };
 export default JobSeekerProfileFlow;

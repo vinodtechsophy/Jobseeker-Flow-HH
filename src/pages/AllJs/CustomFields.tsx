@@ -6,7 +6,6 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import LocalPhoneRoundedIcon from "@mui/icons-material/LocalPhoneRounded";
 import DehazeIcon from "@mui/icons-material/Dehaze";
-import KeycloakService from "../../services/KeycloakService";
 import { downloadFile } from "../../services/DocumentService";
 
 const useStyles = makeStyles(() => ({
@@ -32,14 +31,6 @@ const useStyles = makeStyles(() => ({
 }));
 export const ResumeUploaded = () => {
   const classes = useStyles();
-
-  useEffect(() => {
-    fetchToken();
-  }, []);
-  const fetchToken = async () => {
-    const token = await KeycloakService.fetchTokenOtherUser();
-    sessionStorage.setItem("react-token", token);
-  };
 
   const handleViewResume = async () => {
     let response = await downloadFile("1018755347892011008");

@@ -27,15 +27,15 @@ const initKeycloak = (onAuthenticatedCallback: any) => {
     });
 };
 
-const clearAllLocalstorage = () => {
-  localStorage.removeItem("role");
-  localStorage.removeItem("isAdmin");
+const clearAllsessionStorage = () => {
+  sessionStorage.removeItem("role");
+  sessionStorage.removeItem("isAdmin");
 };
 
 const doLogin = keycloak.login;
 
 const doLogout = () => {
-  clearAllLocalstorage();
+  clearAllsessionStorage();
   keycloak.logout();
 };
 

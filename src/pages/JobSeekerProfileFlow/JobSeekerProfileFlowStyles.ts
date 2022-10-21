@@ -40,7 +40,8 @@ export const useStyles = makeStyles(() => ({
     inputField: {
       [`& fieldset`]: {
         borderRadius: 12,
-        height: 45
+        height: 45,
+        width: '100%'
       },
     },
     Heading: {
@@ -102,10 +103,11 @@ export const useStyles = makeStyles(() => ({
       paddingLeft: '0px !important'
     },
     boxInputField: {
+      width: '80%',
       [`& fieldset`]: {
         borderRadius: 12,
         height: 45,
-        width: '125%'
+        width: '95%'
       },
     }
 }));

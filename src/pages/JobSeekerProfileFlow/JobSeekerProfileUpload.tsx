@@ -6,6 +6,8 @@ import {
   Checkbox,
   Typography,
   ButtonGroup,
+  CircularProgress,
+  Stack,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useDropzone } from "react-dropzone";
@@ -20,12 +22,14 @@ import {
 import {
   ERROR_KEY,
   SUCCESS_KEY,
+  DISABLED_KEY,
   IMAGE_UPLOAD_ERROR,
   JOB_SEEKER_RESUME,
   FORM_SUBMISSION_SUCCESS,
+  FILE_UPLOAD,
+  WARNING_KEY,
 } from "../../constants";
 import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
-import KeycloakService from "../../services/KeycloakService";
 import { getFileDetails } from "../../services/DocumentService";
 
 const useStyles = makeStyles({
@@ -69,7 +73,7 @@ const useStyles = makeStyles({
   subText3: {
     fontSize: "15px",
     color: "#4D6CD9",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   tempalteSubText1: {
     fontSize: "13px",
@@ -160,27 +164,28 @@ const JobSeekerProfileUpload: FC<any> = (props): ReactElement => {
   const [templateState, setTemplateState] = React.useState(false);
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const [imageName, setImageName] = React.useState("");
+  const [loader, setLoader] = React.useState(false);
 
   const {
     acceptedFiles: acceptedFilesTemplate,
     getRootProps: rootPropsTemplate,
     getInputProps: inputPropsTemplate,
     isDragActive: openTemplate,
-  } = useDropzone({ onDrop: () => {} });
+  } = useDropzone({ onDrop: () => { } });
 
   const {
     acceptedFiles: acceptedFilesTemplateResume,
     getRootProps: rootPropsTemplateResume,
     getInputProps: inputPropsTemplateResume,
     isDragActive: openTemplateResume,
-  } = useDropzone({ onDrop: () => {} });
+  } = useDropzone({ onDrop: () => { } });
 
   const {
     acceptedFiles: acceptedFilesResume,
     getRootProps: rootPropsResume,
     getInputProps: inputPropsResume,
     isDragActive: openResume,
-  } = useDropzone({ onDrop: () => {} });
+  } = useDropzone({ onDrop: () => { } });
 
   const handleManualUpload = () => {
     setManualState(true);
@@ -195,13 +200,14 @@ const JobSeekerProfileUpload: FC<any> = (props): ReactElement => {
   const uploadPayloadBuild = () => {
     return {
       documentTypeId: JOB_SEEKER_RESUME,
-      documentPath: `resume/${userDataState.userData.profileLogId}`,
-      documentName: userDataState.userData.profileLogId,
+      documentPath: `resume/${userDataState.userData.profileId}`,
+      documentName: userDataState.userData.profileId,
       files: acceptedFilesResume,
     };
   };
 
   const callResumeUpload = async () => {
+    setLoader(true);
     if (acceptedFilesResume.length > 0) {
       try {
         const uploadResponse = await UploadFiles(uploadPayloadBuild()).catch(
@@ -213,24 +219,28 @@ const JobSeekerProfileUpload: FC<any> = (props): ReactElement => {
           }
         );
         if (uploadResponse?.data?.success) {
-          if(imageName) {
-            const updateResumeReponse = await updateJobSeekerProfile({
-                profileId: props.profileDataId || userDataState.userData.profileId,
-                profileData: {
-                  resumeDocumentId: uploadResponse?.data?.data?.id,
-                }
-            })
-          } else {
-            const seekerProfile = await createJobSeekerProfile({
-              profileLogId: userDataState.userData.profileLogId,
-              profileData: {
-                resumeDocumentId: uploadResponse?.data?.data?.id,
-              },
-            });
-            if (seekerProfile?.data?.success) {
-              dispatchProfileId(seekerProfile?.data?.data?.profileId);
-            }
-          }
+          // if (imageName) {
+          const updateResumeReponse = await updateJobSeekerProfile({
+            profileId: props.profileDataId || userDataState.userData.profileId,
+            profileData: {
+              resumeDocumentId: uploadResponse?.data?.data?.id,
+              profileLastCompletedStep: "2",
+            },
+          });
+          // } else {
+          //   const seekerProfile = await createJobSeekerProfile({
+          //     profileLogId: userDataState.userData.profileLogId,
+          //     profileData: {
+          //       resumeDocumentId: uploadResponse?.data?.data?.id,
+          //     },
+          //   });
+          //   if (seekerProfile?.data?.success) {
+          //     dispatchProfileId(
+          //       seekerProfile?.data?.data?.profileId,
+          //       seekerProfile?.data?.data?.jobSeekerId
+          //     );
+          //   }
+          // }
           props.setType(SUCCESS_KEY);
           props.setDataMessage(FORM_SUBMISSION_SUCCESS);
           props.setOpen(true);
@@ -244,276 +254,340 @@ const JobSeekerProfileUpload: FC<any> = (props): ReactElement => {
         props.setOpen(true);
       }
     }
-  };
-
-  const dispatchProfileId = (profileId) => {
-    dispatch({
-      type: "USER_ADD",
-      data: {
-        userData: {
-          ...userDataState.userData,
-          profileId,
-        },
-        userId: userDataState.userId,
-      },
-    });
+    else if (imageName && acceptedFilesResume.length < 1) {
+      if (props.handleNext) {
+        props.handleComplete(1);
+        props.handleNext();
+      }
+    } else {
+      props.setType(WARNING_KEY);
+      props.setDataMessage(FILE_UPLOAD);
+      props.setOpen(true);
+    }
+    setLoader(false);
   };
 
   useEffect(() => {
-    callPrefillData();
+    if (props.profileDataId || userDataState.userData.profileId)
+      callPrefillData();
   }, []);
 
   const callPrefillData = async () => {
-    const token = await KeycloakService.fetchTokenDifferently();
-    localStorage.setItem('react-token', token);
-    sessionStorage.setItem('react-token', token);
-    const profileDataFetched = await getJobSeekerProfile(props.profileDataId);
-    if(profileDataFetched?.data?.data?.resumeDocumentId) {
-      let fileResponse = await getFileDetails(profileDataFetched?.data?.data?.resumeDocumentId);
-      if(fileResponse?.data?.data?.fileName) setImageName(fileResponse?.data?.data?.fileName);
+    try {
+      setLoader(true);
+      const profileDataFetched = await getJobSeekerProfile(
+        props.profileDataId || userDataState.userData.profileId
+      );
+      if (profileDataFetched?.data?.data?.resumeDocumentId) {
+        let fileResponse = await getFileDetails(
+          profileDataFetched?.data?.data?.resumeDocumentId
+        );
+        if (fileResponse?.data?.data?.fileName)
+          setImageName(fileResponse?.data?.data?.fileName);
+      }
+    } catch (error: any) {
+      console.log(error);
+      props.setType(ERROR_KEY);
+      props.setDataMessage("Something went wrong");
+      props.setOpen(true);
     }
-  }
+    setLoader(false);
+  };
 
   return (
-    <div className="job-seeker-profile-content">
-      <Grid container spacing={3}>
-        <Grid item xs={12} className={classes.Grid1}>
-          <ButtonGroup variant="outlined" aria-label="outlined button group">
-            <Button
-              className={templateState ? classes.bGroup : ""}
-              onClick={handleTemplateUpload}
-            >
-              Template Upload
-            </Button>
-            <Button
-              className={manualState ? classes.bGroup : ""}
-              onClick={handleManualUpload}
-            >
-              Manual Upload
-            </Button>
-          </ButtonGroup>
-        </Grid>
-        {manualState ? (
-          <Grid item xs={12} margin={8} className={classes.Grid2}>
-            <Box display={"inline-flex"} marginTop={3} marginBottom={3}>
-              <Typography className={classes.uploadResume} variant="h6">
-                Upload Resume*
-              </Typography>
-              <Typography className={classes.maualUploadSubHeading}>
-                Warning! Make Sure the Job Seeker can Join within 30 days after
-                Profile is entered into the contest
-              </Typography>
-            </Box>
-            <div {...rootPropsResume()} className={classes.manaulUploadDiv}>
-              <input {...inputPropsResume()} />{" "}
-              <Typography textAlign="center">
-                {openResume ? (
-                  <p>Drop the files here ...</p>
-                ) : (
-                  <p>Drag 'n' drop some files here, or click to select files</p>
-                )}
-              </Typography>
-            </div>
-            <Box
-              marginTop={3}
-              justifyContent={"space-between"}
-              sx={{
-                display: {
-                  sm: "block",
-                  md: "flex",
-                  lg: "flex",
-                  xl: "flex",
-                },
-              }}
-            >
-              <Box textAlign="left" className={classes.subText1}>
-              {
-                imageName && acceptedFilesResume.length < 1 ? 
-                <span>{imageName}</span> :
-                <Box>
-                  {acceptedFilesResume.map((file: any) => (
-                    <Box key={file.path || file.name}>{file.path}</Box>
-                  ))}
-                </Box>
-              }
-              </Box>
-              <Box textAlign="left" className={classes.subText2}>
-                <Checkbox {...label} defaultChecked color="success" />
-                Duplication Check with Hiringhood Completed
-              </Box>
-              <Box
-                {...rootPropsResume()}
-                textAlign="left"
-                className={classes.subText3}
-              >
-                Re-Upload
-              </Box>
-            </Box>
-          </Grid>
-        ) : null}
-        {templateState ? (
-          <Grid container spacing={3}>
-            <Grid item xs={12} marginLeft={10}>
-              <h1>
-                Dear User Template upload is unavailable currently, will be
-                updated in the next iteration
-              </h1>
-              <Box
-                display={"inline-flex"}
-                marginTop={10}
-                justifyContent={"space-between"}
-              >
-                <Typography
-                  variant="h6"
-                  align="left"
-                  className={classes.autoFillTxt}
-                >
-                  Auto Fill Using Template*
-                  <p className={classes.tempalteSubText1}>
-                    Auto fill information for steps 3-6
-                  </p>
-                </Typography>
-                <Typography className={classes.filledWarning}>
-                  Warning! make sure all information is filled before uploading
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              display={"inline-flex"}
-              justifyContent={"space-between"}
-            >
-              <Box className={classes.fillTemplate}>
-                <DownloadIcon style={{ fontSize: "80px" }} />
-                <Box>Auto Fill Template</Box>
-              </Box>
-              <Box className={classes.dragBox} {...rootPropsTemplate()}>
-                <Box className={classes.dashedBox} sx={{ p: 1, m: 3 }}>
-                  <input {...inputPropsTemplate()} />
-                  <Typography fontSize={20} color="blue" textAlign="center">
-                    +
-                  </Typography>
-                  <Typography variant="body1" color="blue" textAlign="center">
-                    Drag & drop{" "}
-                  </Typography>
-                  <Typography textAlign="center">
-                    Your file here or browse
-                  </Typography>
-                  <aside>
-                    {/* {isDragActive ? (
+    <>
+      {!loader ? (
+        <div className="job-seeker-profile-content">
+          {props.hasButtons ? (
+            <Grid container spacing={3}>
+              <Grid item xs={12} className={classes.Grid1}>
+                <ButtonGroup variant="outlined" aria-label="outlined button group">
+                  <Button
+                    className={templateState ? classes.bGroup : ""}
+                    //disabled={!props.hasButtons}
+                    onClick={handleTemplateUpload}
+                  >
+                    Template Upload
+                  </Button>
+                  <Button
+                    //disabled={!props.hasButtons}
+                    className={manualState ? classes.bGroup : ""}
+                    onClick={handleManualUpload}
+                  >
+                    Manual Upload
+                  </Button>
+                </ButtonGroup>
+              </Grid>
+              {manualState ? (
+                <Grid item xs={12} margin={8} className={classes.Grid2}>
+                  <Box display={"inline-flex"} marginTop={3} marginBottom={3}>
+                    <Typography className={classes.uploadResume} variant="h6">
+                      Upload Resume*
+                    </Typography>
+                    <Typography className={classes.maualUploadSubHeading}>
+                      Warning! Make Sure the Job Seeker can Join within 30 days
+                      after Profile is entered into the contest
+                    </Typography>
+                  </Box>
+                  <div {...rootPropsResume()} className={classes.manaulUploadDiv}>
+                    <input {...inputPropsResume()} />{" "}
+                    <Typography textAlign="center">
+                      {openResume ? (
+                        <p>Drop the files here ...</p>
+                      ) : (
+                        <p>
+                          Drag 'n' drop some files here, or click to select files
+                        </p>
+                      )}
+                    </Typography>
+                  </div>
+                  <Box
+                    marginTop={3}
+                    justifyContent={"space-between"}
+                    sx={{
+                      display: {
+                        sm: "block",
+                        md: "flex",
+                        lg: "flex",
+                        xl: "flex",
+                      },
+                    }}
+                  >
+                    <Box textAlign="left" className={classes.subText1}>
+                      {imageName && acceptedFilesResume.length < 1 ? (
+                        <span>{imageName}</span>
+                      ) : (
+                        <Box>
+                          {acceptedFilesResume.map((file: any) => (
+                            <Box key={file.path || file.name}>{file.path}</Box>
+                          ))}
+                        </Box>
+                      )}
+                    </Box>
+                    <Box textAlign="left" className={classes.subText2}>
+                      <Checkbox {...label} defaultChecked color="success" />
+                      Duplication Check with Hiringhood Completed
+                    </Box>
+                    <Box
+                      {...rootPropsResume()}
+                      textAlign="left"
+                      className={classes.subText3}
+                    >
+                      Re-Upload
+                    </Box>
+                  </Box>
+                </Grid>
+              ) : null}
+              {templateState ? (
+                <Grid container spacing={3}>
+                  <Grid item xs={12} marginLeft={10}>
+                    <h1>
+                      Dear User Template upload is unavailable currently, will be
+                      updated in the next iteration
+                    </h1>
+                    <Box
+                      display={"inline-flex"}
+                      marginTop={10}
+                      justifyContent={"space-between"}
+                    >
+                      <Typography
+                        variant="h6"
+                        align="left"
+                        className={classes.autoFillTxt}
+                      >
+                        Auto Fill Using Template*
+                        <p className={classes.tempalteSubText1}>
+                          Auto fill information for steps 3-6
+                        </p>
+                      </Typography>
+                      <Typography className={classes.filledWarning}>
+                        Warning! make sure all information is filled before
+                        uploading
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    display={"inline-flex"}
+                    justifyContent={"space-between"}
+                  >
+                    <Box className={classes.fillTemplate}>
+                      <DownloadIcon style={{ fontSize: "80px" }} />
+                      <Box>Auto Fill Template</Box>
+                    </Box>
+                    <Box className={classes.dragBox} {...rootPropsTemplate()}>
+                      <Box className={classes.dashedBox} sx={{ p: 1, m: 3 }}>
+                        <input {...inputPropsTemplate()} />
+                        <Typography fontSize={20} color="blue" textAlign="center">
+                          +
+                        </Typography>
+                        <Typography variant="body1" color="blue" textAlign="center">
+                          Drag & drop{" "}
+                        </Typography>
+                        <Typography textAlign="center">
+                          Your file here or browse
+                        </Typography>
+                        <aside>
+                          {/* {isDragActive ? (
                         <p className={classes.drag}>Drop the files here ...</p>
                       ) : (
                         <p>
                           Drag 'n' drop some files here, or click to select files
                         </p>
                       )} */}
-                  </aside>
-                </Box>
+                        </aside>
+                      </Box>
+                      <Box
+                        sx={{
+                          display: {
+                            xs: "block",
+                            sm: "flex",
+                            md: "flex",
+                            lg: "flex",
+                          },
+                          justifyContent: "space-between",
+                          p: 2,
+                        }}
+                        className={classes.limitWidth}
+                      >
+                        <Box>
+                          <Box
+                            {...rootPropsTemplate()}
+                            textAlign="left"
+                            className={classes.browseFiles}
+                          >
+                            Browse File
+                          </Box>
+                          <Box sx={{ fontSize: "10px" }}>
+                            Size: 5MB, Format: .pdf
+                          </Box>
+                        </Box>
+
+                        <Box
+                          {...rootPropsTemplate()}
+                          textAlign="right"
+                          className={classes.uploadLogoText}
+                        >
+                          Upload File
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} margin={8}>
+                    <Box
+                      display={"inline-flex"}
+                      marginTop={3}
+                      marginBottom={3}
+                      justifyContent={"space-between"}
+                    >
+                      <Typography className={classes.uploadResume}>
+                        Upload Resume*
+                      </Typography>
+                      <Typography className={classes.maualUploadSubHeading}>
+                        Warning! Make Sure the Job Seeker can Join within 30 days
+                        after Profile is entered into the contest
+                      </Typography>
+                    </Box>
+                    <div
+                      {...rootPropsTemplateResume()}
+                      className={classes.manaulUploadDiv}
+                    >
+                      <input {...inputPropsTemplateResume()} />{" "}
+                      <Typography textAlign="center">
+                        {openTemplateResume ? (
+                          <p>Drop the files here ...</p>
+                        ) : (
+                          <p>
+                            Drag 'n' drop some files here, or click to select files
+                          </p>
+                        )}
+                      </Typography>
+                    </div>
+                    <Box
+                      marginTop={3}
+                      justifyContent={"space-between"}
+                      sx={{
+                        display: {
+                          sm: "block",
+                          md: "flex",
+                          lg: "flex",
+                          xl: "flex",
+                        },
+                      }}
+                    >
+                      <Box textAlign="left" className={classes.subText1}>
+                        <Box>
+                          {acceptedFilesTemplateResume.map((file: any) => (
+                            <Box key={file.path || file.name}>{file.path}</Box>
+                          ))}
+                        </Box>
+                      </Box>
+                      <Box textAlign="left" className={classes.subText2}>
+                        <Checkbox {...label} disabled checked color="success" />
+                        Duplication Check with Hiringhood Completed
+                      </Box>
+                      <Box
+                        {...rootPropsResume()}
+                        textAlign="left"
+                        className={classes.subText3}
+                      >
+                        Re-Upload
+                      </Box>
+                    </Box>
+                  </Grid>
+                </Grid>
+              ) : null}
+            </Grid>
+          ) :
+            (
+              <>
                 <Box
+                  marginTop={3}
+                  justifyContent={"space-between"}
                   sx={{
                     display: {
-                      xs: "block",
-                      sm: "flex",
+                      sm: "block",
                       md: "flex",
                       lg: "flex",
+                      xl: "flex",
                     },
-                    justifyContent: "space-between",
-                    p: 2,
                   }}
-                  className={classes.limitWidth}
                 >
-                  <Box>
-                    <Box
-                      {...rootPropsTemplate()}
-                      textAlign="left"
-                      className={classes.browseFiles}
-                    >
-                      Browse File
-                    </Box>
-                    <Box sx={{ fontSize: "10px" }}>Size: 5MB, Format: .pdf</Box>
+                  <Box textAlign="left" className={classes.subText1}>
+                    {imageName && acceptedFilesResume.length < 1 ? (
+                      <span>{imageName}</span>
+                    ) : (
+                      <Box>
+                        {acceptedFilesResume.map((file: any) => (
+                          <Box key={file.path || file.name}>{file.path}</Box>
+                        ))}
+                      </Box>
+                    )}
                   </Box>
+                  <Box textAlign="left" className={classes.subText2}>
+                    <Checkbox {...label} defaultChecked color="default" />
+                    Duplication Check with Hiringhood Completed
+                  </Box>
+                </Box>
+              </>
 
-                  <Box
-                    {...rootPropsTemplate()}
-                    textAlign="right"
-                    className={classes.uploadLogoText}
-                  >
-                    Upload File
-                  </Box>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12} margin={8}>
-              <Box
-                display={"inline-flex"}
-                marginTop={3}
-                marginBottom={3}
-                justifyContent={"space-between"}
-              >
-                <Typography className={classes.uploadResume}>
-                  Upload Resume*
-                </Typography>
-                <Typography className={classes.maualUploadSubHeading}>
-                  Warning! Make Sure the Job Seeker can Join within 30 days
-                  after Profile is entered into the contest
-                </Typography>
-              </Box>
-              <div
-                {...rootPropsTemplateResume()}
-                className={classes.manaulUploadDiv}
-              >
-                <input {...inputPropsTemplateResume()} />{" "}
-                <Typography textAlign="center">
-                  {openTemplateResume ? (
-                    <p>Drop the files here ...</p>
-                  ) : (
-                    <p>
-                      Drag 'n' drop some files here, or click to select files
-                    </p>
-                  )}
-                </Typography>
-              </div>
-              <Box
-                marginTop={3}
-                justifyContent={"space-between"}
-                sx={{
-                  display: {
-                    sm: "block",
-                    md: "flex",
-                    lg: "flex",
-                    xl: "flex",
-                  },
-                }}
-              >
-                <Box textAlign="left" className={classes.subText1}>
-                  <Box>
-                    {acceptedFilesTemplateResume.map((file: any) => (
-                      <Box key={file.path || file.name}>{file.path}</Box>
-                    ))}
-                  </Box>
-                </Box>
-                <Box textAlign="left" className={classes.subText2}>
-                  <Checkbox {...label} disabled checked color="success" />
-                  Duplication Check with Hiringhood Completed
-                </Box>
-                <Box
-                  {...rootPropsResume()}
-                  textAlign="left"
-                  className={classes.subText3}
-                >
-                  Re-Upload
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
-        ) : null}
-      </Grid>
-      <PreviousNextButtons
-        handleNext={callResumeUpload}
-        handleBack={props.handleBack}
-      />
-    </div>
+            )}
+          {props.hasButtons ? (
+            <PreviousNextButtons
+              handleNext={callResumeUpload}
+              handleBack={props.handleBack}
+            />
+          ) : null}
+        </div>
+      )
+        : (
+          <Stack alignItems="center">
+            <CircularProgress />
+          </Stack>
+        )
+      }
+    </>
   );
 };
 

@@ -60,13 +60,13 @@ var initKeycloak = function (onAuthenticatedCallback) {
         }
     });
 };
-var clearAllLocalstorage = function () {
-    localStorage.removeItem("role");
-    localStorage.removeItem("isAdmin");
+var clearAllsessionStorage = function () {
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("isAdmin");
 };
 var doLogin = keycloak.login;
 var doLogout = function () {
-    clearAllLocalstorage();
+    clearAllsessionStorage();
     keycloak.logout();
 };
 var getToken = function () { return keycloak.token; };

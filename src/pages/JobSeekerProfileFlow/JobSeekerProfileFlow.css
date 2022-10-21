@@ -1,5 +1,5 @@
 .experience-details-card {
-    padding-left: 4%;
+    padding-left: 2%;
     padding-right: 2%;
     box-shadow: 0px 4px 16px rgba(206, 212, 240, 0.8);
     padding-top: 20px;
@@ -25,8 +25,8 @@
 }
 
 .conditional-container {
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 3%;
+    margin-right: 2%;
 }
 
 .tctc-text {
@@ -39,8 +39,8 @@
 }
 
 .notice-details-card {
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: 0.6%;
+    padding-right: 0.5%;
     box-shadow: 0px 4px 16px rgba(206, 212, 240, 0.8);
     padding-top: 20px;
     padding-bottom: 30px;
@@ -101,11 +101,14 @@
 .reason-field .MuiInputBase-root {
     background: var(--sky-blue);
     width: 380px;
-    margin-top: 20px;
 }
 
 .experienced-div {
-    padding: 2% 4% 2% 10%;
+    padding: 2% 4% 2% 5%;
     border: 1px solid var(--light-title);
     border-radius: 16px;
+}
+
+.institute-field{
+    font-size: 15px;
 }

@@ -9,22 +9,44 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React from "react";
+import React, { useEffect } from "react";
 import { TextField } from "@mui/material";
 import "../../App.css";
 var InlineInputs = function (props) {
-    return (_jsxs("div", { children: [props.InlineInputTitle ? (_jsx("div", __assign({ className: "experience-card-title" }, { children: _jsx("div", { children: _jsxs("p", { children: [props.InlineInputTitle, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }) }) }))) : null, _jsx("div", __assign({ className: "inline-div" }, { children: props.InlineInputsArray.map(function (input, index) { return (_jsxs(React.Fragment, { children: [_jsx("div", __assign({ className: "number-input-field" }, { children: _jsx(TextField, { disabled: props.disabled, type: input.type, label: input.label, placeholder: input.placeholder, onInput: function (e) {
+    var _a = React.useState([]), inputValues = _a[0], setInputValues = _a[1];
+    useEffect(function () {
+        if (JSON.stringify(props.value).length > 5)
+            setInputValues(function (arr) { return Object.values(props.value); });
+    }, []);
+    return (_jsxs("div", { children: [props.InlineInputTitle ? (_jsx("div", __assign({ className: "experience-card-title" }, { children: _jsx("div", { children: _jsxs("p", { children: [props.InlineInputTitle, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }) }) }))) : null, _jsx("div", __assign({ className: "inline-div" }, { children: props.InlineInputsArray.map(function (input, index) { return (_jsxs(React.Fragment, { children: [_jsx("div", __assign({ className: "number-input-field" }, { children: _jsx(TextField, { disabled: props.disabled, type: input.type, label: input.label, value: input.type === "number" ? Number(inputValues[index]) : inputValues[index], placeholder: input.placeholder, onInput: function (e) {
                                     var _a;
                                     if (input.type === "number") {
-                                        if (Number(e.target.value) > Number(input.max))
+                                        if (Number(e.target.value) > Number(input.max)) {
+                                            var tempInputs_1 = __spreadArray([], inputValues, true);
+                                            tempInputs_1[index] = 0;
+                                            setInputValues(function (arr) { return tempInputs_1; });
                                             return "";
-                                        e.target.value = Math.max(0, parseInt(e.target.value))
-                                            .toString()
-                                            .slice(0, Number((_a = input.max) === null || _a === void 0 ? void 0 : _a.toString().length) || 2);
+                                        }
+                                        if (e.target.value !== "")
+                                            e.target.value = Math.max(0, parseInt(e.target.value))
+                                                .toString()
+                                                .slice(0, Number((_a = input.max) === null || _a === void 0 ? void 0 : _a.toString().length) || 2);
                                     }
                                 }, onChange: function (e) {
-                                    return props.setValues(e.target.value.toString(), index);
+                                    props.setValues(e.target.value.toString(), index);
+                                    var tempInputs = __spreadArray([], inputValues, true);
+                                    tempInputs[index] = e.target.value;
+                                    setInputValues(function (arr) { return tempInputs; });
                                 }, InputProps: {
                                     inputProps: input.type === "number"
                                         ? {

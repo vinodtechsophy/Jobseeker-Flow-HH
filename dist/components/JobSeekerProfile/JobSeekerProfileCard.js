@@ -35,11 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { jsx as _jsx, Fragment as _Fragment } from "react/jsx-runtime";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import JobSeekerProfileStatus from "./JobSeekerProfileStatus";
 import { getContestDetails } from "../../services/ContestService";
-var JobSeekerProfileCard = function () {
+var JobSeekerProfileCard = function (props) {
     var _a = React.useState(""), userId = _a[0], setUserId = _a[1];
     var _b = React.useState({}), contestData = _b[0], setContestData = _b[1];
     var _c = React.useState("actively-hiring"), tagImage = _c[0], setTagImage = _c[1];
@@ -58,22 +58,26 @@ var JobSeekerProfileCard = function () {
         });
     }); };
     useEffect(function () {
-        searchContestDeatils("1004705555594629120");
+        searchContestDeatils(props.contestId);
+    }, []);
+    useEffect(function () {
+        searchContestDeatils(props.contestId);
     }, [userId]);
     var navigate = useNavigate();
-    var contestDetails = {
-        id: "1004705555594629120",
+    var _e = useState({
+        id: props.contestId,
         employmentType: (contestData === null || contestData === void 0 ? void 0 : contestData.cardTaglines) || "fulltime",
         jobTitle: (contestData === null || contestData === void 0 ? void 0 : contestData.position) || "shsjsjs",
-        cashReward: "\u20B9 ".concat(contestData === null || contestData === void 0 ? void 0 : contestData.bounty) || "30000",
-        company: "Accenture",
+        bounty: "\u20B9 ".concat(contestData === null || contestData === void 0 ? void 0 : contestData.bounty) || "30000",
+        company: (contestData === null || contestData === void 0 ? void 0 : contestData.company) || "RBI",
         experience: "".concat((contestData === null || contestData === void 0 ? void 0 : contestData.experience) || 2, " to ").concat((contestData === null || contestData === void 0 ? void 0 : contestData.experience1) || 4, " yrs"),
         tools: (contestData === null || contestData === void 0 ? void 0 : contestData.technicalSkills) || "java",
         noticePeriod: (contestData === null || contestData === void 0 ? void 0 : contestData.requiredNoticePeriod) || "5",
         locations: (contestData === null || contestData === void 0 ? void 0 : contestData.country) || "india",
         interviewDays: "".concat(contestData === null || contestData === void 0 ? void 0 : contestData.dateTime, " + ").concat(contestData === null || contestData === void 0 ? void 0 : contestData.selectEndDate, " "),
-        positions: "",
-        ctc: "".concat(contestData === null || contestData === void 0 ? void 0 : contestData.budgetCtc2, " to ").concat(contestData === null || contestData === void 0 ? void 0 : contestData.budgetCtc, " ").concat(contestData === null || contestData === void 0 ? void 0 : contestData.denomination),
+        positions: (contestData === null || contestData === void 0 ? void 0 : contestData.position) || "Back-end",
+        numberOfPositions: (contestData === null || contestData === void 0 ? void 0 : contestData.numberOfPositions) || "0",
+        ctc: "".concat(contestData === null || contestData === void 0 ? void 0 : contestData.budgetCtcFrom, " to ").concat(contestData === null || contestData === void 0 ? void 0 : contestData.budgetCtcTo, " ").concat(contestData === null || contestData === void 0 ? void 0 : contestData.denomination),
         skills: contestData === null || contestData === void 0 ? void 0 : contestData.skills,
         degree: contestData === null || contestData === void 0 ? void 0 : contestData.qualifications,
         tags: contestData === null || contestData === void 0 ? void 0 : contestData.tags,
@@ -95,7 +99,45 @@ var JobSeekerProfileCard = function () {
             "questions",
             "post-your-query",
         ],
-    };
+    }), contestDetails = _e[0], setContestDetails = _e[1];
+    useEffect(function () {
+        setContestDetails({
+            id: props.contestId,
+            employmentType: (contestData === null || contestData === void 0 ? void 0 : contestData.cardTaglines) || "h",
+            jobTitle: (contestData === null || contestData === void 0 ? void 0 : contestData.position) || "shsjsjs",
+            bounty: "\u20B9 ".concat(contestData === null || contestData === void 0 ? void 0 : contestData.bounty) || "30000",
+            company: (contestData === null || contestData === void 0 ? void 0 : contestData.company) || "RBI",
+            experience: "".concat((contestData === null || contestData === void 0 ? void 0 : contestData.experienceFrom) || 0, " to ").concat((contestData === null || contestData === void 0 ? void 0 : contestData.experienceTo) || 0, " yrs"),
+            tools: (contestData === null || contestData === void 0 ? void 0 : contestData.technicalSkills) || "java",
+            noticePeriod: (contestData === null || contestData === void 0 ? void 0 : contestData.requiredNoticePeriod) || "5",
+            locations: (contestData === null || contestData === void 0 ? void 0 : contestData.locations) || "india",
+            interviewDays: "".concat(contestData === null || contestData === void 0 ? void 0 : contestData.dateTime, " + ").concat(contestData === null || contestData === void 0 ? void 0 : contestData.selectEndDate, " "),
+            positions: (contestData === null || contestData === void 0 ? void 0 : contestData.position) || "Back-end",
+            numberOfPositions: (contestData === null || contestData === void 0 ? void 0 : contestData.numberOfPositions) || "0",
+            ctc: "".concat(contestData === null || contestData === void 0 ? void 0 : contestData.budgetCtcFrom, " to ").concat(contestData === null || contestData === void 0 ? void 0 : contestData.budgetCtcTo, " ").concat(contestData === null || contestData === void 0 ? void 0 : contestData.denomination),
+            skills: contestData === null || contestData === void 0 ? void 0 : contestData.skills,
+            degree: contestData === null || contestData === void 0 ? void 0 : contestData.qualifications,
+            tags: contestData === null || contestData === void 0 ? void 0 : contestData.tags,
+            tag: tagImage,
+            rewards: {},
+            badge: badgeImage,
+            contestUrl: "",
+            iconStatus: "",
+            bonus: "2%",
+            profilesMatched: " 24 profiles matched",
+            quota: "50 profiles",
+            buttonText: (contestData === null || contestData === void 0 ? void 0 : contestData.buttonText) || "Begin Hunt",
+            buttonEnabled: true,
+            iconsToShow: [
+                "visit",
+                "shares",
+                "bookmarked",
+                "not-interested",
+                "questions",
+                "post-your-query",
+            ],
+        });
+    }, [contestData]);
     return (_jsx(_Fragment, { children: _jsx("div", { children: _jsx(JobSeekerProfileStatus, { contestDetails: contestDetails }) }) }));
 };
 export default JobSeekerProfileCard;

@@ -57,23 +57,23 @@ export var LISTING_GENERIC_HEADERS = [
         },
     },
     {
-        headerName: "Experience",
-        field: "experience",
+        headerName: "Experience(Years)",
+        field: "profileDetailsMap.totalExperience.totalExperienceYears",
         hide: false,
-        minWidth: 180,
+        minWidth: 240,
         filterParams: {
             buttons: ["apply", "clear"],
         },
-        filter: "agNumberColumnFilter",
+        filter: "agTextColumnFilter",
         floatingFilterComponentParams: {
             suppressFilterButton: true,
         },
     },
     {
-        headerName: "Expected CTC",
-        field: "expectedCTC",
+        headerName: "Expected CTC(LPA)",
+        field: "profileDetailsMap.expectedCtc.expectedCtcLakh",
         hide: false,
-        minWidth: 215,
+        minWidth: 240,
         filterParams: {
             buttons: ["apply", "clear"],
         },
@@ -111,7 +111,7 @@ export var LISTING_GENERIC_HEADERS = [
         field: "mobileNumber",
         hide: false,
         minWidth: 200,
-        filter: "agNumberColumnFilter",
+        filter: "agTextColumnFilter",
         floatingFilterComponentParams: {
             suppressFilterButton: true,
         },
@@ -134,7 +134,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Current Location",
-        field: "currentLocation",
+        field: "profileWorkStatusMap.currentLocation",
         hide: false,
         minWidth: 200,
         filter: "agTextColumnFilter",
@@ -147,10 +147,10 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Currently Working",
-        field: "currentlyWorking",
+        field: "profileDetailsMap.currentlyWorking",
         hide: false,
         minWidth: 215,
-        filter: "agNumberColumnFilter",
+        filter: "agTextColumnFilter",
         // floatingFilterComponent: ,
         filterParams: {
             buttons: ["apply", "clear"],
@@ -165,25 +165,14 @@ export var LISTING_GENERIC_HEADERS = [
         hide: false,
         minWidth: 215,
         cellRenderer: ResumeUploaded,
-        filter: "agTextColumnFilter",
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
     },
     {
         headerName: "Change Consent Status",
-        field: "changeConsentStatus",
+        field: "consentStatus",
         hide: false,
         minWidth: 230,
         filter: "agTextColumnFilter",
         cellRenderer: CustomDropDown,
-        valueSetter: function (params) {
-            params.data.changeConsentStatus = params.newValue;
-            return true;
-        },
         floatingFilterComponentParams: {
             suppressFilterButton: true,
         },
@@ -202,60 +191,6 @@ export var LISTING_GENERIC_HEADERS = [
         },
         floatingFilterComponentParams: {
             suppressFilterButton: true,
-        },
-    },
-    {
-        headerName: "Change HH Shortlisting",
-        field: "changeHHShortlisting",
-        hide: false,
-        minWidth: 250,
-        filter: "agTextColumnFilter",
-        cellRenderer: CustomDropDown,
-        valueSetter: function (params) {
-            params.data.changeHHShortlisting = params.newValue;
-            return true;
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-    },
-    {
-        headerName: "Change Employer Duplication",
-        field: "changeEmployerDuplication",
-        hide: false,
-        minWidth: 250,
-        filter: "agTextColumnFilter",
-        cellRenderer: CustomDropDown,
-        valueSetter: function (params) {
-            params.data.changeEmployerDuplication = params.newValue;
-            return true;
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-    },
-    {
-        headerName: "Change Employer Shortlisting",
-        field: "changeEmployerShortlisting",
-        hide: false,
-        minWidth: 250,
-        filter: "agTextColumnFilter",
-        cellRenderer: CustomDropDown,
-        valueSetter: function (params) {
-            params.data.changeEmployerShortlisting = params.newValue;
-            return true;
-        },
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
         },
     },
 ];

@@ -46,23 +46,67 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { CircularProgress, Stack, } from "@mui/material";
 import "./JobSeekerProfileFlow.css";
-import { getFormData, getFormModeler, updateJobSeekerProfile, } from "../../services/FormDataService";
+import { getFormData, getFormModeler, getJobSeekerProfile, updateJobSeekerProfile, } from "../../services/FormDataService";
 import PreviousNextButtons from "../../components/PreviousNextButtons/PreviousNextButtons";
-import { JD_PATCH_FORM, SUCCESS_KEY, FORM_SUBMISSION_SUCCESS, ERROR_KEY, } from "../../constants";
+import { WARNING_KEY, JD_PATCH_FORM, FORM_INVALID_STATUS, SUCCESS_KEY, FORM_SUBMISSION_SUCCESS, ERROR_KEY, } from "../../constants";
 import { Form } from "react-formio";
-import { useAppSelector } from "../../services/StoreHooks";
+import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
 var JobSeekerProfileJD = function (props) {
     var userDataState = useAppSelector(function (state) { return state.currentUser; });
+    var dispatch = useAppDispatch();
+    var myRefTag = useRef(Form);
     var _a = React.useState(false), loader = _a[0], setLoader = _a[1];
     var _b = React.useState(null), menuForm = _b[0], setMenuForm = _b[1];
     var _c = React.useState(false), formValidated = _c[0], setFormValidated = _c[1];
     var _d = React.useState({}), prefillDetails = _d[0], setPrefillDetails = _d[1];
     var _e = React.useState({}), postFormDetails = _e[0], setPostFormDetails = _e[1];
+    var _f = React.useState(false), gotData = _f[0], setGotData = _f[1];
+    var jdQueMap = {
+        textField: "Hy",
+        issuingCountry: "",
+        yes: "yes",
+        dateOfExpiry: "09/23/2020",
+        dateOfIssue: "09/23/2016",
+    };
     useEffect(function () {
+        if (props.profileDataId || userDataState.userData.profileId) {
+            getDataFill();
+        }
         fetchForm();
     }, []);
+    var getDataFill = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var profileDataFetched, error_1;
+        var _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    _e.trys.push([0, 2, , 3]);
+                    setLoader(true);
+                    return [4 /*yield*/, getJobSeekerProfile(props.profileDataId || userDataState.userData.profileId)];
+                case 1:
+                    profileDataFetched = _e.sent();
+                    if ((_b = (_a = profileDataFetched === null || profileDataFetched === void 0 ? void 0 : profileDataFetched.data) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.profileJDQuestionsMap) {
+                        setPrefillDetails({
+                            data: __assign({}, (_d = (_c = profileDataFetched === null || profileDataFetched === void 0 ? void 0 : profileDataFetched.data) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.profileJDQuestionsMap),
+                        });
+                    }
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_1 = _e.sent();
+                    console.log(error_1);
+                    props.setType(ERROR_KEY);
+                    props.setDataMessage("Something went wrong");
+                    props.setOpen(true);
+                    return [3 /*break*/, 3];
+                case 3:
+                    setLoader(false);
+                    return [2 /*return*/];
+            }
+        });
+    }); };
     var fetchForm = function () { return __awaiter(void 0, void 0, void 0, function () {
         var formMarkup, jdMarkup;
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
@@ -77,9 +121,14 @@ var JobSeekerProfileJD = function (props) {
                     jdMarkup = _m.sent();
                     if ((_j = (_h = (_g = jdMarkup === null || jdMarkup === void 0 ? void 0 : jdMarkup.data) === null || _g === void 0 ? void 0 : _g.data) === null || _h === void 0 ? void 0 : _h.components) === null || _j === void 0 ? void 0 : _j.components) {
                         setMenuForm((_l = (_k = jdMarkup === null || jdMarkup === void 0 ? void 0 : jdMarkup.data) === null || _k === void 0 ? void 0 : _k.data) === null || _l === void 0 ? void 0 : _l.components);
+                        setLoader(false);
                     }
-                    _m.label = 3;
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 3:
+                    setLoader(false);
+                    setGotData(true);
+                    _m.label = 4;
+                case 4: return [2 /*return*/];
             }
         });
     }); };
@@ -88,20 +137,27 @@ var JobSeekerProfileJD = function (props) {
         setFormValidated(data.isValid);
     };
     var submitFormData = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var jdQuestionsMap, bodyPayload, profileJDDetailsResponse, error_1;
+        var jdQuestionsMap, bodyPayload, profileJDDetailsResponse, error_2;
         var _a, _b, _c;
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
+                    if (!(myRefTag === null || myRefTag === void 0 ? void 0 : myRefTag.current)) {
+                        props.setType(WARNING_KEY);
+                        props.setDataMessage(FORM_INVALID_STATUS);
+                        props.setOpen(true);
+                        return [2 /*return*/];
+                    }
                     jdQuestionsMap = Object.assign(postFormDetails);
                     setLoader(true);
                     _d.label = 1;
                 case 1:
                     _d.trys.push([1, 3, , 4]);
                     bodyPayload = {
-                        profileId: userDataState.userData.profileId,
+                        profileId: props.profileDataId || userDataState.userData.profileId,
                         profileData: {
-                            jdQuestionsMap: jdQuestionsMap
+                            jdQuestionsMap: jdQuestionsMap,
+                            profileLastCompletedStep: "6",
                         },
                     };
                     return [4 /*yield*/, updateJobSeekerProfile(bodyPayload)];
@@ -116,10 +172,10 @@ var JobSeekerProfileJD = function (props) {
                     }
                     return [3 /*break*/, 4];
                 case 3:
-                    error_1 = _d.sent();
-                    console.log(error_1 === null || error_1 === void 0 ? void 0 : error_1.response);
+                    error_2 = _d.sent();
+                    console.log(error_2 === null || error_2 === void 0 ? void 0 : error_2.response);
                     props.setType(ERROR_KEY);
-                    props.setDataMessage((_c = (_b = error_1 === null || error_1 === void 0 ? void 0 : error_1.response) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.message);
+                    props.setDataMessage((_c = (_b = error_2 === null || error_2 === void 0 ? void 0 : error_2.response) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.message);
                     props.setOpen(true);
                     return [3 /*break*/, 4];
                 case 4:
@@ -128,8 +184,15 @@ var JobSeekerProfileJD = function (props) {
             }
         });
     }); };
-    return (_jsxs("div", __assign({ className: "job-seeker-profile-content" }, { children: [_jsx(Form, { form: menuForm, submission: {
-                    data: prefillDetails,
-                }, onChange: function (schema) { return handleChange(schema); } }), _jsx(PreviousNextButtons, { handleNext: submitFormData, handleBack: props.handleBack })] })));
+    var handleBack = function () {
+        if (userDataState.userData.workStatus === 'Fresh Graduate' || userDataState.userData.workStatus === "Not-Working") {
+            props.setActiveStep(3);
+        }
+        else {
+            props.setActiveStep(4);
+        }
+    };
+    return (_jsxs("div", __assign({ className: "job-seeker-profile-content" }, { children: [_jsx(Form, { ref: myRefTag, form: menuForm, submission: prefillDetails, onChange: function (schema) { return handleChange(schema); } }), gotData &&
+                _jsx("div", __assign({ className: "head-title-text" }, { children: "JD Specific Questions has not been configured for this contest" })), props.hasButtons ? (_jsx(PreviousNextButtons, { handleNext: submitFormData, handleBack: handleBack })) : null, loader && (_jsx(Stack, __assign({ alignItems: "center" }, { children: _jsx(CircularProgress, {}) })))] })));
 };
 export default JobSeekerProfileJD;

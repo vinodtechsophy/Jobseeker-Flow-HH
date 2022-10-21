@@ -45,48 +45,269 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState, useEffect } from "react";
-import { Typography, tooltipClasses, Tooltip, IconButton, } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Typography, Button, TextField, Box, Tooltip, IconButton, Drawer, Grid, Card, Popover, Dialog, DialogTitle, DialogContent, DialogContentText, FormGroup, FormControlLabel, } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import LocalPhoneRoundedIcon from "@mui/icons-material/LocalPhoneRounded";
+import CloseIcon from "@mui/icons-material/Close";
 import DehazeIcon from "@mui/icons-material/Dehaze";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorIcon from "@mui/icons-material/Error";
-import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import { openFile } from "../../services/DocumentService";
+import MessageBox from "../Broadcast/MessageBox";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import clsx from "clsx";
+import { mainStages, subStages } from "./ManageConstants";
+import { manageJobseekerPatch } from "../../services/JobSeekerService";
+import { useAppDispatch } from "../../services/StoreHooks";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import moment from "moment";
+import SendIcon from "@mui/icons-material/Send";
 var useStyles = makeStyles(function () { return ({
-    buttonContainer: {
-        "&.MuiButton-root": {
-            minWidth: "2vw",
-        },
-    },
-    arrow: {
-        "&:before": {
-            border: "1px solid #36454F",
-            color: "#ffffff",
-        },
-    },
     iconColor: {
         color: "#4d6cd9",
         margin: "8px",
     },
     uploadText: {
         color: "#4d6cd9",
+    },
+    viewAssessmentCard: {
+        border: "1px solid grey",
+        height: "200px ",
+        marginTop: "10px",
+        marginRight: "5px",
+        marginLeft: "5px",
+        fontSize: "15px",
+    },
+    assessmentActionButton: {
+        height: "2px",
+        width: "1px",
+        float: "right",
+        margin: "3px 3px 0px 0px",
+        cursor: "pointer",
+    },
+    assessmentButton: {
+        textAlign: "center",
+        marginTop: 3,
+    },
+    assessmentDeleteAction: {
+        border: "1px solid gray",
+        borderRadius: 0,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "left",
+        alignItems: "center",
+        paddingLeft: "40px",
+        width: "250px",
+        color: "gray",
+        height: "55px",
+        fontSize: "16px",
+    },
+    deleteActionButton: {
+        width: "250px",
+        justifyContent: "left",
+        paddingLeft: "25px",
+        color: "gray",
+        height: "55px",
+        fontSize: "16px",
+    },
+    deleteIcon: {
+        marginRight: "15px",
+        cursor: "pointer",
+    },
+    assessmentUpdateAction: {
+        borderLeft: "1px solid gray",
+        borderRight: "1px solid gray",
+        borderBottom: "1px solid gray",
+        borderRadius: 0,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "left",
+        alignItems: "center",
+        paddingLeft: "43px",
+        width: "250px",
+        color: "gray",
+        height: "55px",
+        fontSize: "16px",
+    },
+    updateActionButton: {
+        width: "250px",
+        justifyContent: "left",
+        color: "gray",
+        height: "55px",
+        fontSize: "16px",
+    },
+    updateIcon: {
+        marginRight: "17px",
+        backgroundColor: "gray",
+        color: "white",
+        borderRadius: 3,
+        cursor: "pointer",
+        padding: "2px",
+    },
+    uploadIcon: {
+        size: "small",
+        marginRight: "18px",
+        marginLeft: "25px",
+        backgroundColor: "gray",
+        color: "white",
+        borderRadius: "2px",
+        fontSize: "14px",
+    },
+    assessmentDialogueBox: {
+        backgroundColor: "#4D6CD9",
+        width: "600px",
+        textAlign: "center",
+    },
+    assessmentDialogueContent: {
+        textAlign: "center",
+    },
+    assessmentDialogueText: {
+        paddingTop: "50px",
+        paddingBottom: "40px",
+        justifyContent: "center",
+        textAlign: "center",
+    },
+    assessmentDialogueAction: {
+        paddingTop: "10px",
+        paddingBottom: "40px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "600px",
+    },
+    delete: {
+        backgroundColor: "#4D6CD9",
+        borderRadius: 20,
+        color: "black",
+        paddingLeft: "30px",
+        paddingRight: "30px",
+        height: "30px",
+        paddingTop: "3px",
+        cursor: "pointer",
+        marginRight: "20px",
+    },
+    cancel: {
+        backgroundColor: "#4D6CD9",
+        borderRadius: 20,
+        color: "black",
+        paddingLeft: "20px",
+        paddingRight: "20px",
+        height: "30px",
+        paddingTop: "3px",
+        cursor: "pointer",
+        marginLeft: "20px",
+    },
+    leftDrawerBox: {
+        width: "390px",
+        overflow: "hidden",
+        justifyContent: "center",
+        alignItems: "center",
+        top: 0,
+        overflowY: "auto",
+    },
+    viewAssessmentTitle: {
+        textAlign: "center",
+        backgroundColor: "#4D6CD9",
+        height: "50px",
+        // width: "390px",
+        color: "#FFFFFF",
+        padding: "10px",
+        fontSize: "20px",
+        fontWeight: "bold",
+    },
+    assessmentDetailsCard: {
+        border: "1px solid grey",
+        height: "180px ",
+        marginTop: "20px",
+        marginRight: "5px",
+        marginLeft: "5px",
+        fontSize: "13px",
+        marginBottom: "10px",
+    },
+    assessmentDetails: {
+        width: "190px",
+        "& legend": { display: "none" },
+        "& fieldset": { top: 0 },
+    },
+    partnerAssessment: {
+        fontSize: "20px",
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    mainContainer: {
+        display: "flex",
+        flexDirection: "column",
+        flexWrap: "wrap",
+        height: 687,
+        width: 390,
+        margin: 1,
+        border: "1px solid #E5E5E5",
+    },
+    section1: {
+        textAlign: "center",
+        backgroundColor: "#4D6CD9",
+        height: "50px",
+        width: "390px",
+        color: "#FFFFFF",
+        padding: "10px",
+    },
+    section2: {
+        marginTop: "15px",
+        width: "390px",
+        textAlign: "center",
+    },
+    section3: {
+        marginTop: "15px",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    card: {
+        marginLeft: "18px",
+        backgroundColor: "white",
+        width: "350px",
+        height: "auto",
+        borderRadius: "10px",
+    },
+    timeSlotTitleContainer: {
+        marginTop: "40px",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    commonColor: {
+        color: "#4d6cd9",
+    },
+    commonMargin: {
+        margin: "10px",
+    },
+    dropdown: {
+        border: "1px solid #DFE5FF",
+    },
+    dropdownContent: {
+        display: "inline-flex",
+        alignItems: "center",
+    },
+    closeIcon: {
+        float: "right",
+    },
+    formControl: {
+        top: 5,
+        minWidth: 120,
     },
 }); });
 export var ResumeUploaded = function (params) {
@@ -97,7 +318,6 @@ export var ResumeUploaded = function (params) {
             switch (_a.label) {
                 case 0:
                     resumeId = params.getValue();
-                    console.log(resumeId);
                     return [4 /*yield*/, openFile(resumeId)];
                 case 1:
                     _a.sent();
@@ -105,130 +325,590 @@ export var ResumeUploaded = function (params) {
             }
         });
     }); };
-    return (_jsx("div", __assign({ style: {
-            textAlign: "center",
-        } }, { children: _jsx(Typography, __assign({ onClick: handleViewResume, className: classes.uploadText }, { children: "View Resume Uploaded" })) })));
+    return (_jsx("div", __assign({ className: classes.assessmentDialogueContent }, { children: _jsx(Typography, __assign({ onClick: handleViewResume, className: classes.uploadText }, { children: "View Resume Uploaded" })) })));
 };
 export var Icons = function (params) {
+    var _a = useState(false), toggleDrawer = _a[0], setToggleDrawer = _a[1];
     var classes = useStyles();
-    var handleClick = function () {
-        console.log(params);
-    };
+    var handleClick = function () { };
     var handleChat = function () {
         console.log("Chat Icon clicked");
+        setToggleDrawer(true);
     };
-    return (_jsxs("div", __assign({ style: {
-            textAlign: "center",
-        } }, { children: [_jsx(VisibilityIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(LocalPhoneRoundedIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(ChatBubbleOutlineIcon, { className: classes.iconColor, onClick: handleChat }), _jsx(DehazeIcon, { className: classes.iconColor, onClick: handleClick })] })));
+    return (_jsxs("div", __assign({ className: classes.assessmentDialogueContent }, { children: [_jsx(VisibilityIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(LocalPhoneRoundedIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(ChatBubbleOutlineIcon, { className: classes.iconColor, onClick: handleChat }), _jsx(DehazeIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(Drawer, __assign({ anchor: "left", open: toggleDrawer, onClose: function () { return setToggleDrawer(false); } }, { children: _jsx(Box, __assign({ className: classes.leftDrawerBox }, { children: _jsx(MessageBox, { closeIt: function () { return setToggleDrawer(false); }, params: params }) })) }))] })));
 };
-export var CustomDropDown = function (params) {
-    // console.log("Vetting custom feild", params);
-    var Passed = {
-        option: "passed",
-        color: "#22C55E",
-        title: "Success",
-        body: "Passed",
+export var MainStageDropDown = function (params) {
+    var dispatch = useAppDispatch();
+    var id = "cellNo".concat(params.rowIndex).concat(params.column.instanceId);
+    var _a = useState(params.data.jobSeekerMainStage), mainStageSelected = _a[0], setMainStageSelected = _a[1];
+    var dispatchNotificationData = function (notifyData) {
+        dispatch({
+            type: "SEND_ALERT",
+            data: {
+                enable: notifyData.enable,
+                type: notifyData.type,
+                message: notifyData.message,
+                duration: notifyData.duration,
+            },
+        });
     };
-    var Pending = {
-        option: "pending",
-        color: "#ff781f",
-        title: "",
-        body: "Pending",
-    };
-    var Failed = {
-        option: "failed",
-        color: "#EF4444",
-        title: "",
-        body: "Failed",
-    };
-    var _a = useState({
-        option: "",
-        color: "",
-        title: "",
-        body: "",
-    }), option = _a[0], setOption = _a[1];
-    useEffect(function () {
-        console.log(params.getValue());
-        if (params.getValue() === null || "") {
-            setOption({
-                option: "",
-                color: "",
-                title: "",
-                body: "",
-            });
-        }
-        else if (params.getValue() === "passed") {
-            setOption(Passed);
-        }
-        else if (params.getValue() === "pending") {
-            setOption(Pending);
-        }
-        else if (params.getValue() === "failed") {
-            setOption(Failed);
-        }
-    }, []);
+    var handleChange = function (event) { return __awaiter(void 0, void 0, void 0, function () {
+        var jobSeekerId, payload, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    jobSeekerId = params.data._id;
+                    payload = {
+                        jobSeekerMainStage: event.target.value,
+                        jobSeekerSubStage: "N/A",
+                        jobSeekerComment: "N/A",
+                    };
+                    return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
+                case 1:
+                    response = _a.sent();
+                    if (response.data.success) {
+                        params.setValue(event.target.value);
+                        params.refreshCell();
+                        setMainStageSelected(event.target.value);
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "MainStage Updated Successfully ",
+                            duration: 4000,
+                        });
+                    }
+                    else {
+                        params.setValue(params.data.jobSeekerMainStage);
+                        params.refreshCell();
+                        setMainStageSelected(mainStageSelected);
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "MainStage Not Updated Please Try Again ",
+                            duration: 4000,
+                        });
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    var classes = useStyles();
+    return (_jsx(_Fragment, { children: _jsx("div", { children: _jsx("select", __assign({ id: id, className: classes.dropdown, onChange: handleChange, defaultValue: mainStageSelected }, { children: mainStages.map(function (item) { return (_jsx("option", __assign({ value: item.value }, { children: item.title }))); }) })) }) }));
+};
+export var SubStageDropDown = function (params) {
     var id = "cellNo".concat(params.rowIndex).concat(params.column.instanceId);
     var iconId = "iconNo".concat(params.rowIndex).concat(params.column.instanceId);
-    var _b = useState(""), message = _b[0], setMessage = _b[1];
-    var handleChange = function (event) {
-        params.setValue(event.target.value);
-        if (event.target.value == "passed") {
-            console.log("Can call Api to change status to Passed");
-            setOption(Passed);
+    var initalValue;
+    var _a = useState(params.data.jobSeekerSubStage), subStageSelected = _a[0], setSubStageSelected = _a[1];
+    var dispatch = useAppDispatch();
+    var dispatchNotificationData = function (notifyData) {
+        dispatch({
+            type: "SEND_ALERT",
+            data: {
+                enable: notifyData.enable,
+                type: notifyData.type,
+                message: notifyData.message,
+                duration: notifyData.duration,
+            },
+        });
+    };
+    var _b = useState(params.data.jobSeekerMainStage), mainStageVal = _b[0], setMainStageVal = _b[1];
+    var handleChange = function (event) { return __awaiter(void 0, void 0, void 0, function () {
+        var jobSeekerId, payload, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    setMainStageVal(params.data.jobSeekerMainStage);
+                    jobSeekerId = params.data._id;
+                    payload = {
+                        jobSeekerSubStage: event.target.value,
+                        jobSeekerComment: "N/A",
+                    };
+                    return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
+                case 1:
+                    response = _a.sent();
+                    if (response.data.success) {
+                        params.setValue(event.target.value);
+                        params.refreshCell();
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "SubStage Updated Successfully ",
+                            duration: 4000,
+                        });
+                    }
+                    else {
+                        params.setValue(params.data.jobSeekerSubStage);
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "SubStage not Updated Please Try Again",
+                            duration: 4000,
+                        });
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    useEffect(function () {
+        if (params.data.jobSeekerSubStage)
+            setSubStageSelected(params.data.jobSeekerSubStage);
+        if (params.data.jobSeekerMainStage)
+            setMainStageVal(params.data.jobSeekerMainStage);
+    }, [params]);
+    var classes = useStyles();
+    if (mainStageVal)
+        return (_jsx(_Fragment, { children: _jsx("div", { children: _jsx("select", __assign({ id: id, className: classes.dropdown, onChange: handleChange, defaultValue: subStageSelected }, { children: mainStageVal
+                        ? subStages[mainStageVal]["subStages"].map(function (item) { return (_jsx("option", __assign({ value: item.value }, { children: item.title }))); })
+                        : null })) }) }));
+    else
+        return null;
+};
+export var SubStageCommentsDropDown = function (params) {
+    var id = "cellNo".concat(params.rowIndex).concat(params.column.instanceId);
+    var iconId = "iconNo".concat(params.rowIndex).concat(params.column.instanceId);
+    var _a = useState(""), mainStageVal = _a[0], setMainStageVal = _a[1];
+    var _b = useState(""), subStageVal = _b[0], setSubStageVal = _b[1];
+    var dispatch = useAppDispatch();
+    var dispatchNotificationData = function (notifyData) {
+        dispatch({
+            type: "SEND_ALERT",
+            data: {
+                enable: notifyData.enable,
+                type: notifyData.type,
+                message: notifyData.message,
+                duration: notifyData.duration,
+            },
+        });
+    };
+    var handleChange = function (event) { return __awaiter(void 0, void 0, void 0, function () {
+        var jobSeekerId, payload, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    jobSeekerId = params.data._id;
+                    payload = {
+                        jobSeekerComment: event.target.value,
+                    };
+                    return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
+                case 1:
+                    response = _a.sent();
+                    if (response.data.success) {
+                        params.setValue(event.target.value);
+                        params.refreshCell();
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "Comment Updated Successfully ",
+                            duration: 4000,
+                        });
+                    }
+                    else {
+                        params.setValue(params.data.jobSeekerComment);
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "Comment Not Updated Please Try Again ",
+                            duration: 4000,
+                        });
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    useEffect(function () {
+        if (params.data.jobSeekerMainStage && params.data.jobSeekerSubStage) {
+            setMainStageVal(params.data.jobSeekerMainStage);
+            setSubStageVal(params.data.jobSeekerSubStage);
         }
-        else if (event.target.value == "pending") {
-            setOption(Pending);
-        }
-        else if (event.target.value == "failed") {
-            setOption(Failed);
-        }
-        else if (event.target.value == "") {
-            setOption({
-                option: "",
-                color: "",
-                title: "",
-                body: "",
-            });
-        }
+    }, [params]);
+    var classes = useStyles();
+    if (mainStageVal && subStageVal)
+        return (_jsx(_Fragment, { children: _jsx("div", { children: _jsx("select", __assign({ id: id, className: classes.dropdown, onChange: handleChange, defaultValue: params.data.jobSeekerComment }, { children: mainStageVal && subStageVal
+                        ? subStages[mainStageVal][subStageVal].map(function (item) { return (_jsx("option", __assign({ value: item.value }, { children: item.title }))); })
+                        : null })) }) }));
+    else
+        return null;
+};
+export var ViewAssessments = function (params) {
+    var _a = useState(false), toggleDrawer = _a[0], setToggleDrawer = _a[1];
+    var _b = React.useState([]), assessmentType = _b[0], setAssessmentType = _b[1];
+    var _c = React.useState([]), assessmentPartner = _c[0], setAssessmentPartner = _c[1];
+    var _d = useState(null), anchorElView = _d[0], setAnchorElView = _d[1];
+    var _e = useState(null), anchorElUpload = _e[0], setAnchorElUpload = _e[1];
+    var _f = useState(false), isDeleteBoxOpen = _f[0], setIsDeleteBoxOpen = _f[1];
+    var _g = useState(false), isUpdateBoxOpen = _g[0], setIsUpdateBoxOpen = _g[1];
+    var _h = useState(false), isUploadBoxOpen = _h[0], setIsUploadBoxOpen = _h[1];
+    var _j = useState(false), isDeleteSuccessBoxOpen = _j[0], setIsDeleteSuccessBoxOpen = _j[1];
+    var assessmentTypes = [
+        "Assessment Services",
+        "Interview as a Service",
+        "Resume Builder",
+        "Learning Management System",
+    ];
+    var assessmentPartners = [
+        "Assessment Services",
+        "Interview as a Service",
+        "Resume Builder",
+        "Learning Management System",
+    ];
+    var handleChangeAssessmentType = function (event) {
+        var value = event.target.value;
+        setAssessmentType(
+        // On autofill we get a stringified value.
+        typeof value === "string" ? value.split(",") : value);
+    };
+    var handleChangeAssessmentPartner = function (event) {
+        var value = event.target.value;
+        setAssessmentPartner(
+        // On autofill we get a stringified value.
+        typeof value === "string" ? value.split(",") : value);
     };
     var classes = useStyles();
-    var _c = React.useState(false), open = _c[0], setOpen = _c[1];
-    var HtmlTooltip = styled(function (_a) {
-        var className = _a.className, props = __rest(_a, ["className"]);
-        return (_jsx(Tooltip, __assign({}, props, { placement: "right", arrow: true, classes: { popper: className, arrow: classes.arrow } })));
-    })(function (_a) {
-        var _b;
-        var theme = _a.theme;
-        return (_b = {},
-            _b["& .".concat(tooltipClasses.tooltip)] = {
-                backgroundColor: "#ffffff",
-                border: "1px solid ".concat(option.color),
-                maxWidth: 220,
-                fontSize: theme.typography.pxToRem(12),
-                borderRadius: "1vw",
+    var handleClick = function () {
+        setToggleDrawer(true);
+    };
+    var handleCloseView = function () {
+        setAnchorElView(null);
+    };
+    var handleViewReport = function (event) {
+        setAnchorElView(event.currentTarget);
+    };
+    var openViewPop = Boolean(anchorElView);
+    var ViewAssessmentReport = function () {
+        return (_jsxs(Card, __assign({ className: classes.viewAssessmentCard, elevation: 3 }, { children: [_jsxs(Box, __assign({ className: classes.assessmentDialogueContent }, { children: [_jsxs("div", __assign({ className: classes.commonMargin }, { children: ["Assessment Type - Interview as a Service", _jsx(IconButton, __assign({ onClick: handleViewReport, className: classes.assessmentActionButton }, { children: _jsx(DehazeIcon, { className: classes.commonColor }) })), _jsxs(Popover, __assign({ id: "view-popover", open: openViewPop, anchorEl: anchorElView, onClose: handleCloseView, anchorReference: "anchorPosition", anchorPosition: { top: 345, left: 355 } }, { children: [_jsxs(Box, __assign({ className: classes.assessmentDeleteAction }, { children: [_jsx(DeleteForeverIcon, { className: classes.deleteIcon, onClick: function () {
+                                                        setIsDeleteBoxOpen(true);
+                                                    } }), _jsx(Typography, { children: "Delete" })] })), _jsxs(Box, __assign({ className: classes.assessmentUpdateAction }, { children: [_jsx(BorderColorIcon, { className: classes.updateIcon, onClick: function () {
+                                                        setIsUpdateBoxOpen(true);
+                                                    }, fontSize: "small" }), _jsx(Typography, { children: "Update" })] }))] }))] })), _jsx("div", __assign({ className: classes.commonMargin }, { children: "Assessment Partner - Interviewplus" })), _jsx("div", __assign({ className: classes.commonMargin }, { children: "Assessment Partner - Interviewplus" })), _jsx("div", __assign({ className: classes.commonMargin }, { children: "Assessment Partner - Interviewplus" }))] })), _jsx(Box, __assign({ className: classes.assessmentButton }, { children: _jsx(Button, __assign({ variant: "contained" }, { children: "View Assesment Report" })) }))] })));
+    };
+    var handleCloseUpload = function () {
+        setAnchorElUpload(null);
+    };
+    var handleUploadReport = function (event) {
+        setAnchorElUpload(event.currentTarget);
+    };
+    var openUploadPop = Boolean(anchorElUpload);
+    var UploadAssessmentReport = function () {
+        return (_jsxs(Card, __assign({ className: classes.viewAssessmentCard, elevation: 3 }, { children: [_jsxs(Box, __assign({ textAlign: "center" }, { children: [_jsxs("div", __assign({ className: classes.commonMargin }, { children: ["Assessment Type - Interview as a Service", _jsx(IconButton, __assign({ onClick: handleUploadReport, className: classes.assessmentActionButton }, { children: _jsx(DehazeIcon, { className: classes.commonColor }) })), _jsxs(Popover, __assign({ id: "upload-popover", open: openUploadPop, anchorEl: anchorElUpload, onClose: handleCloseUpload, anchorReference: "anchorPosition", anchorPosition: { top: 565, left: 355 } }, { children: [_jsxs(Box, __assign({ className: classes.assessmentDeleteAction }, { children: [_jsx(DeleteForeverIcon, { className: classes.deleteIcon, onClick: function () {
+                                                        setIsDeleteBoxOpen(true);
+                                                    } }), _jsx(Typography, { children: "Delete" })] })), _jsxs(Box, __assign({ className: classes.assessmentUpdateAction }, { children: [_jsx(BorderColorIcon, { className: classes.updateIcon, onClick: function () {
+                                                        setIsUploadBoxOpen(true);
+                                                    }, fontSize: "small" }), _jsx(Typography, { children: "Upload" })] }))] }))] })), _jsx("div", __assign({ className: classes.commonMargin }, { children: "Assessment Partner - Interviewplus" })), _jsx("div", __assign({ className: classes.commonMargin }, { children: "Assessment Partner - Interviewplus" })), _jsx("div", __assign({ className: classes.commonMargin }, { children: "Assessment Partner - Interviewplus" }))] })), _jsx(Box, __assign({ className: classes.assessmentButton }, { children: _jsx(Button, __assign({ variant: "contained" }, { children: "Upload Assesment Report" })) }))] })));
+    };
+    var handleDelete = function () {
+        //Delete Method
+        setIsDeleteBoxOpen(false);
+        setAnchorElUpload(null);
+        setAnchorElView(null);
+        setIsDeleteSuccessBoxOpen(true);
+    };
+    var DeleteAssessment = function () {
+        return (_jsxs(Dialog, __assign({ open: isDeleteBoxOpen, "aria-labelledby": "delete-dialog-title", "aria-describedby": "delete-dialog-description" }, { children: [_jsxs(DialogTitle, __assign({ id: "delete-dialog-title", className: classes.assessmentDialogueBox }, { children: ["Delete Assessment", _jsx(CloseIcon, { onClick: function () {
+                                setIsDeleteBoxOpen(false);
+                            }, className: classes.assessmentActionButton })] })), _jsx(DialogContent, __assign({ className: classes.assessmentDialogueContent }, { children: _jsx(DialogContentText, __assign({ id: "delete-dialog-description", className: classes.assessmentDialogueText }, { children: "Are you sure you want to Delete Assessment of the Job Seeker from the platfrom?" })) })), _jsxs(Box, __assign({ className: classes.assessmentDialogueAction }, { children: [_jsx(Box, __assign({ className: classes.delete, onClick: handleDelete }, { children: _jsx(Typography, { children: "Yes" }) })), _jsx(Box, __assign({ className: classes.cancel, onClick: function () {
+                                setIsDeleteBoxOpen(false);
+                                setAnchorElUpload(null);
+                                setAnchorElView(null);
+                            } }, { children: _jsx(Typography, { children: "Cancel" }) }))] }))] })));
+    };
+    var DeleteAssessmentSuccess = function () {
+        return (_jsxs(Dialog, __assign({ open: isDeleteSuccessBoxOpen, "aria-labelledby": "delete-success-dialog-title", "aria-describedby": "delete-success-dialog-description" }, { children: [_jsxs(DialogTitle, __assign({ id: "delete-success-dialog-title", className: classes.assessmentDialogueBox }, { children: ["Delete Assessment", _jsx(CloseIcon, { onClick: function () {
+                                setIsDeleteSuccessBoxOpen(false);
+                            }, className: classes.assessmentActionButton })] })), _jsx(DialogContent, __assign({ className: classes.assessmentDialogueContent }, { children: _jsx(DialogContentText, __assign({ id: "delete-success-dialog-description", className: classes.assessmentDialogueText }, { children: "Assessment has been deleted!" })) }))] })));
+    };
+    var UpdateAssessment = function () {
+        return (_jsxs(Dialog, __assign({ open: isUpdateBoxOpen, "aria-labelledby": "update-dialog-title", "aria-describedby": "update-dialog-description" }, { children: [_jsxs(DialogTitle, __assign({ id: "update-dialog-title", className: classes.assessmentDialogueBox }, { children: ["Update Assessment", _jsx(CloseIcon, { onClick: function () {
+                                setIsUpdateBoxOpen(false);
+                                setAnchorElView(null);
+                            }, className: classes.assessmentActionButton })] })), _jsx(DialogContent, __assign({ className: classes.assessmentDialogueContent }, { children: _jsx(DialogContentText, __assign({ id: "update-dialog-description", className: classes.assessmentDialogueText }, { children: "Job Seeker Name -" })) }))] })));
+    };
+    var UploadAssessment = function () {
+        return (_jsxs(Dialog, __assign({ open: isUploadBoxOpen, "aria-labelledby": "upload-dialog-title", "aria-describedby": "upload-dialog-description" }, { children: [_jsxs(DialogTitle, __assign({ id: "upload-dialog-title", className: classes.assessmentDialogueBox }, { children: ["Upload Assessment", _jsx(CloseIcon, { onClick: function () {
+                                setIsUploadBoxOpen(false);
+                                setAnchorElUpload(null);
+                            }, className: classes.assessmentActionButton })] })), _jsx(DialogContent, __assign({ className: classes.assessmentDialogueContent }, { children: _jsx(DialogContentText, __assign({ id: "upload-dialog-description", className: classes.assessmentDialogueText }, { children: "Job Seeker Name -" })) }))] })));
+    };
+    return (_jsxs("div", __assign({ className: classes.assessmentDialogueContent }, { children: [_jsx(Typography, __assign({ onClick: handleClick, className: classes.uploadText }, { children: "View Assessments" })), _jsx(Drawer, __assign({ anchor: "left", open: toggleDrawer, onClose: function () { return setToggleDrawer(false); } }, { children: _jsx(Box, __assign({ className: classes.leftDrawerBox }, { children: _jsxs(Grid, { children: [_jsx(Box, { children: _jsxs(Typography, __assign({ className: classes.viewAssessmentTitle }, { children: ["View Assessments", _jsx(CloseIcon, { className: classes.closeIcon, onClick: function () { return setToggleDrawer(false); } })] })) }), _jsx(Typography, __assign({ className: classes.assessmentDialogueContent }, { children: "Request New Assessment" })), _jsx(Typography, __assign({ className: classes.assessmentDialogueContent }, { children: "Job Seeker Name - Rajesh Sharma" })), _jsxs(Box, { children: [_jsxs(Card, __assign({ className: classes.assessmentDetailsCard, elevation: 3 }, { children: [_jsxs(Box, __assign({ display: "flex" }, { children: [_jsx(Typography, __assign({ p: 2.2 }, { children: "Assessment Type" })), _jsx(FormControl, __assign({ className: classes.formControl, size: "small" }, { children: _jsx(Select, __assign({ labelId: "demo-multiple-checkbox-label", id: "demo-multiple-checkbox", multiple: true, value: assessmentType, onChange: handleChangeAssessmentType, input: _jsx(OutlinedInput, { label: "Tag" }), renderValue: function (selected) { return selected.join(", "); }, className: classes.assessmentDetails }, { children: assessmentTypes.map(function (name) { return (_jsxs(MenuItem, __assign({ value: name }, { children: [_jsx(Checkbox, { checked: assessmentType.indexOf(name) > -1 }), _jsx(ListItemText, { primary: name })] }), name)); }) })) }))] })), _jsxs(Box, __assign({ display: "flex" }, { children: [_jsx(Typography, __assign({ p: 1 }, { children: "Assessment Partner" })), _jsx(FormControl, __assign({ className: classes.formControl, size: "small" }, { children: _jsx(Select, __assign({ labelId: "demo-multiple-checkbox-label", id: "demo-multiple-checkbox", multiple: true, value: assessmentPartner, onChange: handleChangeAssessmentPartner, input: _jsx(OutlinedInput, { label: "Tag" }), renderValue: function (selected) { return selected.join(", "); }, className: classes.assessmentDetails }, { children: assessmentPartners.map(function (name) { return (_jsxs(MenuItem, __assign({ value: name }, { children: [_jsx(Checkbox, { checked: assessmentPartner.indexOf(name) > -1 }), _jsx(ListItemText, { primary: name })] }), name)); }) })) }))] })), _jsx(Box, __assign({ className: clsx(classes.assessmentDialogueContent, classes.section3) }, { children: _jsx(Button, __assign({ variant: "contained" }, { children: "Request Assessment" })) }))] })), _jsx(Typography, __assign({ className: classes.partnerAssessment }, { children: "Partner Assessment Reports" })), _jsx(ViewAssessmentReport, {}), _jsx(UploadAssessmentReport, {}), _jsx(DeleteAssessment, {}), _jsx(DeleteAssessmentSuccess, {}), _jsx(UpdateAssessment, {}), _jsx(UploadAssessment, {})] })] }) })) }))] })));
+};
+export var Interview = function (params) {
+    var classes = useStyles();
+    var _a = useState(false), toggleDrawer = _a[0], setToggleDrawer = _a[1];
+    var _b = useState(""), nextInterviewDate = _b[0], setNextInterviewDate = _b[1];
+    var times = ["11:00am to 01:00pm", "03:00pm to 06:00pm"];
+    var _c = React.useState(moment()), dateValue = _c[0], setDateValue = _c[1];
+    var dispatch = useAppDispatch();
+    var dispatchNotificationData = function (notifyData) {
+        dispatch({
+            type: "SEND_ALERT",
+            data: {
+                enable: notifyData.enable,
+                type: notifyData.type,
+                message: notifyData.message,
+                duration: notifyData.duration,
             },
-            _b);
-    });
-    var handleTooltipClose = function () {
-        setOpen(false);
+        });
     };
-    var handleTooltipOpen = function () {
-        setOpen(true);
-        setTimeout(function () {
-            setOpen(false);
-        }, 4000);
+    var handleDateChange = function (newValue) { return __awaiter(void 0, void 0, void 0, function () {
+        var dd, mm, yy;
+        return __generator(this, function (_a) {
+            dd = ("0" + newValue.$D).slice(-2);
+            mm = ("0" + (newValue.$M + 1)).slice(-2);
+            yy = newValue.$y;
+            // Date picker is handling the date in DD/MM/YYYY format
+            console.log("".concat(mm, "/").concat(dd, "/").concat(yy));
+            setDateValue("".concat(dd, "/").concat(mm, "/").concat(yy));
+            return [2 /*return*/];
+        });
+    }); };
+    var handleSchedule = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var jobSeekerId, payload, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    jobSeekerId = params.data._id;
+                    payload = {
+                        nextInterviewDate: dateValue,
+                    };
+                    return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
+                case 1:
+                    response = _a.sent();
+                    if (response.data.success) {
+                        params.setValue(moment(dateValue, "DD-MM-YYYY").format("DD-MM-YYYY"));
+                        params.refreshCell();
+                        setToggleDrawer(false);
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "Interview Date is Successfully Scheduled",
+                            duration: 4000,
+                        });
+                    }
+                    else {
+                        params.setValue(params.data.nextInterviewDate);
+                        params.refreshCell();
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "Interview Date is Not Scheduled Please Try Again ",
+                            duration: 4000,
+                        });
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    var Card = function (props) {
+        var handleOnChange = function (e) {
+            if (e.target.checked) {
+                var time = e.target.value;
+            }
+        };
+        return (_jsxs(Grid, { children: [_jsx(Box, { children: _jsxs(Typography, __assign({ className: classes.viewAssessmentTitle }, { children: ["Interview Scheduling", _jsx(CloseIcon, { onClick: handleClose, className: classes.closeIcon })] })) }), _jsx(Box, __assign({ className: classes.section2 }, { children: _jsx("h5", __assign({ className: classes.commonColor }, { children: "Phase - L1" })) })), _jsxs(Box, __assign({ className: classes.section3 }, { children: [_jsx("p", { children: "Choose Date" }), _jsx(Box, { children: _jsx(LocalizationProvider, __assign({ dateAdapter: AdapterDayjs }, { children: _jsx(DesktopDatePicker, { label: "Choose Date", inputFormat: "DD/MM/YYYY", value: moment(dateValue, "DD-MM-YYYY").format("MM-DD-YYYY"), onChange: handleDateChange, disablePast: true, renderInput: function (params) { return _jsx(TextField, __assign({}, params)); } }) })) })] })), _jsxs(Box, __assign({ p: 1, className: classes.timeSlotTitleContainer }, { children: [_jsx("p", { children: "Time Slots Available" }), _jsx(FormGroup, { children: times.map(function (time) { return (_jsx(FormControlLabel, { onChange: handleOnChange, value: time, control: _jsx(Checkbox, {}), label: time })); }) })] })), _jsx(Box, __assign({ p: 1, className: classes.timeSlotTitleContainer }, { children: _jsx(Button, __assign({ variant: "contained", onClick: handleSchedule }, { children: "Schedule" })) }))] }));
     };
-    return (_jsxs(_Fragment, { children: [_jsx("div", { children: _jsxs("select", __assign({ id: id, style: { border: "1px solid #DFE5FF" }, value: option.option, onChange: handleChange, disabled: true }, { children: [_jsx("option", __assign({ value: "" }, { children: "Null" })), _jsx("option", __assign({ value: "passed" }, { children: "Passed" })), _jsx("option", __assign({ value: "pending" }, { children: "Pending" })), _jsx("option", __assign({ value: "failed" }, { children: "Failed" }))] })) }), _jsx("div", __assign({ style: { display: "inline-flex", alignItems: "center" } }, { children: (function () {
-                    if (option.option == "passed") {
-                        return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, { children: _jsx(CheckCircleIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) }) })));
+    var handleClose = function () {
+        setToggleDrawer(false);
+    };
+    return (_jsxs("div", __assign({ className: classes.assessmentDialogueContent }, { children: [_jsx(Button, __assign({ size: "small", onClick: function () { return setToggleDrawer(true); }, variant: "contained", sx: { background: "#4D6CD9", borderRadius: "15px", height: "25px" } }, { children: "Schedule" })), _jsx(Drawer, __assign({ anchor: "right", open: toggleDrawer, onClose: handleClose }, { children: _jsx(Card, { handleCloseIcon: handleClose }) }))] })));
+};
+export var Reward = function (params) {
+    var _a = useState(params.data.sendReward), disable = _a[0], setDisable = _a[1];
+    useEffect(function () {
+        if (params.data.coolingPeriod === "Complete") {
+            setDisable(true);
+        }
+        else {
+            setDisable(false);
+        }
+    }, [params.data.coolingPeriod]);
+    return (_jsx("div", { children: _jsx(Button, __assign({ disabled: !disable, size: "small", variant: "contained", sx: { background: "#4D6CD9", borderRadius: "15px", height: "25px" } }, { children: "Reward" })) }));
+};
+export var JobSeekerJoined = function (params) {
+    var _a = useState(), disable = _a[0], setDisable = _a[1];
+    var _b = React.useState(params.getValue()), dateValue = _b[0], setDateValue = _b[1];
+    var dispatch = useAppDispatch();
+    var dispatchNotificationData = function (notifyData) {
+        dispatch({
+            type: "SEND_ALERT",
+            data: {
+                enable: notifyData.enable,
+                type: notifyData.type,
+                message: notifyData.message,
+                duration: notifyData.duration,
+            },
+        });
+    };
+    var handleDateChange = function (newValue) { return __awaiter(void 0, void 0, void 0, function () {
+        var dd, mm, yy, jobSeekerId, payload, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    dd = ("0" + newValue.$D).slice(-2);
+                    mm = ("0" + (newValue.$M + 1)).slice(-2);
+                    yy = newValue.$y;
+                    // Date picker is handling the date in DD/MM/YYYY format
+                    console.log("".concat(mm, "/").concat(dd, "/").concat(yy));
+                    setDateValue("".concat(dd, "/").concat(mm, "/").concat(yy));
+                    jobSeekerId = params.data._id;
+                    payload = {
+                        jobSeekerJoinedDate: "".concat(dd, "/").concat(mm, "/").concat(yy),
+                    };
+                    return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
+                case 1:
+                    response = _a.sent();
+                    console.log(response);
+                    if (response.data.success) {
+                        params.setValue(moment(dateValue, "DD-MM-YYYY").format("DD-MM-YYYY"));
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "JobSeekerJoined Date is Successfully Updated",
+                            duration: 4000,
+                        });
                     }
-                    else if (option.option == "pending") {
-                        return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, { children: _jsx(PauseCircleFilledIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) }) })));
+                    else {
+                        params.setValue(params.data.jobSeekerJoinedDate);
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "JobSeekerJoined Date is Not Updated Please Try Again ",
+                            duration: 4000,
+                        });
                     }
-                    else if (option.option == "failed") {
-                        return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, { children: _jsx(ErrorIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) }) })));
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    return (_jsx("div", { children: _jsx(LocalizationProvider, __assign({ dateAdapter: AdapterDayjs }, { children: _jsx(DesktopDatePicker
+            // label="Choose Date"
+            , { 
+                // label="Choose Date"
+                inputFormat: "DD/MM/YYYY", value: moment(dateValue, "DD-MM-YYYY").format("MM-DD-YYYY"), onChange: handleDateChange, disablePast: true, renderInput: function (params) { return _jsx(TextField, __assign({}, params)); } }) })) }));
+};
+export var CoolingPeriod = function (params) {
+    var _a = useState(params.data.coolingPeriod), coolingPeriodEntered = _a[0], setCoolingPeriodEntered = _a[1];
+    var dispatch = useAppDispatch();
+    var dispatchNotificationData = function (notifyData) {
+        dispatch({
+            type: "SEND_ALERT",
+            data: {
+                enable: notifyData.enable,
+                type: notifyData.type,
+                message: notifyData.message,
+                duration: notifyData.duration,
+            },
+        });
+    };
+    var handleCoolingPeriod = function (event) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            setCoolingPeriodEntered(event.target.value);
+            return [2 /*return*/];
+        });
+    }); };
+    var handleSend = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var jobSeekerId, payload, response, jobSeekerId, payload, response, jobSeekerId, payload, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!(coolingPeriodEntered === "Complete")) return [3 /*break*/, 2];
+                    jobSeekerId = params.data._id;
+                    payload = {
+                        coolingPeriod: coolingPeriodEntered,
+                        sendReward: true,
+                    };
+                    return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
+                case 1:
+                    response = _a.sent();
+                    if (response.data.success) {
+                        params.setValue(coolingPeriodEntered);
+                        params.refreshCell();
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "CoolingPeriod is Successfully Updated",
+                            duration: 4000,
+                        });
                     }
-                })() }))] }));
+                    else {
+                        params.setValue(params.data.coolingPeriod);
+                        params.refreshCell();
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "CoolingPeriod is Not Updated Please Try Again ",
+                            duration: 4000,
+                        });
+                    }
+                    return [3 /*break*/, 6];
+                case 2:
+                    if (!(coolingPeriodEntered === "")) return [3 /*break*/, 4];
+                    jobSeekerId = params.data._id;
+                    payload = {
+                        coolingPeriod: "N/A",
+                        sendReward: false,
+                    };
+                    return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
+                case 3:
+                    response = _a.sent();
+                    if (response.data.success) {
+                        params.setValue("N/A");
+                        params.refreshCell();
+                        setCoolingPeriodEntered("N/A");
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "CoolingPeriod is Successfully Scheduled",
+                            duration: 4000,
+                        });
+                    }
+                    else {
+                        params.setValue(params.data.coolingPeriod);
+                        params.refreshCell();
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "CoolingPeriod is Not Scheduled Please Try Again ",
+                            duration: 4000,
+                        });
+                    }
+                    return [3 /*break*/, 6];
+                case 4:
+                    jobSeekerId = params.data._id;
+                    payload = {
+                        coolingPeriod: coolingPeriodEntered,
+                        sendReward: false,
+                    };
+                    return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
+                case 5:
+                    response = _a.sent();
+                    if (response.data.success) {
+                        params.setValue(coolingPeriodEntered);
+                        params.refreshCell();
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "CoolingPeriod is Successfully Scheduled",
+                            duration: 4000,
+                        });
+                    }
+                    else {
+                        params.setValue(params.data.coolingPeriod);
+                        params.refreshCell();
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "CoolingPeriod is Not Scheduled Please Try Again ",
+                            duration: 4000,
+                        });
+                    }
+                    _a.label = 6;
+                case 6: return [2 /*return*/];
+            }
+        });
+    }); };
+    return (_jsx("div", { children: _jsx(TextField, { id: "outlined-basic", label: "CoolingPeriod", variant: "outlined", value: coolingPeriodEntered, onChange: handleCoolingPeriod, InputProps: {
+                endAdornment: (_jsx(Tooltip, __assign({ title: "Update", placement: "top", arrow: true }, { children: _jsx(SendIcon, { fontSize: "small", sx: { color: "#4D6CD9" }, onClick: handleSend }) }))),
+            } }) }));
 };
 var CustomFields = function () {
     return _jsx("div", { children: "CustomFields" });

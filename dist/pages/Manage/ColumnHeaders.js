@@ -1,4 +1,4 @@
-import { CustomDropDown, Icons, ResumeUploaded } from "./CustomFields";
+import { MainStageDropDown, Icons, Interview, ResumeUploaded, ViewAssessments, SubStageDropDown, SubStageCommentsDropDown, Reward, JobSeekerJoined, CoolingPeriod, } from "./CustomFields";
 import { CONTEST_ABOUT_EMPLOYER } from "../../constants";
 export var dateFilterParams = {
     comparator: function (filterLocalDateAtMidnight, cellValue) {
@@ -57,23 +57,23 @@ export var LISTING_GENERIC_HEADERS = [
         },
     },
     {
-        headerName: "Experience",
-        field: "experience",
+        headerName: "Experience(Years)",
+        field: "profileDetailsMap.totalExperience.totalExperienceYears",
         hide: false,
-        minWidth: 180,
+        minWidth: 230,
         filterParams: {
             buttons: ["apply", "clear"],
         },
-        filter: "agNumberColumnFilter",
+        filter: "agTextColumnFilter",
         floatingFilterComponentParams: {
             suppressFilterButton: true,
         },
     },
     {
-        headerName: "Expected CTC",
-        field: "expectedCTC",
+        headerName: "Expected CTC(LPA)",
+        field: "profileDetailsMap.expectedCtc.expectedCtcLakh",
         hide: false,
-        minWidth: 215,
+        minWidth: 230,
         filterParams: {
             buttons: ["apply", "clear"],
         },
@@ -111,7 +111,7 @@ export var LISTING_GENERIC_HEADERS = [
         field: "mobileNumber",
         hide: false,
         minWidth: 200,
-        filter: "agNumberColumnFilter",
+        filter: "agTextColumnFilter",
         floatingFilterComponentParams: {
             suppressFilterButton: true,
         },
@@ -134,7 +134,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Current Location",
-        field: "currentLocation",
+        field: "profileWorkStatusMap.currentLocation",
         hide: false,
         minWidth: 200,
         filter: "agTextColumnFilter",
@@ -147,10 +147,10 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Currently Working",
-        field: "currentlyWorking",
+        field: "profileDetailsMap.currentlyWorking",
         hide: false,
         minWidth: 215,
-        filter: "agNumberColumnFilter",
+        filter: "agTextColumnFilter",
         // floatingFilterComponent: ,
         filterParams: {
             buttons: ["apply", "clear"],
@@ -165,13 +165,6 @@ export var LISTING_GENERIC_HEADERS = [
         hide: false,
         minWidth: 215,
         cellRenderer: ResumeUploaded,
-        filter: "agTextColumnFilter",
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
     },
     {
         headerName: "Job Seeker ID",
@@ -188,7 +181,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Profile Vetted",
-        field: "profileVetted",
+        field: "consentDate",
         hide: false,
         filter: "agDateColumnFilter",
         filterParams: dateFilterParams,
@@ -198,21 +191,92 @@ export var LISTING_GENERIC_HEADERS = [
         minWidth: 200,
     },
     {
-        headerName: "Interview Scheduling",
-        field: "interviewScheduling",
+        headerName: "Partner Assessments",
+        field: "partnerAssessments",
         hide: false,
-        minWidth: 230,
+        minWidth: 250,
+        cellRenderer: ViewAssessments,
+    },
+    {
+        headerName: "Job Seeker Main Stage",
+        field: "jobSeekerMainStage",
+        hide: false,
         filter: "agTextColumnFilter",
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
+        cellRenderer: MainStageDropDown,
+        valueGetter: function (params) {
+            return params.data.jobSeekerMainStage;
+        },
+        valueSetter: function (params) {
+            params.data.jobSeekerComment = "N/A";
+            params.data.jobSeekerSubStage = "N/A";
+            params.data.jobSeekerMainStage = params.newValue;
+            return true;
         },
         filterParams: {
             buttons: ["apply", "clear"],
         },
+        floatingFilterComponentParams: {
+            suppressFilterButton: true,
+        },
+        minWidth: 260,
+    },
+    {
+        headerName: "Job Seeker Sub Stage",
+        field: "jobSeekerSubStage",
+        hide: false,
+        filter: "agTextColumnFilter",
+        cellRenderer: SubStageDropDown,
+        valueGetter: function (params) {
+            return params.data.jobSeekerMainStage;
+        },
+        valueSetter: function (params) {
+            params.refresh = true;
+            params.data.jobSeekerSubStage = params.newValue;
+            return true;
+        },
+        filterParams: {
+            buttons: ["apply", "clear"],
+        },
+        floatingFilterComponentParams: {
+            suppressFilterButton: true,
+        },
+        minWidth: 430,
+    },
+    {
+        headerName: "Job Seeker Comment",
+        field: "jobSeekerComment",
+        hide: false,
+        filter: "agTextColumnFilter",
+        cellRenderer: SubStageCommentsDropDown,
+        valueGetter: function (params) {
+            return params.data.jobSeekerSubStage;
+        },
+        valueSetter: function (params) {
+            params.data.jobSeekerComment = params.newValue;
+            return true;
+        },
+        filterParams: {
+            buttons: ["apply", "clear"],
+        },
+        floatingFilterComponentParams: {
+            suppressFilterButton: true,
+        },
+        minWidth: 260,
+    },
+    {
+        headerName: "Interview Scheduling",
+        field: "interviewScheduling",
+        cellRenderer: Interview,
+        valueSetter: function (params) {
+            params.data.nextInterviewDate = params.newValue;
+            return true;
+        },
+        hide: false,
+        minWidth: 230,
     },
     {
         headerName: "Next Interview Date",
-        field: "profileVetted",
+        field: "nextInterviewDate",
         hide: false,
         filter: "agDateColumnFilter",
         filterParams: dateFilterParams,
@@ -222,110 +286,46 @@ export var LISTING_GENERIC_HEADERS = [
         minWidth: 230,
     },
     {
-        headerName: "Phase-L1",
-        field: "phaseL1",
-        hide: false,
-        minWidth: 250,
-        filter: "agTextColumnFilter",
-        cellRenderer: CustomDropDown,
-        valueSetter: function (params) {
-            params.data.phaseL1 = params.newValue;
-            return true;
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-    },
-    {
-        headerName: "Phase-L2",
-        field: "phaseL2",
-        hide: false,
-        minWidth: 250,
-        filter: "agTextColumnFilter",
-        cellRenderer: CustomDropDown,
-        valueSetter: function (params) {
-            params.data.phaseL2 = params.newValue;
-            return true;
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-    },
-    {
-        headerName: "Phase-HR",
-        field: "phaseHR",
-        hide: false,
-        minWidth: 250,
-        filter: "agTextColumnFilter",
-        cellRenderer: CustomDropDown,
-        valueSetter: function (params) {
-            params.data.phaseHR = params.newValue;
-            return true;
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-    },
-    {
-        headerName: "Offer Rolled Out",
-        field: "offerRolledOut",
-        hide: false,
-        minWidth: 230,
-        filter: "agTextColumnFilter",
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
-    },
-    {
         headerName: "Job Seeker Joined",
-        field: "jobSeekerJoined",
+        field: "jobSeekerJoinedDate",
+        cellRenderer: JobSeekerJoined,
+        valueGetter: function (params) {
+            return params.data.jobSeekerJoinedDate;
+        },
+        valueSetter: function (params) {
+            params.data.jobSeekerJoinedDate = params.newValue;
+            return true;
+        },
         hide: false,
         minWidth: 230,
-        filter: "agTextColumnFilter",
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
-    },
-    {
-        headerName: "Claim Reward",
-        field: "claimReward",
-        hide: false,
-        minWidth: 230,
-        filter: "agTextColumnFilter",
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
     },
     {
         headerName: "Cooling Period",
         field: "coolingPeriod",
+        cellRenderer: CoolingPeriod,
+        valueGetter: function (params) {
+            return params.data.coolingPeriod;
+        },
+        valueSetter: function (params) {
+            params.data.coolingPeriod = params.newValue;
+            return true;
+        },
         hide: false,
+        minWidth: 250,
+    },
+    {
+        headerName: "Send Reward",
+        field: "sendReward",
+        hide: false,
+        cellRenderer: Reward,
+        valueGetter: function (params) {
+            return params.data.coolingPeriod;
+        },
+        valueSetter: function (params) {
+            params.data.sendReward = params.newValue;
+            return true;
+        },
         minWidth: 230,
-        filter: "agTextColumnFilter",
-        floatingFilterComponentParams: {
-            suppressFilterButton: true,
-        },
-        filterParams: {
-            buttons: ["apply", "clear"],
-        },
     },
 ];
 export var relations = [CONTEST_ABOUT_EMPLOYER];

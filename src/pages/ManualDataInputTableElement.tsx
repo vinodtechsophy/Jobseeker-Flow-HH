@@ -9,6 +9,7 @@ import {
   tooltipClasses,
   Tooltip,
   ClickAwayListener,
+  IconButton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
@@ -22,6 +23,9 @@ import {
   fullDuplicationCheck,
 } from "../services/JobSeekerService";
 import moment from "moment";
+import { useAppDispatch } from "../services/StoreHooks";
+import { DUPLICATION_PASS, DUPLICATION_FAIL } from "../constants";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const useStyles = makeStyles(() => ({
   buttonContainer: {
@@ -39,8 +43,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const FirstNameInputBox = (params: any) => {
-  const id = `cellNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
   const [firstName, setFirstName] = useState(params.getValue());
+  useEffect(() => {
+    if (params.getValue().trim() == "") setFirstName(params.getValue());
+  }, [params.getValue()]);
+
   const handleChange = (event: any) => {
     if (/^[A-Za-z\s]+$/.test(event.target.value) || event.target.value == "") {
       setFirstName(event.target.value);
@@ -48,9 +58,10 @@ export const FirstNameInputBox = (params: any) => {
     }
   };
   return (
-    <div>
+    <div id={containerId}>
       <input
         id={id}
+        name={elementName}
         disabled={params.pdcDisabled}
         type="text"
         onChange={handleChange}
@@ -62,7 +73,9 @@ export const FirstNameInputBox = (params: any) => {
 };
 
 export const LastNameInputBox = (params: any) => {
-  const id = `cellNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
   const [lastName, setLastName] = useState(params.getValue());
   const handleChange = (event: any) => {
     if (/^[A-Za-z\s]+$/.test(event.target.value) || event.target.value == "") {
@@ -70,10 +83,14 @@ export const LastNameInputBox = (params: any) => {
       params.setValue(event.target.value);
     }
   };
+  useEffect(() => {
+    if (params.getValue().trim() == "") setLastName(params.getValue());
+  }, [params.getValue()]);
   return (
-    <div>
+    <div id={containerId}>
       <input
         id={id}
+        name={elementName}
         disabled={params.pdcDisabled}
         type="text"
         onChange={handleChange}
@@ -84,7 +101,9 @@ export const LastNameInputBox = (params: any) => {
   );
 };
 export const MobileNumberInputBox = (params: any) => {
-  const id = `cellNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
   const [mobileNumber, setMobileNumber] = useState(params.getValue());
   const handleChange = (event: any) => {
     if (/^\d{0,10}$/.test(event.target.value.trim())) {
@@ -92,10 +111,14 @@ export const MobileNumberInputBox = (params: any) => {
       params.setValue(event.target.value);
     }
   };
+  useEffect(() => {
+    if (params.getValue().trim() == "") setMobileNumber(params.getValue());
+  }, [params.getValue()]);
   return (
-    <div>
+    <div id={containerId}>
       <input
         id={id}
+        name={elementName}
         disabled={params.pdcDisabled}
         type="text"
         onChange={handleChange}
@@ -107,20 +130,26 @@ export const MobileNumberInputBox = (params: any) => {
 };
 
 export const EmailTextInput = (params: any) => {
-  const id = `cellNo${params.rowIndex}${params.column.instanceId}`;
-  const [message, setMessage] = useState(params.getValue());
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const [email, setEmail] = useState(params.getValue());
   const handleChange = (event: any) => {
-    setMessage(event.target.value);
+    setEmail(event.target.value);
     params.setValue(event.target.value);
   };
+  useEffect(() => {
+    if (params.getValue().trim() == "") setEmail(params.getValue());
+  }, [params.getValue()]);
   return (
-    <div>
+    <div id={containerId}>
       <input
         id={id}
+        name={elementName}
         disabled={params.pdcDisabled}
         type="email"
         onChange={handleChange}
-        value={message}
+        value={email}
         style={{ width: "100%", border: "1px solid #DFE5FF" }}
       />
     </div>
@@ -151,12 +180,14 @@ export const CustomDropDown = (params: any) => {
     setOption(params.getValue() == "yes" ? yes : no);
   }, []);
 
-  const id = `cellNo${params.rowIndex}${params.column.instanceId}`;
-  const iconId = `iconNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const iconId = `icon-no-${params.rowIndex}-${params.column.instanceId}`;
 
-  const [message, setMessage] = useState(params.getValue());
+  const [isInterviewed, setIsInterviewed] = useState(params.getValue());
   const handleChange = (event: any) => {
-    setMessage(event.target.value);
+    setIsInterviewed(event.target.value);
     params.setValue(event.target.value);
     if (event.target.value == "yes") {
       setOption(yes);
@@ -202,13 +233,21 @@ export const CustomDropDown = (params: any) => {
       setOpen(false);
     }, 4000);
   };
+  useEffect(() => {
+    if (params.getValue() == "no") {
+      setOption(no);
+      setOpen(false);
+      setIsInterviewed(params.getValue());
+    }
+  }, [params.getValue()]);
   return (
     <>
-      <div>
+      <div id={containerId}>
         <select
           id={id}
+          name={elementName}
           style={{ border: "1px solid #DFE5FF" }}
-          value={message}
+          value={isInterviewed}
           onChange={handleChange}
         >
           <option value="no">No</option>
@@ -258,17 +297,19 @@ export const CustomDropDown = (params: any) => {
 };
 
 export const PDCStatusCheckButton = (params: any) => {
+  const dispatch = useAppDispatch();
+
   const fail = {
     result: "Fail",
     color: "#EF4444",
     title: "Dublicate Found!",
-    body: "The ownwership with sai anvesh Maruboyina for 30 days.",
+    body: "",
   };
   const pass = {
     result: "Pass",
     color: "#22C55E",
-    title: "Pre Dublication Check Pass, job Seeker Id Created! ",
-    body: "Please Add DOB and PAN No. For full Dublication Check.",
+    title: "Pre Duplication Check Pass, job Seeker Id Created! ",
+    body: "",
   };
   const [result, setResult] = useState({
     result: "",
@@ -297,13 +338,27 @@ export const PDCStatusCheckButton = (params: any) => {
     },
   }));
 
-  const buttonId = `buttonNo${params.rowIndex}${params.column.instanceId}`;
-  const iconId = `iconNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const iconId = `icon-no-${params.rowIndex}-${params.column.instanceId}`;
+
+  const dispatchNotificationData = (notifyData) => {
+    dispatch({
+      type: "SEND_ALERT",
+      data: {
+        enable: notifyData.enable,
+        type: notifyData.type,
+        message: notifyData.message,
+        duration: notifyData.duration,
+      },
+    });
+  };
 
   const ref = useRef(null);
 
   const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  const handleClick = (event: any) => {
+  const handleClick = async (event: any) => {
     if (
       params.data.firstName.trim() == "" ||
       params.data.lastName.trim() == "" ||
@@ -311,45 +366,98 @@ export const PDCStatusCheckButton = (params: any) => {
       params.data.email.trim() == "" ||
       params.data.interviewed.trim() == ""
     ) {
-      alert("Enter All Details.");
+      dispatchNotificationData({
+        enable: true,
+        type: "warning",
+        message: "Enter All Details.",
+        duration: 2000,
+      });
+      console.log("Enter All Details.");
+
       params.setValue([false, ""]);
     } else if (!/^[6-9]{1}[0-9]{9}$/.test(params.data.phoneNumber)) {
-      alert("Invalid Phone Number.");
+      dispatchNotificationData({
+        enable: true,
+        type: "warning",
+        message: "Invalid Phone Number.",
+        duration: 2000,
+      });
+      console.log("Invalid Phone Number.");
+
       params.setValue([false, ""]);
     } else if (!emailRegex.test(params.data.email)) {
-      alert("Invalid Email.");
+      dispatchNotificationData({
+        enable: true,
+        type: "warning",
+        message: "Invalid Email.",
+        duration: 2000,
+      });
+      console.log("Invalid Email.");
+
       params.setValue([false, ""]);
     } else {
       const bodyPayload = {
         referralCompanyId: "a2",
-        contestId: "CONTEST_07_1091",
+        contestId: params.data.contestId,
         emailId: params.data.email,
         mobileNumber: params.data.phoneNumber,
         firstName: params.data.firstName,
         lastName: params.data.lastName,
         interviewAttended: params.data.interviewed,
       };
-      preDuplicationCheck(bodyPayload).then((response) => {
+      const response: any = await preDuplicationCheck(bodyPayload);
+
+      if (response?.status === 200) {
         if (response?.data.data.status == "PDC_SUCCESS") {
-          setResult(pass);
-          setOpen(true);
-          setTimeout(() => {
-            setOpen(false);
-          }, 4000);
+          setResult({
+            ...DUPLICATION_PASS,
+            title: "Pre Duplication Check Pass, job Seeker Id Created! ",
+            body: response?.data.message,
+          });
           params.setValue([true, response?.data.data.profileLogId]);
-          localStorage.setItem(
+          sessionStorage.setItem(
             `row${params.rowIndex}`,
             JSON.stringify(params.data)
           );
-        } else {
-          setResult(fail);
           setOpen(true);
           setTimeout(() => {
             setOpen(false);
           }, 4000);
+        } else {
+          setResult({
+            ...DUPLICATION_FAIL,
+            title: "Duplicate Found!",
+            body: response?.data.message,
+          });
           params.setValue([false, response?.data.data.profileLogId]);
+          setOpen(true);
+          setTimeout(() => {
+            setOpen(false);
+          }, 4000);
         }
-      });
+      } else if (response?.response?.status === 500) {
+        setResult({
+          ...DUPLICATION_FAIL,
+          title: "Duplicate Found!",
+          body: `500 ${response?.response?.data?.error} ${response?.response?.data?.message}`,
+        });
+        setOpen(true);
+        setTimeout(() => {
+          setOpen(false);
+        }, 4000);
+        params.setValue(false);
+      } else {
+        setResult({
+          ...DUPLICATION_FAIL,
+          title: "Duplicate Found!",
+          body: response?.response?.data.message,
+        });
+        setOpen(true);
+        setTimeout(() => {
+          setOpen(false);
+        }, 4000);
+        params.setValue(false);
+      }
     }
   };
 
@@ -372,15 +480,36 @@ export const PDCStatusCheckButton = (params: any) => {
         body: "",
       });
     } else if (params.getValue()) {
-      setResult(pass);
+      setResult({
+        ...DUPLICATION_PASS,
+        title: "Pre Duplication Check Pass, job Seeker Id Created!",
+        // body: response?.data.message,
+      });
     } else if (!params.getValue() == false) {
-      setResult(fail);
+      setResult({
+        ...DUPLICATION_FAIL,
+        title: "Dublicate Found!",
+        // body: response?.data.message,
+      });
     }
   }, []);
+  useEffect(() => {
+    if (params.getValue() === "0") {
+      setResult({
+        result: "",
+        color: "",
+        title: "",
+        body: "",
+      });
+      setOpen(false);
+    }
+  }, [params.getValue()]);
 
   return (
     <>
       <Button
+        id={id}
+        name={elementName}
         className={classes.buttonContainer}
         sx={{
           display: "inline",
@@ -441,23 +570,37 @@ export const PDCStatusCheckButton = (params: any) => {
 
 export const CustomDOBInputBox = (params: any) => {
   const [date, setDate] = React.useState(
-    params.getValue() == "" ? new Date(new Date().setFullYear(new Date().getFullYear() - 18)) : params.getValue()
+    params.getValue()
+    // params.getValue() == ""
+    //   ? new Date(new Date().setFullYear(new Date().getFullYear() - 18))
+    //   : params.getValue()
   );
-
+  const [isDisable, setIsDisable] = useState(false);
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
   const handleChange = (newValue: any) => {
-    const dd = ("0" + newValue.$D).slice(-2);
-    const mm = ("0" + (newValue.$M + 1)).slice(-2);
-    const yy = newValue.$y;
-    setDate(`${dd}/${mm}/${yy}`);
-    params.setValue(`${dd}/${mm}/${yy}`);
+    if (newValue != null) {
+      const dd = ("0" + newValue.$D).slice(-2);
+      const mm = ("0" + (newValue.$M + 1)).slice(-2);
+      const yy = newValue.$y;
+      // Date picker is handling the date in MM/DD/YYYY format
+      setDate(`${mm}/${dd}/${yy}`);
+      params.setValue(`${dd}/${mm}/${yy}`);
+    }
   };
+  useEffect(() => {
+    setIsDisable(!params.data.pdcStatus);
+  }, [params.data.pdcStatus]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         label="Custom input"
         views={["year", "month", "day"]}
+        disabled={isDisable}
         value={date}
+        inputFormat="DD/MM/YYYY"
         onChange={(newValue) => {
           handleChange(newValue);
         }}
@@ -465,6 +608,8 @@ export const CustomDOBInputBox = (params: any) => {
         renderInput={({ inputRef, inputProps, InputProps }) => (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <input
+              id={id}
+              name={elementName}
               ref={inputRef}
               {...inputProps}
               style={{
@@ -482,19 +627,30 @@ export const CustomDOBInputBox = (params: any) => {
 };
 
 export const PanInputBox = (params: any) => {
-  const id = `cellNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
   const [panNumber, setPanNumber] = useState(params.getValue());
+  const [isDisable, setIsDisable] = useState(false);
+
   const handleChange = (event: any) => {
     if (event.target.value.trim().length <= 5) {
       setPanNumber(event.target.value);
       params.setValue(event.target.value);
     }
   };
+  useEffect(() => {
+    setIsDisable(!params.data.pdcStatus);
+  }, [params.data.pdcStatus]);
+  useEffect(() => {
+    if (params.getValue().trim() == "") setPanNumber(params.getValue());
+  }, [params.getValue()]);
   return (
-    <div>
+    <div id={containerId}>
       <input
         id={id}
-        disabled={params.pdcDisabled}
+        name={elementName}
+        disabled={isDisable}
         type="text"
         onChange={handleChange}
         value={panNumber}
@@ -504,6 +660,8 @@ export const PanInputBox = (params: any) => {
   );
 };
 export const FDCStatusCheckButton = (params: any) => {
+  const dispatch = useAppDispatch();
+
   const fail = {
     result: "Fail",
     color: "#EF4444",
@@ -513,7 +671,7 @@ export const FDCStatusCheckButton = (params: any) => {
   const pass = {
     result: "Pass",
     color: "#22C55E",
-    title: "Final Dublication Check Passed, ",
+    title: "Final Duplication Check Passed, ",
     body: "Press upload to start uploading the profile.",
   };
   const [result, setResult] = useState({
@@ -522,10 +680,28 @@ export const FDCStatusCheckButton = (params: any) => {
     title: "",
     body: "",
   });
+  const [isDisable, setIsDisable] = useState(false);
+
+  useEffect(() => {
+    setIsDisable(!params.data.pdcStatus);
+  }, [params.data.pdcStatus]);
 
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
+
+  const dispatchNotificationData = (notifyData) => {
+    dispatch({
+      type: "SEND_ALERT",
+      data: {
+        enable: notifyData.enable,
+        type: notifyData.type,
+        message: notifyData.message,
+        duration: notifyData.duration,
+      },
+    });
+  };
+
   const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip
       {...props}
@@ -543,13 +719,14 @@ export const FDCStatusCheckButton = (params: any) => {
     },
   }));
 
-  const buttonId = `buttonNo${params.rowIndex}${params.column.instanceId}`;
-  const iconId = `iconNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const iconId = `icon-no-${params.rowIndex}-${params.column.instanceId}`;
 
-  const ref = useRef(null);
   const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-  const handleClick = (event: any) => {
+  const handleClick = async (event: any) => {
     if (
       params.data.firstName.trim() == "" ||
       params.data.lastName.trim() == "" ||
@@ -557,53 +734,117 @@ export const FDCStatusCheckButton = (params: any) => {
       params.data.email.trim() == "" ||
       params.data.interviewed.trim() == ""
     ) {
-      alert("Enter All Details.");
+      dispatchNotificationData({
+        enable: true,
+        type: "warning",
+        message: "Enter All Details.",
+        duration: 2000,
+      });
+
       params.setValue(false);
     }
     // else if (params.data.dob.trim() == "") {
     //   alert("Please enter date of birth.");
     // }
     else if (!/^[A-Za-z\s]+$/.test(params.data.firstName)) {
-      alert("Only alphabet can be entered in first name.");
+      dispatchNotificationData({
+        enable: true,
+        type: "warning",
+        message: "Only alphabet can be entered in first name.",
+        duration: 2000,
+      });
       params.setValue(false);
     } else if (!/^[A-Za-z\s]+$/.test(params.data.lastName)) {
-      alert("Only alphabet can be entered in last name.");
+      dispatchNotificationData({
+        enable: true,
+        type: "warning",
+        message: "Only alphabet can be entered in last name.",
+        duration: 2000,
+      });
       params.setValue(false);
     } else if (!/^[6-9]{1}[0-9]{9}$/.test(params.data.phoneNumber)) {
-      alert("Invalid Phone Number.");
+      dispatchNotificationData({
+        enable: true,
+        type: "warning",
+        message: "Invalid Phone Number.",
+        duration: 2000,
+      });
       params.setValue(false);
     } else if (!emailRegex.test(params.data.email)) {
-      alert("Invalid Email.");
+      dispatchNotificationData({
+        enable: true,
+        type: "warning",
+        message: "Invalid Email.",
+        duration: 2000,
+      });
       params.setValue(false);
     } else if (params.data.lastFiveDigitOfPan.trim().length != 5) {
-      alert("Please enter last five digits of PAN.");
+      dispatchNotificationData({
+        enable: true,
+        type: "warning",
+        message: "Please enter last five digits of PAN.",
+        duration: 2000,
+      });
       params.setValue(false);
     } else {
-      fullDuplicationCheck(
+      const response = await fullDuplicationCheck(
         params.data.profileLogId,
         params.data.lastFiveDigitOfPan,
         params.data.dob
-      ).then((response) => {
+      );
+      if (response?.status === 200) {
         if (response?.data.data.status == "FDC_SUCCESS") {
-          setResult(pass);
+          setResult({
+            ...DUPLICATION_PASS,
+            title: "Final Duplication Check Passed, ",
+            body: response?.data.message,
+          });
           setOpen(true);
+
           setTimeout(() => {
             setOpen(false);
           }, 4000);
           params.setValue(true);
-          localStorage.setItem(
+          sessionStorage.setItem(
             `row${params.rowIndex}`,
             JSON.stringify(params.data)
           );
         } else {
-          setResult(fail);
+          setResult({
+            ...DUPLICATION_FAIL,
+            title: "Final Duplication Check Failed, ",
+            body: response?.data.message,
+          });
           setOpen(true);
           setTimeout(() => {
             setOpen(false);
           }, 4000);
           params.setValue(false);
         }
-      });
+      } else if (response?.response?.status === 500) {
+        setResult({
+          ...DUPLICATION_FAIL,
+          title: "Final Duplication Check Failed, ",
+          body: `500 ${response?.response?.data?.error} ${response?.response?.data?.message}`,
+        });
+        setOpen(true);
+
+        setTimeout(() => {
+          setOpen(false);
+        }, 4000);
+        params.setValue(false);
+      } else {
+        setResult({
+          ...DUPLICATION_FAIL,
+          title: "Final Duplication Check Failed, ",
+          body: response?.response?.data.message,
+        });
+        setOpen(true);
+        setTimeout(() => {
+          setOpen(false);
+        }, 4000);
+        params.setValue(false);
+      }
     }
   };
 
@@ -627,15 +868,37 @@ export const FDCStatusCheckButton = (params: any) => {
         body: "",
       });
     } else if (params.getValue()) {
-      setResult(pass);
+      setResult({
+        ...DUPLICATION_PASS,
+        title: "Final Duplication Check Passed, ",
+        // body: response?.data.message,
+      });
     } else if (!params.getValue() == false) {
-      setResult(fail);
+      setResult({
+        ...DUPLICATION_FAIL,
+        title: "Final Dublication Check Failed, ",
+        // body: response?.data.message,
+      });
     }
   }, []);
+
+  useEffect(() => {
+    if (params.getValue() === "0") {
+      setResult({
+        result: "",
+        color: "",
+        title: "",
+        body: "",
+      });
+      setOpen(false);
+    }
+  }, [params.getValue()]);
 
   return (
     <>
       <Button
+        id={id}
+        name={elementName}
         className={classes.buttonContainer}
         sx={{
           display: "inline",
@@ -643,6 +906,7 @@ export const FDCStatusCheckButton = (params: any) => {
         variant="contained"
         size="small"
         onClick={handleClick}
+        disabled={isDisable}
       >
         Check
       </Button>
@@ -699,23 +963,76 @@ export const FDCStatusCheckButton = (params: any) => {
 
 export const CustomUploadButton = (params: any) => {
   const classes = useStyles();
+  const [isDisable, setIsDisable] = useState(false);
 
+  useEffect(() => {
+    setIsDisable(!params.data.fdcStatus);
+  }, [params.data.fdcStatus]);
   const navigateUpload = () => {};
-
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
   return (
     <div
       style={{
         textAlign: "center",
       }}
+      id={containerId}
     >
       <Button
+        id={id}
+        name={elementName}
         className={classes.buttonContainer}
         variant="contained"
         size="small"
         onClick={navigateUpload}
+        disabled={isDisable}
       >
         Upload
       </Button>
+    </div>
+  );
+};
+export const ClearRowButton = (params: any) => {
+  const classes = useStyles();
+  const [disableButton, setdisableButton] = useState<any>(
+    params.data.pdcStatus
+  );
+  useEffect(() => {
+    setdisableButton(params.data.pdcStatus);
+  }, [params.data.pdcStatus]);
+
+  const handleClick = () => {
+    params.node.setDataValue("firstName", "");
+    params.node.setDataValue("lastName", "");
+    params.node.setDataValue("phoneNumber", "");
+    params.node.setDataValue("email", "");
+    params.node.setDataValue("interviewed", "no");
+    params.node.setDataValue("pdcStatus", "0");
+    params.node.setDataValue("lastFiveDigitOfPan", "");
+    params.node.setDataValue("dob", "");
+    params.node.setDataValue("fdcStatus", "0");
+    params.node.setDataValue("uploadProfile", "");
+  };
+  const id = `clear-row-${params.rowIndex}-${params.column.instanceId}`;
+  // const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  return (
+    <div
+      id={containerId}
+      style={{
+        textAlign: "center",
+      }}
+    >
+      <IconButton
+        id={id}
+        // className={classes.buttonContainer}
+        onClick={handleClick}
+        aria-label="delete"
+        disabled={disableButton === true ? true : false}
+      >
+        <DeleteIcon />
+      </IconButton>
     </div>
   );
 };

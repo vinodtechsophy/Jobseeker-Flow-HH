@@ -14,7 +14,7 @@ import {
   patchContestDetails,
   getContestDetails,
 } from "../../services/ContestService";
-import { CONTEST_DETAILS, JOB_SEEKER_STATUS } from "../../constants";
+import { CONTEST_DETAILS } from "../../constants";
 import ConfirmationModel from "../ConfirmationModal/ConfirmationModel";
 import JobSeekerProfileStatusDetails from "./JobSeekerProfileStatusDetails";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -34,11 +34,11 @@ const degreeImage = "assets/degree.svg";
 const tagImage = "assets/tag.svg";
 
 interface ContestDetails {
+  bounty: any;
   id: string;
   contestCreatedDuration?: string;
   employmentType: string;
   jobTitle: string;
-  cashReward: string;
   company: string;
   experience: string;
   tools: string;
@@ -46,6 +46,7 @@ interface ContestDetails {
   locations: string;
   interviewDays: string;
   positions: string;
+  numberOfPositions: any;
   ctc: string;
   skills: string;
   degree: string;
@@ -67,10 +68,10 @@ const renderDetails = (image: string, text: any, tooltip: string) => {
   return (
     text && (
       <>
-        <div style={{ padding: "5%", marginTop: ".5vw" }}>
+        <div style={{ padding: "5%", marginTop: "0" }}>
           <img src={image} alt="Icon" />
         </div>
-        <div style={{ color: "#626880" }}>
+        <div style={{ color: "#626880", marginTop: ".4vw" }}>
           <p>{text}</p>
         </div>
       </>
@@ -84,7 +85,7 @@ interface Props {
 
 const JobSeekerProfileStatus: React.FC<Props> = (props) => {
   const [subStatus, setSubStatus] = React.useState("");
-  const { contestDetails } = props;
+  const contestDetails = props.contestDetails;
   const [openModal, setOpenModal] = React.useState(false);
   const [modalTitle, setModalTitle] = React.useState("");
   const [modalMessage, setModalMessage] = React.useState("");
@@ -114,7 +115,7 @@ const JobSeekerProfileStatus: React.FC<Props> = (props) => {
       },
     };
     const response = await patchContestDetails(data);
-    console.log("Settingspostdata", response);
+    // console.log("Settingspostdata", response);
   };
 
   useEffect(() => {
@@ -125,6 +126,17 @@ const JobSeekerProfileStatus: React.FC<Props> = (props) => {
     apiData(contestDetails.id);
   }, [contestDetails.id]);
 
+  const JOB_SEEKER_STATUS = [
+    {
+      iconFileName: "Group 3474",
+      title: "Bounty",
+      data: contestDetails.bounty,
+    },
+    { iconFileName: "Group 99", title: "Matching Profiles", data: " 0" },
+    { iconFileName: "Group 108", title: "Total Quota", data: " 0" },
+    { iconFileName: "Group 3369", title: "Days Left", data: " 0" },
+  ];
+
   return (
     <Card>
       <div style={{ display: "block", padding: "1vw 2vw 1vw 1vw" }}>
@@ -134,7 +146,7 @@ const JobSeekerProfileStatus: React.FC<Props> = (props) => {
               <img
                 src={getImageForTag(contestDetails?.tag)}
                 alt="tag"
-                className="contest-detail-tag-image"
+                className="contest-detail-tag-image-jobSeekerFlow"
               />
             )}
           </div>
@@ -144,7 +156,7 @@ const JobSeekerProfileStatus: React.FC<Props> = (props) => {
         </div>
         <div className="contest-detail-card-body-container">
           <div style={{ borderRight: "1px solid #DFE5FF" }}>
-            <ContestDetail contestDetails={contestDetails} />
+            <ContestDetail contestDetails={props.contestDetails} />
           </div>
           <div className="contest-details-container">
             <div className="contest-status-details-container">
@@ -190,7 +202,7 @@ const JobSeekerProfileStatus: React.FC<Props> = (props) => {
                 >
                   <img src={ratingStar} alt="Icon" />
                   <p style={{ display: "inline", color: "#626880" }}>
-                    {"\u00a0 4.5"}
+                    {"\u00a0 __"}
                   </p>
                 </div>
               </div>
@@ -203,31 +215,50 @@ const JobSeekerProfileStatus: React.FC<Props> = (props) => {
                   )}
                 </div>
                 <div className="job-details-container-container-container">
-                  {renderDetails(positionsImage, "25", "positions")}
+                  {renderDetails(
+                    positionsImage,
+                    contestDetails.numberOfPositions,
+                    "positions"
+                  )}
                 </div>
               </div>
               <div className="job-details-container-container">
                 <div className="job-details-container-container-container">
-                  {renderDetails(ctcImage, "7 to 8", "ctc")}
+                  {renderDetails(ctcImage, contestDetails.ctc, "ctc")}
                 </div>
                 <div className="job-details-container-container-container">
                   {renderDetails(
                     locationImage,
-                    contestDetails.locations,
+                    contestDetails.locations[0],
                     "location"
                   )}
                 </div>
               </div>
               <div className="job-details-container-container">
-                <div style={{ width: "85%", margin: "2vw 1vw 0vw 1vw" }}>
+                <div style={{ margin: ".5vw" }}>
                   <Button
                     sx={{
                       borderRadius: "1vw",
-                      fontSize: "1vw",
+                      fontSize: ".8vw",
+                      height: "3vw",
+                      width: "100%",
                     }}
                     variant="contained"
                   >
-                    View All Uploaded Resumes
+                    View All Uploaded Profiles
+                  </Button>
+                </div>
+                <div style={{ width: "90%", margin: ".5vw" }}>
+                  <Button
+                    sx={{
+                      borderRadius: "1vw",
+                      fontSize: ".8vw",
+                      height: "3vw",
+                      width: "100%",
+                    }}
+                    variant="contained"
+                  >
+                    Add More Profiles
                   </Button>
                 </div>
               </div>

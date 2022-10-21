@@ -5,6 +5,8 @@ import {
   RadioGroup,
   FormControl,
   FormControlLabel,
+  CircularProgress,
+  Stack,
 } from "@mui/material";
 import {
   LWD_TEXT,
@@ -31,6 +33,7 @@ import CurrentOffers from "./CurrentOffers/CurrentOffers";
 import { useStyles } from "./JobSeekerProfileFlowStyles";
 import Calendar from "../../components/Calendar/Calendar";
 import {
+  getJobSeekerProfile,
   updateJobSeekerProfile,
   UploadFiles,
 } from "../../services/FormDataService";
@@ -40,6 +43,7 @@ import {
   FORM_SUBMISSION_SUCCESS,
   WARNING_KEY,
   OFFER_LETTER,
+  NUMBER_ONLY_REGEX,
 } from "../../constants";
 import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
 
@@ -58,6 +62,7 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
   const [offerData, setOfferData] = useState<any[]>([]);
   const [reasonOfJobChange, setReasonOfJobChange] = useState("");
   const [reasonOfResignation, setReasonOfResignation] = useState("");
+  const [loader, setLoader] = React.useState(false);
 
   const uploadPayloadBuild = (files) => {
     return {
@@ -85,31 +90,52 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
     };
   };
   const submitNoticePeriodInfo = async () => {
-    const noticePeriodInfoMap = buildDetailsPayload();
+    setLoader(true);
+    const profileNoticePeriodMap = buildDetailsPayload();
 
-    if (!validateNoticePeriodInfo(noticePeriodInfoMap)) {
+    if (!validateNoticePeriodInfo(profileNoticePeriodMap)) {
       props.setOpen(true);
       props.setType(WARNING_KEY);
       props.setDataMessage("Please enter all Notice Period details");
+      setLoader(false);
       return;
     }
-    if (noticePeriodInfoMap.offerData.length > 0) {
+    if (profileNoticePeriodMap.offerData.length > 0) {
       try {
-        const fileIds: { index: number; id: string }[] = [];
+        const fileIds: { employerName: string; id: string }[] = [];
+
+        const uploadFiles: Array<any> = profileNoticePeriodMap.offerData.filter(
+          (elt) => {
+            if (elt.letterFiles[0]?.name) {
+              return true;
+            } else {
+              fileIds.push({
+                employerName: elt.employerName,
+                id: elt.offerDocumentId,
+              });
+            }
+          }
+        );
+
         await Promise.all(
-          noticePeriodInfoMap.offerData.map(async (offer, index) => {
+          uploadFiles.map(async (offer) => {
             const uploadResponse = await UploadFiles(
               uploadPayloadBuild(offer?.letterFiles)
             );
             fileIds.push({
-              index,
+              employerName: offer.employerName,
               id: uploadResponse?.data?.data?.id,
             });
           })
         );
-        noticePeriodInfoMap.offerData.forEach((offer, index) => {
-          const idData = fileIds.find((files) => files.index === index);
-          noticePeriodInfoMap.offerData[index].offerDocumentId = idData?.id;
+
+        profileNoticePeriodMap.offerData.forEach((offer, index) => {
+          const idData = fileIds.find(
+            (files) => files.employerName === offer.employerName
+          );
+          profileNoticePeriodMap.offerData[index].offerDocumentId = idData?.id;
+          profileNoticePeriodMap.offerData[index].saveStatus = false;
+          profileNoticePeriodMap.offerData[index].fieldDisabled = false;
         });
       } catch (error) {
         props.setOpen(true);
@@ -122,15 +148,15 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
     }
     try {
       const profileDetailsResponse = await updateJobSeekerProfile({
-        profileId: userDataState.userData.profileId || "1018862574432321536",
-        profileData: { noticePeriodInfoMap },
+        profileId: props.profileDataId || userDataState.userData.profileId,
+        profileData: { profileNoticePeriodMap, profileLastCompletedStep: "5" },
       });
       console.log(profileDetailsResponse?.data);
       if (profileDetailsResponse?.data?.success) {
         props.setType(SUCCESS_KEY);
         props.setDataMessage(FORM_SUBMISSION_SUCCESS);
         props.setOpen(true);
-        props.handleComplete(3);
+        props.handleComplete(4);
         props.handleNext();
       }
     } catch (error: any) {
@@ -139,6 +165,7 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
       props.setDataMessage(error?.message);
       props.setOpen(true);
     }
+    setLoader(false);
   };
   const validateNoticePeriodInfo = (data) => {
     if (data.noticeStatus === "Serving Notice Period") {
@@ -190,285 +217,370 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
     list.splice(index, 1);
     setOfferData(list);
   };
+
+  useEffect(() => {
+    if (props.profileDataId || userDataState.userData.profileId)
+      callPrefillData();
+  }, []);
+
+  // const fetchCityDetails = async () => {
+  //     const cityRawData = await getCityList();
+  //     setCitiesArray(cityRawData?.data.split('\n'));
+  // }
+
+  const callPrefillData = async () => {
+    try {
+      setLoader(true);
+      const profileDataFetched = await getJobSeekerProfile(
+        props.profileDataId || userDataState.userData.profileId
+      );
+      if (profileDataFetched?.data?.data?.profileNoticePeriodMap) {
+        patchNoticePeriodDetails(
+          profileDataFetched?.data?.data?.profileNoticePeriodMap
+        );
+      }
+    } catch (error: any) {
+      console.log(error);
+      props.setType(ERROR_KEY);
+      props.setDataMessage("Something went wrong");
+      props.setOpen(true);
+    }
+    setLoader(false);
+  };
+
+  const patchNoticePeriodDetails = (patchData: any) => {
+    setBuyoutStatus(patchData.buyoutStatus);
+    setNegotiableStatus(patchData.negotiableStatus);
+    setNegotiablePeriod(patchData.negotiablePeriod);
+    setNoticeStatus(patchData.noticeStatus);
+    setReasonOfJobChange(patchData.reasonOfJobChange);
+    setOfferStatus(patchData.offerStatus);
+    setReasonOfResignation(patchData.reasonOfResignation);
+    setNoticePeriod(patchData.noticePeriod);
+    setOfferData(() => [...patchData.offerData]);
+    setJoiningDate(patchData.joiningDate);
+    setLastWorkingDate(patchData.lastWorkingDate);
+  };
+
   return (
-    <div className="job-seeker-profile-content">
-      <div className="notice-details-card">
-        {currentlyWorking ? (
-          <>
-            <div className="experience-card-title">
-              <span>
-                {NOTICE_STATUS}
-                <span className="asterisk-span"> *</span>
-              </span>
-            </div>
-            <div className="notice-period-radio">
-              <FormControl>
-                <RadioGroup
-                  value={noticeStatus}
-                  onChange={(e) => setNoticeStatus(e.target.value)}
-                >
-                  {NoticeOptions.map((option) => (
-                    <FormControlLabel
-                      key={option}
-                      value={option}
-                      control={<Radio />}
-                      label={option}
-                      disabled={!props.hasButtons}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="experience-card-title">
-              <span>
-                {SEEKER_STATUS}
-                <span className="asterisk-span"> *</span>
-              </span>
-            </div>
-            <div className="notice-period-radio">
-              <p>
-                {JOINING_DATE_TEXT}
-                <span className="asterisk-span"> *</span>
-              </p>
-              <Calendar setDate={setJoiningDate} status={true} />
-            </div>
-            <div className="job-change-field">
-              <p>
-                {LATE_JOINING_TEXT}
-                <span className="asterisk-span"> *</span>
-              </p>
-              <TextField
-                type="text"
-                multiline
-                fullWidth
-                rows={3}
-                disabled={!props.hasButtons}
-                helperText={WORD_LIMIT_TEXT}
-                onChange={(e) => console.log("val ", e.target.value)}
-                InputProps={{
-                  inputProps: {
-                    maxLength: 1200,
-                  },
-                }}
-              />
-            </div>
-          </>
-        )}
-        <div className="notice-period-conditional">
-          {noticeStatus === NoticeOptions[0] ? (
-            <div>
-              <p>
-                {LWD_TEXT}
-                <span className="asterisk-span"> *</span>
-              </p>
-              <Calendar setDate={setLastWorkingDate} status={true} />
-            </div>
-          ) : noticeStatus === NoticeOptions[1] ? (
-            <div>
-              <p>
-                {OFFICIAL_NOTICE_PERIOD_TEXT}
-                <span className="asterisk-span"> *</span>
-              </p>
-              <TextField
-                disabled={!props.hasButtons}
-                className={classes.inputField}
-                type="number"
-                label={OFFICIAL_NOTICE_PERIOD_TEXT}
-                value={noticePeriod}
-                onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  if (
-                    Number(e.target.value) > 180 ||
-                    Number(e.target.value) < 0
-                  ) {
-                    e.target.value = Math.max(0, parseInt(e.target.value))
-                      .toString()
-                      .slice(0, 2);
-                  }
-                  setNoticePeriod(e.target.value);
-                }}
-                size="small"
-              />
-            </div>
-          ) : null}
-        </div>
-        {noticeStatus !== "" ? (
-          <React.Fragment>
-            <div className="job-change-field">
-              <p>
-                {CHANGE_REASON_TEXT}
-                <span className="asterisk-span"> *</span>
-              </p>
-              <TextField
-                disabled={!props.hasButtons}
-                type="text"
-                multiline
-                fullWidth
-                rows={3}
-                helperText={WORD_LIMIT_TEXT}
-                onChange={(e) => setReasonOfJobChange(e.target.value)}
-                InputProps={{
-                  inputProps: {
-                    maxLength: 1200,
-                  },
-                }}
-              />
-            </div>
-            <div className="notice-period-conditional">
-              <p>
-                {NEGOTIABLE_TEXT}
-                <span className="asterisk-span"> *</span>
-              </p>
-              <FormControl>
-                <RadioGroup
-                  value={negotiableStatus}
-                  onChange={(e) => setNegotiableStatus(e.target.value)}
-                >
-                  {YesNoOptions.map((option) => (
-                    <FormControlLabel
-                      key={option}
-                      value={option}
-                      control={<Radio />}
-                      label={option}
-                      disabled={!props.hasButtons}
-                    />
-                  ))}
-                  {noticeStatus === NoticeOptions[0] ? (
-                    <FormControlLabel
-                      value={BUYOUT_OPTION}
-                      control={<Radio />}
-                      label={BUYOUT_OPTION}
-                    />
-                  ) : null}
-                </RadioGroup>
-              </FormControl>
-            </div>
-          </React.Fragment>
-        ) : null}
-        {negotiableStatus === YesNoOptions[0] ? (
-          <div className="notice-period-conditional">
-            <p>
-              {NEGOTIABLE_YES_TEXT}
-              {noticeStatus === NoticeOptions[1] ? (
-                <span className="asterisk-span"> *</span>
-              ) : null}
-            </p>
-            <TextField
-              disabled={!props.hasButtons}
-              className={classes.inputField}
-              type="number"
-              label={NEGOTIABLE_LABEL}
-              value={negotiablePeriod}
-              onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
-                if (
-                  Number(e.target.value) > 180 ||
-                  Number(e.target.value) < 0
-                ) {
-                  e.target.value = Math.max(0, parseInt(e.target.value))
-                    .toString()
-                    .slice(0, 2);
-                }
-                setNegotiablePeriod(e.target.value);
-              }}
-              size="small"
-            />
-          </div>
-        ) : null}
-        {noticeStatus === NoticeOptions[1] ? (
-          <div className="notice-period-conditional">
-            <p>
-              {BUYOUT_QUESTION_TEXT}
-              <span className="asterisk-span"> *</span>
-            </p>
-            <FormControl>
-              <RadioGroup
-                value={buyoutStatus}
-                onChange={(e) => setBuyoutStatus(e.target.value)}
-              >
-                {YesNoOptions.map((option) => (
-                  <FormControlLabel
-                    key={option}
-                    value={option}
-                    control={<Radio />}
-                    label={option}
-                    disabled={!props.hasButtons}
+    <>
+      {!loader ? (
+        <div className="job-seeker-profile-content">
+          <div className="notice-details-card">
+            {currentlyWorking ? (
+              <>
+                <div className="experience-card-title">
+                  <span>
+                    {NOTICE_STATUS}
+                    <span className="asterisk-span"> *</span>
+                  </span>
+                </div>
+                <div className="notice-period-radio">
+                  <FormControl>
+                    <RadioGroup
+                      value={noticeStatus}
+                      onChange={(e) => setNoticeStatus(e.target.value)}
+                    >
+                      {NoticeOptions.map((option) => (
+                        <FormControlLabel
+                          key={option}
+                          value={option}
+                          control={<Radio />}
+                          label={option}
+                          disabled={!props.hasButtons}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="experience-card-title">
+                  <span>
+                    {SEEKER_STATUS}
+                    <span className="asterisk-span"> *</span>
+                  </span>
+                </div>
+                <div className="notice-period-radio">
+                  <p>
+                    {JOINING_DATE_TEXT}
+                    <span className="asterisk-span"> *</span>
+                  </p>
+                  <Calendar
+                    setDate={setJoiningDate}
+                    status={true}
+                    value={joiningDate}
+                    calendarDisabled={!props.hasButtons}
                   />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          </div>
-        ) : null}
-        {noticeStatus === NoticeOptions[0] || !currentlyWorking ? (
-          <React.Fragment>
+                </div>
+                <div className="job-change-field">
+                  <p>
+                    {LATE_JOINING_TEXT}
+                    <span className="asterisk-span"> *</span>
+                  </p>
+                  <TextField
+                    type="text"
+                    multiline
+                    fullWidth
+                    rows={3}
+                    disabled={!props.hasButtons}
+                    helperText={WORD_LIMIT_TEXT}
+                    onChange={(e) => console.log("val ", e.target.value)}
+                    InputProps={{
+                      inputProps: {
+                        maxLength: 1200,
+                      },
+                    }}
+                  />
+                </div>
+              </>
+            )}
             <div className="notice-period-conditional">
-              <p>
-                {OFFER_IN_HAND}
-                <span className="asterisk-span"> *</span>
-              </p>
-              <FormControl>
-                <RadioGroup
-                  value={offerStatus}
-                  onChange={(e) => setOfferStatus(e.target.value)}
-                >
-                  {YesNoOptions.map((option) => (
-                    <FormControlLabel
-                      key={option}
-                      value={option}
-                      control={<Radio />}
-                      label={option}
-                      disabled={!props.hasButtons}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
+              {noticeStatus === NoticeOptions[0] ? (
+                <div>
+                  <p>
+                    {LWD_TEXT}
+                    <span className="asterisk-span"> *</span>
+                  </p>
+                  <Calendar
+                    setDate={setLastWorkingDate}
+                    status={true}
+                    value={lastWorkingDate}
+                    calendarDisabled={!props.hasButtons}
+                  />
+                </div>
+              ) : noticeStatus === NoticeOptions[1] ? (
+                <div>
+                  <p>
+                    {OFFICIAL_NOTICE_PERIOD_TEXT}
+                    <span className="asterisk-span"> *</span>
+                  </p>
+                  <TextField
+                    disabled={!props.hasButtons}
+                    className={classes.inputField}
+                    type="number"
+                    label={OFFICIAL_NOTICE_PERIOD_TEXT}
+                    value={noticePeriod}
+                    onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const regex = NUMBER_ONLY_REGEX;
+                      if (
+                        Number(e.target.value) > 180 ||
+                        Number(e.target.value) < 0
+                      ) {
+                        e.target.value = Math.max(0, parseInt(e.target.value))
+                          .toString()
+                          .slice(0, 2);
+                      }
+                      if (!regex.test(e.target.value) && e.target.value !== "")
+                        return false;
+
+                      setNoticePeriod(e.target.value);
+                    }}
+                    size="small"
+                  />
+                </div>
+              ) : null}
             </div>
-            {offerStatus === YesNoOptions[1] ? (
-              <div className="job-change-field">
+            {noticeStatus !== "" ? (
+              <React.Fragment>
+                <div className="job-change-field">
+                  <p>
+                    {CHANGE_REASON_TEXT}
+                    <span className="asterisk-span"> *</span>
+                  </p>
+                  <TextField
+                    required
+                    disabled={!props.hasButtons}
+                    type="text"
+                    multiline
+                    label={CHANGE_REASON_TEXT}
+                    fullWidth
+                    rows={3}
+                    value={reasonOfJobChange}
+                    helperText={WORD_LIMIT_TEXT}
+                    onChange={(e) => setReasonOfJobChange(e.target.value)}
+                    InputProps={{
+                      inputProps: {
+                        maxLength: 1200,
+                      },
+                    }}
+                  />
+                </div>
+                <div className="notice-period-conditional">
+                  <p>
+                    {NEGOTIABLE_TEXT}
+                    <span className="asterisk-span"> *</span>
+                  </p>
+                  <FormControl>
+                    <RadioGroup
+                      value={negotiableStatus}
+                      onChange={(e) => setNegotiableStatus(e.target.value)}
+                    >
+                      {YesNoOptions.map((option) => (
+                        <FormControlLabel
+                          key={option}
+                          value={option}
+                          control={<Radio />}
+                          label={option}
+                          disabled={!props.hasButtons}
+                        />
+                      ))}
+                      {noticeStatus === NoticeOptions[0] ? (
+                        <FormControlLabel
+                          value={BUYOUT_OPTION}
+                          control={<Radio />}
+                          label={BUYOUT_OPTION}
+                          disabled={!props.hasButtons}
+                        />
+                      ) : null}
+                    </RadioGroup>
+                  </FormControl>
+                </div>
+              </React.Fragment>
+            ) : null}
+            {negotiableStatus === YesNoOptions[0] ? (
+              <div className="notice-period-conditional">
                 <p>
-                  {NO_OFFER_REASON}
-                  <span className="asterisk-span"> *</span>
+                  {NEGOTIABLE_YES_TEXT}
+                  {noticeStatus === NoticeOptions[1] ? (
+                    <span className="asterisk-span"> *</span>
+                  ) : null}
                 </p>
                 <TextField
                   disabled={!props.hasButtons}
-                  type="text"
-                  multiline
-                  fullWidth
-                  rows={3}
-                  helperText={WORD_LIMIT_TEXT}
-                  onChange={(e) => setReasonOfResignation(e.target.value)}
-                  InputProps={{
-                    inputProps: {
-                      maxLength: 1200,
-                    },
+                  className={classes.inputField}
+                  type="number"
+                  label={NEGOTIABLE_LABEL}
+                  value={negotiablePeriod}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    if(JSON.stringify(e.target.value).includes(".")) return false;
+                    const regex = NUMBER_ONLY_REGEX;
+                    if (
+                      Number(e.target.value) > 99 ||
+                      Number(e.target.value) < 0
+                    ) {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 2);
+                    }
+                    if (!regex.test(e.target.value) && e.target.value !== "")
+                    return false;
+                    setNegotiablePeriod(e.target.value);
                   }}
                   size="small"
                 />
               </div>
-            ) : offerStatus === YesNoOptions[0] ? (
+            ) : null}
+            {noticeStatus === NoticeOptions[1] ? (
               <div className="notice-period-conditional">
-                <div className="outline-div">
-                  <CurrentOffers
-                    setOfferData={setOfferData}
-                    removeOfferData={removeOfferData}
-                    setType={props.setType}
-                    setOpen={props.setOpen}
-                    setDataMessage={props.setDataMessage}
-                  />
-                </div>
+                <p>
+                  {BUYOUT_QUESTION_TEXT}
+                  <span className="asterisk-span"> *</span>
+                </p>
+                <FormControl>
+                  <RadioGroup
+                    value={buyoutStatus}
+                    onChange={(e) => setBuyoutStatus(e.target.value)}
+                  >
+                    {YesNoOptions.map((option) => (
+                      <FormControlLabel
+                        key={option}
+                        value={option}
+                        control={<Radio />}
+                        label={option}
+                        disabled={!props.hasButtons}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
               </div>
             ) : null}
-          </React.Fragment>
-        ) : null}
-      </div>
-      {props.hasButtons ? (
-        <PreviousNextButtons
-          handleNext={submitNoticePeriodInfo}
-          handleBack={props.handleBack}
-        />
-      ) : null}
-    </div>
+            {noticeStatus === NoticeOptions[0] || !currentlyWorking ? (
+              <React.Fragment>
+                <div className="notice-period-conditional">
+                  <p>
+                    {OFFER_IN_HAND}
+                    <span className="asterisk-span"> *</span>
+                  </p>
+                  <FormControl>
+                    <RadioGroup
+                      value={offerStatus}
+                      onChange={(e) => setOfferStatus(e.target.value)}
+                    >
+                      {YesNoOptions.map((option) => (
+                        <FormControlLabel
+                          key={option}
+                          value={option}
+                          control={<Radio />}
+                          label={option}
+                          disabled={!props.hasButtons}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </div>
+                {offerStatus === YesNoOptions[1] ? (
+                  <div className="job-change-field">
+                    <p>
+                      {NO_OFFER_REASON}
+                      <span className="asterisk-span"> *</span>
+                    </p>
+                    <TextField
+                      required
+                      disabled={!props.hasButtons}
+                      type="text"
+                      label={NO_OFFER_REASON}
+                      multiline
+                      fullWidth
+                      rows={3}
+                      value={reasonOfResignation}
+                      helperText={WORD_LIMIT_TEXT}
+                      onChange={(e) => setReasonOfResignation(e.target.value)}
+                      InputProps={{
+                        inputProps: {
+                          maxLength: 1200,
+                        },
+                      }}
+                      size="small"
+                    />
+                  </div>
+                ) : offerStatus === YesNoOptions[0] ? (
+                  <div>
+                    <div className="outline-div">
+                      <CurrentOffers
+                        disabled={!props.hasButtons}
+                        setOfferData={setOfferData}
+                        removeOfferData={removeOfferData}
+                        setType={props.setType}
+                        setOpen={props.setOpen}
+                        setDataMessage={props.setDataMessage}
+                        prefilData={
+                          props.profileDataId ||
+                          userDataState.userData.profileId
+                            ? offerData
+                            : null
+                        }
+                      />
+                    </div>
+                  </div>
+                ) : null}
+              </React.Fragment>
+            ) : null}
+          </div>
+          {props.hasButtons ? (
+            <PreviousNextButtons
+              handleNext={submitNoticePeriodInfo}
+              handleBack={props.handleBack}
+            />
+          ) : null}
+        </div>
+      ) : (
+        <Stack alignItems="center">
+          <CircularProgress />
+        </Stack>
+      )}
+    </>
   );
 };
 

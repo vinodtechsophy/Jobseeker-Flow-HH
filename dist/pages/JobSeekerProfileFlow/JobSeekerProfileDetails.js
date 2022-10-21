@@ -45,27 +45,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React from "react";
-import { Select, MenuItem, Checkbox, TextField, InputLabel, FormControl, } from "@mui/material";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import React, { useEffect } from "react";
+import { Select, MenuItem, Checkbox, TextField, InputLabel, FormControl, CircularProgress, Stack, } from "@mui/material";
 import InlineInputs from "../../components/InlineInputs/InlineInputs";
 import { CTCDetails, FRESHER_TEXT, TCTC_SUB_TEXT, TOTAL_CTC_TEXT, FIXED_CTC_TEXT, TOTAL_EXP_TEXT, CTC_DETAIL_TEXT, TOTAL_CTC_LABEL, WorkStatusArray, YearMonthDetails, TCTC_PLACEHOLDER, EXPERIENCE_TITLE, WORK_STATUS_TEXT, RELEVANT_EXP_TEXT, VARIABLE_CTC_TEXT, EXPECTED_CTC_TEXT, } from "./JobSeekerProfileFlowConstants";
 import "./JobSeekerProfileFlow.css";
 import PreviousNextButtons from "../../components/PreviousNextButtons/PreviousNextButtons";
-import { updateJobSeekerProfile } from "../../services/FormDataService";
+import { getJobSeekerProfile, updateJobSeekerProfile, } from "../../services/FormDataService";
 import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
-import { ERROR_KEY, SUCCESS_KEY, FORM_SUBMISSION_SUCCESS, } from "../../constants";
+import { ERROR_KEY, SUCCESS_KEY, FORM_SUBMISSION_SUCCESS, EXPEXTED_CTC_DET, WARNING_KEY, } from "../../constants";
 var JobSeekerProfileDetails = function (props) {
     var dispatch = useAppDispatch();
     var userDataState = useAppSelector(function (state) { return state.currentUser; });
     var _a = React.useState(false), freshGraduate = _a[0], setFreshGraduate = _a[1];
-    var _b = React.useState(""), workStatus = _b[0], setWorkStatus = _b[1];
-    var _c = React.useState(""), totalCtc = _c[0], setTotalCtc = _c[1];
-    var _d = React.useState({ totalExperienceYears: "", totalExperienceMonths: "" }), totalExperience = _d[0], setTotalExperience = _d[1];
-    var _e = React.useState({ relevantExperienceYears: "", relevantExperienceMonths: "" }), relevantExperience = _e[0], setRelevantExperience = _e[1];
-    var _f = React.useState({ fixedCtcLakh: "", fixedCtcThousand: "" }), fixedCtc = _f[0], setFixedCtc = _f[1];
-    var _g = React.useState({ variableCtcLakh: "", variableCtcThousand: "" }), variableCtc = _g[0], setVariableCtc = _g[1];
-    var _h = React.useState({ expectedCtcLakh: "", expectedCtcThousand: "" }), expectedCtc = _h[0], setExpectedCtc = _h[1];
+    var _b = React.useState(false), loader = _b[0], setLoader = _b[1];
+    var _c = React.useState(""), workStatus = _c[0], setWorkStatus = _c[1];
+    var _d = React.useState(""), totalCtc = _d[0], setTotalCtc = _d[1];
+    var _e = React.useState({ totalExperienceYears: "", totalExperienceMonths: "" }), totalExperience = _e[0], setTotalExperience = _e[1];
+    var _f = React.useState({ relevantExperienceYears: "", relevantExperienceMonths: "" }), relevantExperience = _f[0], setRelevantExperience = _f[1];
+    var _g = React.useState({ fixedCtcLakh: "", fixedCtcThousand: "" }), fixedCtc = _g[0], setFixedCtc = _g[1];
+    var _h = React.useState({ variableCtcLakh: "", variableCtcThousand: "" }), variableCtc = _h[0], setVariableCtc = _h[1];
+    var _j = React.useState({ expectedCtcLakh: "", expectedCtcThousand: "" }), expectedCtc = _j[0], setExpectedCtc = _j[1];
     var handleTotalExperience = function (value, index) {
         if (index === 0 && value)
             setTotalExperience({
@@ -91,39 +92,53 @@ var JobSeekerProfileDetails = function (props) {
             });
     };
     var handleFixedCtc = function (value, index) {
-        if (index === 0 && value)
+        if (index === 0) {
             setFixedCtc({
                 fixedCtcLakh: value,
                 fixedCtcThousand: fixedCtc.fixedCtcThousand,
             });
-        else if (index === 1 && value)
+            handleTotalCtc(value ? value : '0', '', '', '');
+        }
+        else if (index === 1) {
             setFixedCtc({
                 fixedCtcLakh: fixedCtc.fixedCtcLakh,
                 fixedCtcThousand: value,
             });
+            handleTotalCtc('', value ? value : '0', '', '');
+        }
     };
     var handleVariableCtc = function (value, index) {
-        if (index === 0 && value)
+        if (index === 0) {
             setVariableCtc({
                 variableCtcLakh: value,
                 variableCtcThousand: variableCtc.variableCtcThousand,
             });
-        else if (index === 1 && value)
+            handleTotalCtc('', '', value ? value : '0', '');
+        }
+        else if (index === 1) {
             setVariableCtc({
                 variableCtcLakh: variableCtc.variableCtcLakh,
                 variableCtcThousand: value,
             });
+            handleTotalCtc('', '', '', value ? value : '0');
+        }
+    };
+    var handleTotalCtc = function (fL, fT, vL, vT) {
+        setTotalCtc(((parseInt(fL ? fL : (fixedCtc.fixedCtcLakh ? fixedCtc.fixedCtcLakh : '0')) +
+            parseInt(vL ? vL : (variableCtc.variableCtcLakh ? variableCtc.variableCtcLakh : '0'))) * 100000 +
+            (parseInt(fT ? fT : (fixedCtc.fixedCtcThousand ? fixedCtc.fixedCtcThousand : '0'))
+                + parseInt(vT ? vT : (variableCtc.variableCtcThousand ? variableCtc.variableCtcThousand : '0'))) * 1000).toString());
     };
     var handleExpectedCtc = function (value, index) {
-        if (index === 0 && value)
+        if (index === 0)
             setExpectedCtc({
-                expectedCtcLakh: value,
+                expectedCtcLakh: value ? value : '0',
                 expectedCtcThousand: expectedCtc.expectedCtcThousand,
             });
-        else if (index === 1 && value)
+        else if (index === 1)
             setExpectedCtc({
                 expectedCtcLakh: expectedCtc.expectedCtcLakh,
-                expectedCtcThousand: value,
+                expectedCtcThousand: value ? value : '0',
             });
     };
     var submitDetails = function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -132,17 +147,19 @@ var JobSeekerProfileDetails = function (props) {
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
+                    setLoader(true);
                     profileDetailsMap = buildDetailsPayload();
+                    if (!profileDetailsMap.expectedCtc.expectedCtcLakh) return [3 /*break*/, 7];
+                    if (!profileDetailsMap.workStatus) return [3 /*break*/, 5];
                     _b.label = 1;
                 case 1:
                     _b.trys.push([1, 3, , 4]);
                     return [4 /*yield*/, updateJobSeekerProfile({
-                            profileId: userDataState.userData.profileId,
-                            profileData: { profileDetailsMap: profileDetailsMap },
+                            profileId: props.profileDataId || userDataState.userData.profileId,
+                            profileData: { profileDetailsMap: profileDetailsMap, profileLastCompletedStep: "3" },
                         })];
                 case 2:
                     profileDetailsResponse = _b.sent();
-                    console.log(profileDetailsResponse === null || profileDetailsResponse === void 0 ? void 0 : profileDetailsResponse.data);
                     if ((_a = profileDetailsResponse === null || profileDetailsResponse === void 0 ? void 0 : profileDetailsResponse.data) === null || _a === void 0 ? void 0 : _a.success) {
                         dispatchWorkStatus(workStatus);
                         props.setType(SUCCESS_KEY);
@@ -159,7 +176,21 @@ var JobSeekerProfileDetails = function (props) {
                     props.setDataMessage(error_1 === null || error_1 === void 0 ? void 0 : error_1.message);
                     props.setOpen(true);
                     return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                case 4: return [3 /*break*/, 6];
+                case 5:
+                    props.setType(WARNING_KEY);
+                    props.setDataMessage("Please select Work Status");
+                    props.setOpen(true);
+                    _b.label = 6;
+                case 6: return [3 /*break*/, 8];
+                case 7:
+                    props.setType(WARNING_KEY);
+                    props.setDataMessage(EXPEXTED_CTC_DET);
+                    props.setOpen(true);
+                    _b.label = 8;
+                case 8:
+                    setLoader(false);
+                    return [2 /*return*/];
             }
         });
     }); };
@@ -173,6 +204,7 @@ var JobSeekerProfileDetails = function (props) {
             relevantExperience: relevantExperience,
             freshGraduate: freshGraduate.toString(),
             workStatus: workStatus,
+            currentlyWorking: workStatus === WorkStatusArray[0] ? "Yes" : "No"
         };
     };
     var dispatchWorkStatus = function (workStatus) {
@@ -184,10 +216,116 @@ var JobSeekerProfileDetails = function (props) {
             },
         });
     };
-    return (_jsxs("div", __assign({ className: "job-seeker-profile-content" }, { children: [_jsx("p", __assign({ className: "step-content-title-text" }, { children: EXPERIENCE_TITLE })), _jsxs("div", __assign({ className: "experience-details-card" }, { children: [_jsxs("div", __assign({ className: "experience-card-title" }, { children: [_jsx("div", { children: _jsxs("span", { children: [TOTAL_EXP_TEXT, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }) }), _jsxs("div", { children: [_jsx("span", { children: FRESHER_TEXT }), _jsx(Checkbox, { disabled: !props.hasButtons, checked: freshGraduate, onChange: function (e) { var _a; return setFreshGraduate((_a = e === null || e === void 0 ? void 0 : e.target) === null || _a === void 0 ? void 0 : _a.checked); }, inputProps: { "aria-label": "controlled" } })] })] })), _jsx(InlineInputs, { InlineInputsArray: YearMonthDetails, disabled: !props.hasButtons, setValues: handleTotalExperience }), _jsx(InlineInputs, { InlineInputsArray: YearMonthDetails, InlineInputTitle: RELEVANT_EXP_TEXT, disabled: !props.hasButtons, setValues: handleRelevantExperience })] })), _jsx("div", __assign({ className: "generic-container" }, { children: _jsxs("div", __assign({ className: "inline-div" }, { children: [_jsx("div", { children: _jsxs("p", __assign({ className: "step-content-title-text" }, { children: [" ", WORK_STATUS_TEXT, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] })) }), _jsx("div", __assign({ className: "work-status-select" }, { children: _jsxs(FormControl, __assign({ sx: { minWidth: 250 } }, { children: [_jsx(InputLabel, __assign({ id: "demo-simple-select-helper-label" }, { children: WORK_STATUS_TEXT })), _jsx(Select, __assign({ disabled: !props.hasButtons, value: workStatus, label: WORK_STATUS_TEXT, onChange: function (e) { return setWorkStatus(e.target.value); } }, { children: WorkStatusArray.map(function (item) { return (_jsx(MenuItem, __assign({ value: item }, { children: item }), item)); }) }))] })) }))] })) })), _jsxs("div", __assign({ className: "conditional-container" }, { children: [_jsx("div", { children: _jsxs("p", __assign({ className: "ctc-details-text" }, { children: [" ", CTC_DETAIL_TEXT] })) }), _jsx(InlineInputs, { InlineInputsArray: CTCDetails, InlineInputTitle: FIXED_CTC_TEXT, disabled: !props.hasButtons, setValues: handleFixedCtc }), _jsx(InlineInputs, { InlineInputsArray: CTCDetails, InlineInputTitle: VARIABLE_CTC_TEXT, disabled: !props.hasButtons, setValues: handleVariableCtc }), _jsxs("div", { children: [_jsx("div", __assign({ className: "experience-card-title" }, { children: _jsx("div", { children: _jsx("p", { children: TOTAL_CTC_TEXT }) }) })), _jsxs("div", __assign({ className: "inline-div" }, { children: [_jsx(TextField, { disabled: !props.hasButtons, type: "text", onChange: function (e) { return setTotalCtc(e.target.value); }, label: TOTAL_CTC_LABEL, placeholder: TCTC_PLACEHOLDER, InputProps: {
-                                            inputProps: {
-                                                maxLength: 12,
-                                            },
-                                        }, size: "small" }), _jsx("div", __assign({ className: "tctc-text" }, { children: _jsx("span", { children: TCTC_SUB_TEXT }) }))] }))] })] })), _jsxs("div", __assign({ className: "generic-container" }, { children: [_jsx("div", __assign({ className: "expected-ctc" }, { children: _jsxs("p", __assign({ className: "step-content-title-text" }, { children: [" ", EXPECTED_CTC_TEXT, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] })) })), _jsx("div", __assign({ className: "experience-details-card" }, { children: _jsx(InlineInputs, { InlineInputsArray: CTCDetails, disabled: !props.hasButtons, setValues: handleExpectedCtc }) }))] })), props.hasButtons ? (_jsx(PreviousNextButtons, { handleNext: submitDetails, handleBack: props.handleBack })) : null] })));
+    useEffect(function () {
+        if (props.profileDataId || userDataState.userData.profileId)
+            callPrefillData();
+    }, []);
+    var callPrefillData = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var profileDataFetched, error_2;
+        var _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    _e.trys.push([0, 2, , 3]);
+                    setLoader(true);
+                    return [4 /*yield*/, getJobSeekerProfile(props.profileDataId || userDataState.userData.profileId)];
+                case 1:
+                    profileDataFetched = _e.sent();
+                    if ((_b = (_a = profileDataFetched === null || profileDataFetched === void 0 ? void 0 : profileDataFetched.data) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.profileDetailsMap) {
+                        patchProfileDetails((_d = (_c = profileDataFetched === null || profileDataFetched === void 0 ? void 0 : profileDataFetched.data) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.profileDetailsMap);
+                    }
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_2 = _e.sent();
+                    console.log(error_2);
+                    props.setType(ERROR_KEY);
+                    props.setDataMessage("Something went wrong");
+                    props.setOpen(true);
+                    return [3 /*break*/, 3];
+                case 3:
+                    setLoader(false);
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    var patchProfileDetails = function (patchData) {
+        console.log(patchData);
+        setFreshGrad(patchData.freshGraduate);
+        setTotalExp(patchData.totalExperience);
+        setRelevantExperience({
+            relevantExperienceYears: patchData.relevantExperience.relevantExperienceYears,
+            relevantExperienceMonths: patchData.relevantExperience.relevantExperienceMonths,
+        });
+        setFixedCtc({
+            fixedCtcLakh: patchData.fixedCtc.fixedCtcLakh,
+            fixedCtcThousand: patchData.fixedCtc.fixedCtcThousand,
+        });
+        setVariableCtc({
+            variableCtcLakh: patchData.variableCtc.variableCtcLakh,
+            variableCtcThousand: patchData.variableCtc.variableCtcThousand,
+        });
+        setExpectedCtc({
+            expectedCtcLakh: patchData.expectedCtc.expectedCtcLakh,
+            expectedCtcThousand: patchData.expectedCtc.expectedCtcThousand,
+        });
+        setWorkStatus(patchData.workStatus);
+        setTotalCtc(patchData.totalCtc);
+    };
+    var setTotalExp = function (patchObj) {
+        setTotalExperience({
+            totalExperienceMonths: patchObj.totalExperienceMonths,
+            totalExperienceYears: patchObj.totalExperienceYears,
+        });
+    };
+    var setFreshGrad = function (data) {
+        if (data === "true") {
+            setFreshGraduate(true);
+        }
+        else {
+            setFreshGraduate(false);
+        }
+    };
+    var emptyExperienceCTCDetatils = function () {
+        setRelevantExperience({
+            relevantExperienceYears: "",
+            relevantExperienceMonths: ""
+        });
+        setTotalExperience({
+            totalExperienceMonths: "",
+            totalExperienceYears: "",
+        });
+        setFixedCtc({
+            fixedCtcLakh: "",
+            fixedCtcThousand: "",
+        });
+        setVariableCtc({
+            variableCtcLakh: "",
+            variableCtcThousand: "",
+        });
+    };
+    return (_jsx(_Fragment, { children: !loader ? (_jsxs("div", __assign({ className: "job-seeker-profile-content" }, { children: [_jsx("p", __assign({ className: "step-content-title-text" }, { children: EXPERIENCE_TITLE })), _jsxs("div", __assign({ className: "experience-details-card" }, { children: [_jsxs("div", __assign({ className: "experience-card-title" }, { children: [_jsx("div", { children: _jsxs("span", { children: [TOTAL_EXP_TEXT, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }) }), _jsxs("div", { children: [_jsx("span", { children: FRESHER_TEXT }), _jsx(Checkbox, { disabled: !props.hasButtons, checked: freshGraduate, onChange: function (e) {
+                                                var _a;
+                                                setFreshGraduate((_a = e === null || e === void 0 ? void 0 : e.target) === null || _a === void 0 ? void 0 : _a.checked);
+                                                if (e.target.checked === true) {
+                                                    emptyExperienceCTCDetatils();
+                                                    setWorkStatus("Fresh Graduate");
+                                                }
+                                                else {
+                                                    setWorkStatus("");
+                                                }
+                                            }, inputProps: { "aria-label": "controlled" } })] })] })), _jsx(InlineInputs, { InlineInputsArray: YearMonthDetails, disabled: !props.hasButtons || freshGraduate, setValues: handleTotalExperience, value: totalExperience }), _jsx(InlineInputs, { InlineInputsArray: YearMonthDetails, InlineInputTitle: RELEVANT_EXP_TEXT, disabled: !props.hasButtons || freshGraduate, setValues: handleRelevantExperience, value: relevantExperience })] })), _jsx("div", __assign({ className: "generic-container" }, { children: _jsxs("div", __assign({ className: "inline-div" }, { children: [_jsx("div", { children: _jsxs("p", __assign({ className: "step-content-title-text" }, { children: [" ", WORK_STATUS_TEXT, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] })) }), _jsx("div", __assign({ className: "work-status-select" }, { children: _jsxs(FormControl, __assign({ sx: { minWidth: 250 } }, { children: [_jsx(InputLabel, __assign({ id: "demo-simple-select-helper-label" }, { children: WORK_STATUS_TEXT })), _jsx(Select, __assign({ disabled: !props.hasButtons || freshGraduate, value: freshGraduate ? 'Fresh Graduate' : workStatus, label: WORK_STATUS_TEXT, onChange: function (e) {
+                                                if (e.target.value !== 'Fresh Graduate') {
+                                                    setFreshGraduate(false);
+                                                }
+                                                else {
+                                                    emptyExperienceCTCDetatils();
+                                                    setFreshGraduate(true);
+                                                }
+                                                setWorkStatus(e.target.value);
+                                            } }, { children: WorkStatusArray.map(function (item) { return (_jsx(MenuItem, __assign({ value: item }, { children: item }), item)); }) }))] })) }))] })) })), _jsxs("div", __assign({ className: "conditional-container" }, { children: [_jsx("div", { children: _jsxs("p", __assign({ className: "ctc-details-text" }, { children: [" ", CTC_DETAIL_TEXT] })) }), _jsx(InlineInputs, { InlineInputsArray: CTCDetails, InlineInputTitle: FIXED_CTC_TEXT, disabled: !props.hasButtons || freshGraduate, setValues: handleFixedCtc, value: fixedCtc }), _jsx(InlineInputs, { InlineInputsArray: CTCDetails, InlineInputTitle: VARIABLE_CTC_TEXT, disabled: !props.hasButtons || freshGraduate, setValues: handleVariableCtc, value: variableCtc }), _jsxs("div", { children: [_jsx("div", __assign({ className: "experience-card-title" }, { children: _jsx("div", { children: _jsx("p", { children: TOTAL_CTC_TEXT }) }) })), _jsxs("div", __assign({ className: "inline-div" }, { children: [_jsx(TextField, { disabled: true, type: "text", value: totalCtc, label: TOTAL_CTC_LABEL, placeholder: TCTC_PLACEHOLDER, InputProps: {
+                                                inputProps: {
+                                                    maxLength: 12,
+                                                },
+                                            }, size: "small" }), _jsx("div", __assign({ className: "tctc-text" }, { children: _jsx("span", { children: TCTC_SUB_TEXT }) }))] }))] })] })), _jsxs("div", __assign({ className: "generic-container" }, { children: [_jsx("div", __assign({ className: "expected-ctc" }, { children: _jsxs("p", __assign({ className: "step-content-title-text" }, { children: [" ", EXPECTED_CTC_TEXT, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] })) })), _jsx("div", __assign({ className: "experience-details-card" }, { children: _jsx(InlineInputs, { required: true, InlineInputsArray: CTCDetails, disabled: !props.hasButtons, setValues: handleExpectedCtc, value: expectedCtc }) }))] })), props.hasButtons ? (_jsx(PreviousNextButtons, { handleNext: submitDetails, handleBack: props.handleBack })) : null] }))) : (_jsx(Stack, __assign({ alignItems: "center" }, { children: _jsx(CircularProgress, {}) }))) }));
 };
 export default JobSeekerProfileDetails;

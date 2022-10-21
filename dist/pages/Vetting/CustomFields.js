@@ -57,8 +57,8 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import React, { useState, useEffect } from "react";
-import { Typography, tooltipClasses, Tooltip, IconButton, } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Typography, Button, Box, tooltipClasses, Tooltip, IconButton, Drawer, } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -69,6 +69,9 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import { openFile } from "../../services/DocumentService";
+import MessageBox from "../Broadcast/MessageBox";
+import { jobseekerConsentStatusChangeWorkflow } from "../../services/JobSeekerService";
+import { useAppDispatch } from "../../services/StoreHooks";
 var useStyles = makeStyles(function () { return ({
     buttonContainer: {
         "&.MuiButton-root": {
@@ -88,6 +91,27 @@ var useStyles = makeStyles(function () { return ({
     uploadText: {
         color: "#4d6cd9",
     },
+    dropdown: {
+        border: "1px solid #DFE5FF",
+    },
+    dropdownAlignment: {
+        display: "inline-flex",
+        alignItems: "center",
+    },
+    commonAlignment: {
+        textAlign: "center",
+    },
+    dropdownIconAlignment: {
+        left: "18px",
+    },
+    chatBox: {
+        width: "390px",
+        overflow: "hidden",
+        justifyContent: "center",
+        alignItems: "center",
+        top: 0,
+        left: 0,
+    },
 }); });
 export var ResumeUploaded = function (params) {
     var classes = useStyles();
@@ -97,7 +121,6 @@ export var ResumeUploaded = function (params) {
             switch (_a.label) {
                 case 0:
                     resumeId = params.getValue();
-                    console.log(resumeId);
                     return [4 /*yield*/, openFile(resumeId)];
                 case 1:
                     _a.sent();
@@ -105,94 +128,164 @@ export var ResumeUploaded = function (params) {
             }
         });
     }); };
-    return (_jsx("div", __assign({ style: {
-            textAlign: "center",
-        } }, { children: _jsx(Typography, __assign({ onClick: handleViewResume, className: classes.uploadText }, { children: "View Resume Uploaded" })) })));
+    return (_jsx("div", __assign({ className: classes.commonAlignment }, { children: _jsx(Typography, __assign({ onClick: handleViewResume, className: classes.uploadText }, { children: "View Resume Uploaded" })) })));
 };
 export var Icons = function (params) {
+    var _a = useState(false), toggleDrawer = _a[0], setToggleDrawer = _a[1];
     var classes = useStyles();
-    var handleClick = function () {
-        console.log(params);
-    };
+    var handleClick = function () { };
     var handleChat = function () {
-        console.log("Chat Icon clicked");
+        setToggleDrawer(true);
     };
-    return (_jsxs("div", __assign({ style: {
-            textAlign: "center",
-        } }, { children: [_jsx(VisibilityIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(LocalPhoneRoundedIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(ChatBubbleOutlineIcon, { className: classes.iconColor, onClick: handleChat }), _jsx(DehazeIcon, { className: classes.iconColor, onClick: handleClick })] })));
+    return (_jsxs("div", __assign({ className: classes.commonAlignment }, { children: [_jsx(VisibilityIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(LocalPhoneRoundedIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(ChatBubbleOutlineIcon, { className: classes.iconColor, onClick: handleChat }), _jsx(DehazeIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(Drawer, __assign({ anchor: "left", open: toggleDrawer, onClose: function () { return setToggleDrawer(false); } }, { children: _jsx(Box, __assign({ className: classes.chatBox }, { children: _jsx(MessageBox, { closeIt: function () { return setToggleDrawer(false); }, params: params }) })) }))] })));
 };
 export var CustomDropDown = function (params) {
-    // console.log("Vetting custom feild", params);
+    var _a = useState(false), disable = _a[0], setDisable = _a[1];
+    var dispatch = useAppDispatch();
     var Passed = {
-        option: "passed",
+        option: "JOB_SEEKER_CONSENT_PASS",
         color: "#22C55E",
         title: "Success",
         body: "Passed",
     };
     var Pending = {
-        option: "pending",
+        option: "JOB_SEEKER_CONSENT_PENDING",
         color: "#ff781f",
         title: "",
         body: "Pending",
     };
     var Failed = {
-        option: "failed",
+        option: "JOB_SEEKER_CONSENT_FAIL",
         color: "#EF4444",
         title: "",
-        body: "Failed",
+        body: "Job Seeker Rejected Consent!",
     };
-    var _a = useState({
+    var _b = useState({
         option: "",
         color: "",
         title: "",
         body: "",
-    }), option = _a[0], setOption = _a[1];
+    }), option = _b[0], setOption = _b[1];
     useEffect(function () {
-        console.log(params.getValue());
-        if (params.getValue() === null || "") {
-            setOption({
-                option: "",
-                color: "",
-                title: "",
-                body: "",
-            });
-        }
-        else if (params.getValue() === "passed") {
-            setOption(Passed);
-        }
-        else if (params.getValue() === "pending") {
+        if (params.getValue() === "JOB_SEEKER_CONSENT_PENDING" ||
+            params.getValue() === null ||
+            params.getValue() === "") {
+            // setOption({
+            //   option: "",
+            //   color: "",
+            //   title: "",
+            //   body: "",
+            // });
+            // setDisable(true);
             setOption(Pending);
         }
-        else if (params.getValue() === "failed") {
+        else if (params.getValue() === "JOB_SEEKER_CONSENT_PASS") {
+            setOption(Passed);
+            setDisable(true);
+        }
+        // else if (params.getValue() === "JOB_SEEKER_CONSENT_PENDING") {
+        //   setOption(Pending);
+        // }
+        else if (params.getValue() === "JOB_SEEKER_CONSENT_FAIL") {
             setOption(Failed);
+            setDisable(true);
         }
     }, []);
     var id = "cellNo".concat(params.rowIndex).concat(params.column.instanceId);
     var iconId = "iconNo".concat(params.rowIndex).concat(params.column.instanceId);
-    var _b = useState(""), message = _b[0], setMessage = _b[1];
-    var handleChange = function (event) {
-        params.setValue(event.target.value);
-        if (event.target.value == "passed") {
-            console.log("Can call Api to change status to Passed");
-            setOption(Passed);
-        }
-        else if (event.target.value == "pending") {
-            setOption(Pending);
-        }
-        else if (event.target.value == "failed") {
-            setOption(Failed);
-        }
-        else if (event.target.value == "") {
-            setOption({
-                option: "",
-                color: "",
-                title: "",
-                body: "",
-            });
-        }
+    var _c = useState(""), message = _c[0], setMessage = _c[1];
+    var dispatchNotificationData = function (notifyData) {
+        dispatch({
+            type: "SEND_ALERT",
+            data: {
+                enable: notifyData.enable,
+                type: notifyData.type,
+                message: notifyData.message,
+                duration: notifyData.duration,
+            },
+        });
     };
+    var handleChange = function (event) { return __awaiter(void 0, void 0, void 0, function () {
+        var payLoad, response, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    payLoad = {
+                        messageName: "consentArrived",
+                        businessKey: params.data._id,
+                        correlationKeys: {},
+                        processVariables: {
+                            consentGivenByJobSeeker: {
+                                value: event.target.value,
+                                type: "string",
+                            },
+                        },
+                    };
+                    if (!(event.target.value == "JOB_SEEKER_CONSENT_PASS")) return [3 /*break*/, 2];
+                    return [4 /*yield*/, jobseekerConsentStatusChangeWorkflow(payLoad)];
+                case 1:
+                    response = _a.sent();
+                    if (response) {
+                        setOption(Passed);
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "Job Seeker Consent Changed to Pass",
+                            duration: 2000,
+                        });
+                    }
+                    else {
+                        setOption(Pending);
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "Something Went Wrong Please Try gain",
+                        });
+                    }
+                    return [3 /*break*/, 6];
+                case 2:
+                    if (!(event.target.value == "JOB_SEEKER_CONSENT_PENDING")) return [3 /*break*/, 3];
+                    setOption(Pending);
+                    return [3 /*break*/, 6];
+                case 3:
+                    if (!(event.target.value == "JOB_SEEKER_CONSENT_FAIL")) return [3 /*break*/, 5];
+                    return [4 /*yield*/, jobseekerConsentStatusChangeWorkflow(payLoad)];
+                case 4:
+                    response = _a.sent();
+                    if (response) {
+                        setOption(Failed);
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "Job Seeker Consent Changed to Fail",
+                            duration: 2000,
+                        });
+                    }
+                    else {
+                        setOption(Pending);
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "Something Went Wrong Please Try gain",
+                            duration: 2000,
+                        });
+                    }
+                    return [3 /*break*/, 6];
+                case 5:
+                    if (event.target.value == "") {
+                        setOption({
+                            option: "",
+                            color: "",
+                            title: "",
+                            body: "",
+                        });
+                    }
+                    _a.label = 6;
+                case 6: return [2 /*return*/];
+            }
+        });
+    }); };
     var classes = useStyles();
-    var _c = React.useState(false), open = _c[0], setOpen = _c[1];
     var HtmlTooltip = styled(function (_a) {
         var className = _a.className, props = __rest(_a, ["className"]);
         return (_jsx(Tooltip, __assign({}, props, { placement: "right", arrow: true, classes: { popper: className, arrow: classes.arrow } })));
@@ -209,24 +302,74 @@ export var CustomDropDown = function (params) {
             },
             _b);
     });
-    var handleTooltipClose = function () {
-        setOpen(false);
-    };
-    var handleTooltipOpen = function () {
-        setOpen(true);
-        setTimeout(function () {
-            setOpen(false);
-        }, 4000);
-    };
-    return (_jsxs(_Fragment, { children: [_jsx("div", { children: _jsxs("select", __assign({ id: id, style: { border: "1px solid #DFE5FF" }, value: option.option, onChange: handleChange, disabled: true }, { children: [_jsx("option", __assign({ value: "" }, { children: "Null" })), _jsx("option", __assign({ value: "passed" }, { children: "Passed" })), _jsx("option", __assign({ value: "pending" }, { children: "Pending" })), _jsx("option", __assign({ value: "failed" }, { children: "Failed" }))] })) }), _jsx("div", __assign({ style: { display: "inline-flex", alignItems: "center" } }, { children: (function () {
-                    if (option.option == "passed") {
-                        return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, { children: _jsx(CheckCircleIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) }) })));
+    var ColorButton = styled(Button)(function (_a) {
+        var theme = _a.theme;
+        return ({
+            color: theme.palette.getContrastText("#4d6cd9"),
+            backgroundColor: "#4d6cd9",
+            "&:hover": {
+                backgroundColor: "#4d6cd9",
+            },
+            borderRadius: 20,
+            width: "8px",
+            fontSize: "12px",
+            height: "20px",
+        });
+    });
+    var handleResend = function (params) { return __awaiter(void 0, void 0, void 0, function () {
+        var payLoad, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    payLoad = {
+                        messageName: "consentArrived",
+                        businessKey: params.data._id,
+                        correlationKeys: {},
+                        processVariables: {
+                            consentGivenByJobSeeker: {
+                                value: "JOB_SEEKER_CONSENT_PENDING",
+                                type: "string",
+                            },
+                        },
+                    };
+                    return [4 /*yield*/, jobseekerConsentStatusChangeWorkflow(payLoad)];
+                case 1:
+                    response = _a.sent();
+                    if (response) {
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "success",
+                            message: "Job Seeker Consent Resent!",
+                            duration: 2000,
+                        });
                     }
-                    else if (option.option == "pending") {
-                        return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, { children: _jsx(PauseCircleFilledIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) }) })));
+                    else {
+                        dispatchNotificationData({
+                            enable: true,
+                            type: "error",
+                            message: "Job Seeker Consent Resent Failed",
+                            duration: 2000,
+                        });
                     }
-                    else if (option.option == "failed") {
-                        return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, { children: _jsx(ErrorIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) }) })));
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    return (_jsxs(_Fragment, { children: [_jsx("div", { children: _jsxs("select", __assign({ id: id, className: classes.dropdown, value: option.option || "JOB_SEEKER_CONSENT_PENDING", onChange: handleChange, disabled: true
+                        ? option.option === "JOB_SEEKER_CONSENT_FAIL" ||
+                            option.option === "JOB_SEEKER_CONSENT_PASS"
+                        : false }, { children: [_jsx("option", __assign({ value: "JOB_SEEKER_CONSENT_PASS" }, { children: "Passed" })), _jsx("option", __assign({ value: "JOB_SEEKER_CONSENT_PENDING" }, { children: "Pending" })), _jsx("option", __assign({ value: "JOB_SEEKER_CONSENT_FAIL" }, { children: "Failed" }))] })) }), _jsx("div", __assign({ className: classes.dropdownAlignment }, { children: (function () {
+                    if (option.option == "JOB_SEEKER_CONSENT_PASS") {
+                        return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, __assign({ className: classes.dropdownIconAlignment }, { children: _jsx(CheckCircleIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) })) })));
+                    }
+                    else if (option.option == "JOB_SEEKER_CONSENT_FAIL") {
+                        return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, __assign({ className: classes.dropdownIconAlignment }, { children: _jsx(ErrorIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) })) })));
+                    }
+                    else {
+                        return (_jsxs(_Fragment, { children: [_jsx(ColorButton, __assign({ variant: "contained", onClick: function () { return handleResend(params); } }, { children: "Resend" })), _jsx(Tooltip, __assign({ title: option.body || "Pending", placement: "right-start" }, { children: _jsx(IconButton, { children: _jsx(PauseCircleFilledIcon, { id: iconId, sx: {
+                                                color: option.color || "#ff781f",
+                                                fontSize: "25px",
+                                            } }) }) }))] }));
                     }
                 })() }))] }));
 };

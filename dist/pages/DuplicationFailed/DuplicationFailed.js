@@ -46,11 +46,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React, { useState, useRef, useMemo, useEffect, useCallback, } from "react";
+import React, { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import { Button, Grid, Typography, Box, Checkbox } from "@mui/material";
 import StepCount from "../../components/StepCount";
 import { LISTING_GENERIC_HEADERS } from "./DuplicationFailedColumnHeaders";
-import KeycloakService from "../../services/KeycloakService";
 import ColumnSelection from "../../components/ColumnSelection/ColumnSelection";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
@@ -59,7 +58,7 @@ import BookmarkIcon from "../../../src/assets/bookmark.svg";
 import { PAGE_SIZE_ARRAY } from "../../constants";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import { getDuplicationFailedProfiles, getDuplicationFailedProfilesAggregate, } from "../../services/JobSeekerService";
-var DuplicationFailed = function () {
+var DuplicationFailed = function (props) {
     var _a = useState(1), selectedButtonId = _a[0], setSelectedButtonId = _a[1];
     var _b = useState("SUBMITTED"), selectedButtonValue = _b[0], setSelectedButtonValue = _b[1];
     var gridRef = useRef();
@@ -73,34 +72,19 @@ var DuplicationFailed = function () {
     var _k = React.useState(0), pageNo = _k[0], setPageNo = _k[1];
     var _l = useState({}), agCount = _l[0], setAgCount = _l[1];
     useEffect(function () {
-        fetchToken();
         apiCallAggregateData();
         apiCallDuplicationFailedData(selectedButtonValue, pageNo, pageSize);
     }, []);
-    var fetchToken = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, KeycloakService.fetchTokenOtherUser()];
-                case 1:
-                    token = _a.sent();
-                    sessionStorage.setItem("react-token", token);
-                    return [2 /*return*/];
-            }
-        });
-    }); };
     var setSelectedButton = function (id, filterValue) {
         setSelectedButtonId(id);
         setSelectedButtonValue(filterValue);
-        setPageNo(0);
-        setPageSize(10);
-        apiCallDuplicationFailedData(filterValue, pageNo, 10);
+        apiCallDuplicationFailedData(filterValue, 0, 10);
     };
     var apiCallAggregateData = function () { return __awaiter(void 0, void 0, void 0, function () {
         var response, result, t_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, getDuplicationFailedProfilesAggregate()];
+                case 0: return [4 /*yield*/, getDuplicationFailedProfilesAggregate(props.contestId)];
                 case 1:
                     response = _a.sent();
                     if (response.data.success) {
@@ -121,7 +105,7 @@ var DuplicationFailed = function () {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         return __generator(this, function (_k) {
             switch (_k.label) {
-                case 0: return [4 /*yield*/, getDuplicationFailedProfiles(filterValue, page, size)];
+                case 0: return [4 /*yield*/, getDuplicationFailedProfiles(filterValue, page, size, props.contestId)];
                 case 1:
                     response = _k.sent();
                     if ((_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.success) {
@@ -149,7 +133,7 @@ var DuplicationFailed = function () {
             enablePivot: true,
             enableValue: true,
             resizable: true,
-            cellStyle: { "border-right-color": "#DFE5FF" },
+            cellStyle: { "borderRightColor": "#DFE5FF" },
         };
     }, []);
     var autoGroupColumnDef = useMemo(function () {
@@ -234,7 +218,7 @@ var DuplicationFailed = function () {
                     ], countsList: [
                         {
                             _id: 1,
-                            count: agCount.PDC_FAIL + agCount.PDC_PASS + agCount.FDC_FAIL,
+                            count: ((agCount === null || agCount === void 0 ? void 0 : agCount.PDC_PASS) ? agCount === null || agCount === void 0 ? void 0 : agCount.PDC_PASS : 0) + ((agCount === null || agCount === void 0 ? void 0 : agCount.FDC_FAIL) ? agCount === null || agCount === void 0 ? void 0 : agCount.FDC_FAIL : 0) + ((agCount === null || agCount === void 0 ? void 0 : agCount.PDC_FAIL) ? agCount === null || agCount === void 0 ? void 0 : agCount.PDC_FAIL : 0),
                         },
                         { _id: 2, count: agCount.PDC_FAIL },
                         { _id: 3, count: agCount.PDC_PASS },

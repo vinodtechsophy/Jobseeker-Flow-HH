@@ -31,12 +31,12 @@ const GridItem: FC<any> = (props): ReactElement => {
       return { background: "#F1F7FF" };
     }
   };
-  
+
   const onCellClicked = (event) => {
-    if(event?.colDef?.headerName === "Upload Profile") {
+    if (event?.colDef?.headerName === "Upload Profile") {
       props.fulfillUpload(event?.data);
     }
-  }
+  };
 
   return (
     <div className="ag-theme-alpine grid-container ag-root-wrapper ">
@@ -57,6 +57,7 @@ const GridItem: FC<any> = (props): ReactElement => {
         pagination={props.pagination}
         onSelectionChanged={props.onSelectionChanged}
         onCellClicked={onCellClicked}
+        onCellValueChanged={props.onCellValueChanged}
       />
       {/* <div className="pagination-container">
         <Select

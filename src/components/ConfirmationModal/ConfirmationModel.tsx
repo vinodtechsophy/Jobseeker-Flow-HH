@@ -10,33 +10,32 @@ import {
 } from "@mui/material";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import { makeStyles } from "@mui/styles";
-import { CONFIRMATION_BOX_BUTTON } from "../../constants";
-import { 
-  CLOSE_RED, 
-  MAIN_BLUE, 
+import { ADD_PROFILE_CONFIRMATION_BOX_BUTTON } from "../../constants";
+import {
+  CLOSE_RED,
+  MAIN_BLUE,
   BORDER_RED,
   WHITE_TEXT,
   DARK_BLUE,
-  COOL_RED
+  COOL_RED,
 } from "../../color";
 
 const useStyles = makeStyles(() => ({
   confirmationButton: {
-    "&.MuiButton-outlined": {
-      color: MAIN_BLUE,
+    "&.MuiButton-contained": {
+      backGroundColor: MAIN_BLUE,
       borderColor: MAIN_BLUE,
       textTransform: "none",
-      borderRadius: "1vw",
+      borderRadius: ".5vw",
       fontWeight: "500",
-      width: "8vw",
     },
   },
   cancelButton: {
     "&.MuiButton-outlined": {
-      color: COOL_RED,
-      borderColor: COOL_RED,
+      color: MAIN_BLUE,
+      borderColor: MAIN_BLUE,
       textTransform: "none",
-      borderRadius: "1vw",
+      borderRadius: ".5vw",
       fontWeight: "500",
       width: "8vw",
     },
@@ -48,8 +47,8 @@ const useStyles = makeStyles(() => ({
     paddingBottom: "2.5vh",
   },
   titleContainer: {
-    backgroundColor: MAIN_BLUE,
-    color: WHITE_TEXT,
+    // backgroundColor: MAIN_BLUE,
+    // color: WHITE_TEXT,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -60,14 +59,19 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
     display: "flex",
     fontWeight: "700",
+    padding: "1vw",
   },
   titleIconButton: {
-    display: "inline",
-    color: CLOSE_RED,
-    borderColor: BORDER_RED,
-    position: "absolute",
-    alignItems: "center",
-    right: "0px",
+    "&.MuiIconButton-root": {
+      // display: "inline",
+      color: CLOSE_RED,
+      // borderColor: BORDER_RED,
+      // backGroundColor: "red",
+      position: "absolute",
+      alignItems: "center",
+      right: "1px",
+      top: "1px",
+    },
   },
   messageContainer: {
     color: DARK_BLUE,
@@ -78,19 +82,21 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
     alignItems: "center",
     marginTop: "2.5vh",
+    textAlign: "center",
+    color: "#626880",
   },
 }));
 const ConfirmationModel: FC<any> = (props): ReactElement => {
-
-  const { isOpen, title, message } = props.dialogAction;
+  const { isOpen, title, mainMessage, bottomMessage } = props.dialogAction;
 
   const classes = useStyles();
 
   const handleClose = () => {
     props.setDialogAction({
       isOpen: false,
-      title: '',
-      message: ''
+      title: "",
+      mainMessage: "",
+      bottomMessage: "",
     });
   };
 
@@ -98,38 +104,50 @@ const ConfirmationModel: FC<any> = (props): ReactElement => {
     <>
       <Dialog open={isOpen} onClose={handleClose}>
         <DialogTitle className={classes.titleContainer}>
-          <Typography variant="h6" className={classes.titleText}>
+          <Typography variant="h5" className={classes.titleText}>
             {title}
           </Typography>
-
-          <IconButton
-            className={classes.titleIconButton}
-            onClick={() => handleClose()}
-          >
-            <CancelRoundedIcon />
-          </IconButton>
         </DialogTitle>
+        <IconButton
+          className={classes.titleIconButton}
+          onClick={() => handleClose()}
+        >
+          <CancelRoundedIcon />
+        </IconButton>
         <DialogContent className={classes.messageContainer}>
-          <Typography variant="subtitle2" className={classes.messageText}>
-            {message}
+          <Typography variant="body1" className={classes.messageText}>
+            {mainMessage}
           </Typography>
         </DialogContent>
         <DialogActions className={classes.buttonContainer}>
-          <Button
-            variant="outlined"
-            className={classes.cancelButton}
-            onClick={() => props.buttonLeftFunction()}
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-evenly",
+            }}
           >
-            {CONFIRMATION_BOX_BUTTON[1]}
-          </Button>
-          <Button
-            variant="outlined"
-            className={classes.confirmationButton}
-            onClick={() => props.buttonRightFunction()}
-          >
-            {CONFIRMATION_BOX_BUTTON[0]}
-          </Button>
+            <Button
+              variant="outlined"
+              className={classes.cancelButton}
+              onClick={() => props.buttonLeftFunction()}
+            >
+              {ADD_PROFILE_CONFIRMATION_BOX_BUTTON[0]}
+            </Button>
+            <Button
+              variant="contained"
+              className={classes.confirmationButton}
+              onClick={() => props.buttonRightFunction()}
+            >
+              {ADD_PROFILE_CONFIRMATION_BOX_BUTTON[1]}
+            </Button>
+          </div>
         </DialogActions>
+        <DialogContent className={classes.messageContainer}>
+          <Typography variant="body1" className={classes.messageText}>
+            {bottomMessage}
+          </Typography>
+        </DialogContent>
       </Dialog>
     </>
   );

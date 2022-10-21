@@ -42,7 +42,8 @@ export var useStyles = makeStyles(function () {
         inputField: (_a = {},
             _a["& fieldset"] = {
                 borderRadius: 12,
-                height: 45
+                height: 45,
+                width: '100%'
             },
             _a),
         Heading: {
@@ -103,11 +104,13 @@ export var useStyles = makeStyles(function () {
         muiContainer: {
             paddingLeft: '0px !important'
         },
-        boxInputField: (_b = {},
+        boxInputField: (_b = {
+                width: '80%'
+            },
             _b["& fieldset"] = {
                 borderRadius: 12,
                 height: 45,
-                width: '125%'
+                width: '95%'
             },
             _b)
     });

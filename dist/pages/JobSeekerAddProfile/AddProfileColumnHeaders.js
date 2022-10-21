@@ -1,4 +1,4 @@
-import { FirstNameInputBox, LastNameInputBox, MobileNumberInputBox, EmailTextInput, CustomDropDown, PanInputBox, CustomDOBInputBox, CustomUploadButton, PDCStatusCheckButton, FDCStatusCheckButton, } from "../ManualDataInputTableElement";
+import { FirstNameInputBox, LastNameInputBox, MobileNumberInputBox, EmailTextInput, CustomDropDown, PanInputBox, CustomDOBInputBox, CustomUploadButton, PDCStatusCheckButton, FDCStatusCheckButton, ClearRowButton, } from "../ManualDataInputTableElement";
 import { CONTEST_ABOUT_EMPLOYER } from "../../constants";
 import "./JobSeekerAddProfile.css";
 export var dateFilterParams = {
@@ -27,16 +27,18 @@ export var headerCheckboxSelection = function (params) {
     return params.columnApi.getRowGroupColumns().length === 0;
 };
 export var LISTING_GENERIC_HEADERS = [
-    {
-        headerName: "All",
-        checkboxSelection: checkboxSelection,
-        headerCheckboxSelection: headerCheckboxSelection,
-        maxWidth: 50,
-        floatingFilter: false,
-    },
+    // {
+    //   // headerName: "All",
+    //   // checkboxSelection: checkboxSelection,
+    //   // headerCheckboxSelection: headerCheckboxSelection,
+    //   maxWidth: 50,
+    //   floatingFilter: false,
+    // },
     {
         headerName: "Actions",
         floatingFilter: false,
+        editable: false,
+        cellRenderer: ClearRowButton,
     },
     {
         headerName: "First Name",
@@ -131,14 +133,13 @@ export var LISTING_GENERIC_HEADERS = [
             params.data.dob = params.newValue;
             return true;
         },
-        cellClassRules: {
-            "cell-pass": function (params) {
-                return params.data.pdcStatus == false || params.data.pdcStatus == null;
-            },
-        },
+        // cellClassRules: {
+        //   "cell-pass": (params: any) =>
+        //     params.data.pdcStatus == false || params.data.pdcStatus == null,
+        // },
     },
     {
-        headerName: "Last 5 disgits of PAN",
+        headerName: "Last 5 digits of PAN",
         field: "lastFiveDigitOfPan",
         floatingFilter: false,
         editable: false,
@@ -147,11 +148,10 @@ export var LISTING_GENERIC_HEADERS = [
             params.data.lastFiveDigitOfPan = params.newValue;
             return true;
         },
-        cellClassRules: {
-            "cell-pass": function (params) {
-                return params.data.pdcStatus == false || params.data.pdcStatus == null;
-            },
-        },
+        // cellClassRules: {
+        //   "cell-pass": (params: any) =>
+        //     params.data.pdcStatus == false || params.data.pdcStatus == null,
+        // },
     },
     {
         headerName: "FDC Status",
@@ -163,15 +163,14 @@ export var LISTING_GENERIC_HEADERS = [
             params.data.fdcStatus = params.newValue;
             return true;
         },
-        cellClassRules: {
-            "cell-pass": function (params) {
-                return params.data.pdcStatus == false || params.data.pdcStatus == null;
-            },
-        },
+        // cellClassRules: {
+        //   "cell-pass": (params: any) =>
+        //     params.data.pdcStatus == false || params.data.pdcStatus == null,
+        // },
     },
     {
         headerName: "Upload Profile",
-        // field: "bounty",
+        field: "uploadProfile",
         // hide: false,
         // filter: "agNumberColumnFilter",
         // floatingFilter: false,
@@ -184,11 +183,10 @@ export var LISTING_GENERIC_HEADERS = [
         floatingFilter: false,
         editable: false,
         cellRenderer: CustomUploadButton,
-        cellClassRules: {
-            "cell-pass": function (params) {
-                return params.data.fdcStatus == false || params.data.fdcStatus == null;
-            },
-        },
+        // cellClassRules: {
+        //   "cell-pass": (params: any) =>
+        //     params.data.fdcStatus == false || params.data.fdcStatus == null,
+        // },
     },
 ];
 export var relations = [CONTEST_ABOUT_EMPLOYER];

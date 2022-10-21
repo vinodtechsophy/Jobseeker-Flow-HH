@@ -1,4 +1,4 @@
-import React, { ReactElement, FC, useEffect } from "react";
+import React, { ReactElement, FC, useEffect, useState } from "react";
 import { Step, Stack, Stepper, StepLabel } from "@mui/material";
 import "../../App.css";
 import { JobSeekerAddStepper, ColorlibConnector } from "../StepIcons";
@@ -19,6 +19,7 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
     [k: number]: boolean;
   }>({});
   const [gotData, setGotData] = React.useState(false);
+  const [progressBar, setProgressBar] = useState(true);
 
   const userDataState = useAppSelector((state) => state.currentUser);
 
@@ -31,6 +32,7 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
     "Work Status",
     "Notice Period",
     "JD Specific Questions",
+    "Review and Submit",
   ];
 
   const isLastStep = () => {
@@ -57,23 +59,30 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
 
   return (
     <div>
-      <div className="stepper-container">
-        <Stack sx={{ width: FULL_WIDTH_PERCENT }} spacing={4}>
-          <Stepper
-            alternativeLabel
-            activeStep={activeStep}
-            connector={<ColorlibConnector />}
-          >
-            {steps.map((label, index) => (
-              <Step key={label} completed={completed[index] === true}>
-                <StepLabel StepIconComponent={JobSeekerAddStepper}>
-                  {label}
-                </StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-        </Stack>
-      </div>
+      {progressBar ? (
+        <>
+          <div className="stepper-container">
+            <Stack sx={{ width: FULL_WIDTH_PERCENT }} spacing={4}>
+              <Stepper
+                alternativeLabel
+                activeStep={activeStep}
+                connector={<ColorlibConnector />}
+              >
+                {steps.map((label, index) => (
+                  <Step key={label} completed={completed[index] === true}>
+                    <StepLabel StepIconComponent={JobSeekerAddStepper}>
+                      {label}
+                    </StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </Stack>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
+
       {activeStep + 1 === 1 ? (
         <JobSeekerAddProfile
           hasButtons={true}
@@ -114,6 +123,7 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
           handleBack={handleBack}
           handleComplete={handleComplete}
           setDataMessage={props.setDataMessage}
+          setActiveStep={setActiveStep}
         />
       ) : activeStep + 1 === 5 ? (
         <JobSeekerProfileNoticePeriod
@@ -135,13 +145,16 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
           contestId={props.contestId}
           handleComplete={handleComplete}
           setDataMessage={props.setDataMessage}
+          setActiveStep={setActiveStep}
         />
       ) : (
         <JobSeekerProfileReview
+          contestId={props.contestId}
           setOpen={props.setOpen}
           setType={props.setType}
           setActiveStep={setActiveStep}
           setDataMessage={props.setDataMessage}
+          setProgressBar={setProgressBar}
         />
       )}
     </div>

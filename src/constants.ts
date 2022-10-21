@@ -1,3 +1,7 @@
+import GroupsIcon from "@mui/icons-material/Groups";
+import UploadIcon from "@mui/icons-material/Upload";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+
 export enum PageStatus {
   SIGNUP = "signup",
   OTP = "otp",
@@ -31,22 +35,26 @@ export const COUNTRY_LABEL = "Country";
 export const SNACKBAR_ERROR_MSG =
   "Something went wrong, kindly retry with valid details";
 export const FORM_SUBMISSION_SUCCESS = "Details are successfully submitted";
+export const EXPEXTED_CTC_DET = "Please enter expected CTC";
 export const IMAGE_UPLOAD_ERROR =
   "Something went wrong in image upload, please try again";
+export const FILE_UPLOAD = "Please upload a file"
 export const FORM_INVALID_STATUS =
   "Form is not validated, kindly fill all the required details";
 export const SPECIAL_CHAR_ERR_MSG = "cannot have special characters or numbers";
-export const ALPHA_ERR_MSG = 'Cannot have special charaters';
-export const URL_ERROR_MSG = 'Please Enter proper URL';
+export const ALPHA_ERR_MSG = "Cannot have special charaters";
+export const URL_ERROR_MSG = "Please Enter proper URL";
 export const CONTEST_DETAILS = "991273137863147520";
 export const JD_PATCH_FORM = "999548019411533824";
 export const CONTEST_ABOUT_EMPLOYER = "991289466351534080";
 export const JOB_SEEKER_RESUME = "1018802975069569024";
 export const OFFER_LETTER = "1022430257759780864";
+export const FILTER_CONTEST_DETAILS_RELATION =
+  "/form-runtime/v1/form-data?relations=";
 
 export const ALL_KEY = "All";
 export const COLUMNS_TEXT = "Columns";
-export const DISABLED_KEY = 'disabled';
+export const DISABLED_KEY = "disabled";
 
 export const emailValidation = (email: string) => {
   const regex = new RegExp(
@@ -97,14 +105,14 @@ export const tanNumValidation = (tan: string) => {
 
 export const NUMBER_ONLY_REGEX = /^[0-9\b]+$/;
 export const LETTERS_ONLY_REGEX = /^[a-zA-Z \b]+$/;
-export const ALPHA_NUMERIC_REGEX = /^[a-zA-Z0-9 \b]+$/
+export const ALPHA_NUMERIC_REGEX = /^[a-zA-Z0-9 \b]+$/;
 export const URL_REGEX = new RegExp(
   "(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?"
 );
 
 export const CONFIRMATION_BOX_BUTTON = ["Yes", "Cancel"];
 
-export const GET_CONTEST_DETAILS = "/form-runtime/v1/form-data?filter=id:";
+export const GET_CONTEST_DETAILS = "form-runtime/v1/form-data?filter=id:";
 export const PATCH_CONTEST_DETAILS = "/form-runtime/v1/form-data";
 
 export const CONTESTSETTINGS_EDIT = "999548019411533824";
@@ -120,16 +128,19 @@ export const JOB_SEEKER_TABS = [
 ];
 
 export const TEMPLATE_BUTTON = [
-  { iconFileName: "Group.png", title: "Import From Job Seeker Collections" },
   {
-    iconFileName: "Download.png",
+    iconFileName: GroupsIcon,
+    title: "Import From Job Seeker Collections",
+  },
+  {
+    iconFileName: FileDownloadIcon,
     title: "Download the Pre Dupliation Template",
   },
   {
-    iconFileName: "Download.png",
+    iconFileName: FileDownloadIcon,
     title: "Download the Full Dupliation Template",
   },
-  { iconFileName: "upload.png", title: "Upload Template" },
+  { iconFileName: UploadIcon, title: "Upload Template" },
 ];
 
 export enum WorkStatusType {
@@ -145,3 +156,44 @@ export const JOB_SEEKER_STATUS = [
   { iconFileName: "Group 3369", title: "Days Left", data: " 29" },
 ];
 export const PAGE_SIZE_ARRAY = [10, 15, 20, 25, 50, 100];
+
+export const DUPLICATION_PASS = {
+  result: "Pass",
+  color: "#22C55E",
+  title: "",
+  body: "",
+};
+export const DUPLICATION_FAIL = {
+  result: "Fail",
+  color: "#EF4444",
+  title: "",
+  body: "",
+};
+export const ADD_PROFILE_CONFIRMATION_BOX_BUTTON = [
+  "Keep Editing",
+  "Submit and Send Verification to Job Seeker",
+];
+export const ADD_PROFILE_CONFIRMATION_BOX_TEXT = {
+  header: "Job Seeker Consent Required",
+  mainMessage:
+    "The Profile needs verification of data and consent of submission from Job Seeker before proceeding",
+  bottomMessage:
+    "Profile will be submitted to the HH Admin for further processing. After the Job Seeker consent is obtained",
+};
+
+export const JOB_SEEKER_COMLETE_PROFILE_TEXT = {
+  title: "Congrats! The Profile is complete and saved in your dashboard.",
+  titleOne: "Email & SMS sent to get consent from job seeker ",
+  notification1: "Sent on 21 of July, 2021, 09:33:03 AM IST",
+  notification2:
+    "Please follow up and get the consent from the job seeker at the earliest.",
+  notification3: "Stay tuned !! to get further updates on Recruiter Dashboard.",
+  notification4:
+    "Hope this job seeker converts into placement and we wish you all the best!!",
+  alyticsTitle: "Your Profile Submission Statistics For this Contest",
+};
+
+export const JOB_TYPE_OPTIONS = [
+  'Full-Time',
+  'Contract'
+];

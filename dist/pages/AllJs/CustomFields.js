@@ -46,14 +46,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useEffect } from "react";
 import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import LocalPhoneRoundedIcon from "@mui/icons-material/LocalPhoneRounded";
 import DehazeIcon from "@mui/icons-material/Dehaze";
-import KeycloakService from "../../services/KeycloakService";
 import { downloadFile } from "../../services/DocumentService";
 var useStyles = makeStyles(function () { return ({
     buttonContainer: {
@@ -77,21 +75,6 @@ var useStyles = makeStyles(function () { return ({
 }); });
 export var ResumeUploaded = function () {
     var classes = useStyles();
-    useEffect(function () {
-        fetchToken();
-    }, []);
-    var fetchToken = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, KeycloakService.fetchTokenOtherUser()];
-                case 1:
-                    token = _a.sent();
-                    sessionStorage.setItem("react-token", token);
-                    return [2 /*return*/];
-            }
-        });
-    }); };
     var handleViewResume = function () { return __awaiter(void 0, void 0, void 0, function () {
         var response, response1, pdf, downloadLink, blob, url;
         return __generator(this, function (_a) {

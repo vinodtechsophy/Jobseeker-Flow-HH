@@ -81,7 +81,7 @@ var CertificationDetails = function (props) {
                 issueDate: Yup.string().required(FormAttributes.issueDate.required),
                 expirationDate: Yup.string(),
             }))
-                .required("offr details required")
+                .required("offer details required")
                 .min(1, "add at least one offer"),
         }),
         onSubmit: function (values, _a) {
@@ -91,9 +91,21 @@ var CertificationDetails = function (props) {
     });
     var handleServiceAdd = function (prefillValue) {
         certificationDetailsForm.setValues(function (prevValues) { return ({
-            members: __spreadArray(__spreadArray([], prevValues.members, true), [__assign(__assign({}, initialValuesForForm), prefillValue)], false),
+            members: __spreadArray(__spreadArray([], prevValues.members, true), [
+                __assign(__assign({}, initialValuesForForm), prefillValue),
+            ], false),
         }); });
-        setServiceList(function (prevState) { return __spreadArray(__spreadArray([], prevState, true), [__assign(__assign({}, initialValuesForForm), prefillValue)], false); });
+        setServiceList(function (prevState) { return __spreadArray(__spreadArray([], prevState, true), [
+            __assign(__assign({}, initialValuesForForm), prefillValue),
+        ], false); });
+    };
+    var AddMultipleService = function (prefillArray) {
+        if (prefillArray) {
+            certificationDetailsForm.setValues(function (prevValues) { return ({
+                members: __spreadArray([], prefillArray, true),
+            }); });
+            setServiceList(function (prevState) { return __spreadArray([], prefillArray, true); });
+        }
     };
     var getError = function (name) {
         var error = getIn(certificationDetailsForm.errors, name);
@@ -102,7 +114,7 @@ var CertificationDetails = function (props) {
     };
     useEffect(function () {
         if (props.prefillDetails) {
-            props.prefillDetails.forEach(function (certification) { return handleServiceAdd(certification); });
+            AddMultipleService(props.prefillDetails);
         }
         else if (serviceList.length === 0)
             handleServiceAdd();
@@ -119,35 +131,64 @@ var CertificationDetails = function (props) {
             props.setDataMessage("Please select issue date");
             props.setOpen(true);
         }
-        else if (!certificationDetailsForm.values.members[index].credentialStatus
-            && !certificationDetailsForm.values.members[index].expirationDate) {
+        else if (!certificationDetailsForm.values.members[index].credentialStatus &&
+            !certificationDetailsForm.values.members[index].expirationDate) {
             props.setType(WARNING_KEY);
             props.setDataMessage("Please select expiration date");
             props.setOpen(true);
         }
+        else if (!certificationDetailsForm.values.members[index].name) {
+            props.setType(WARNING_KEY);
+            props.setDataMessage("Please enter the certification name");
+            props.setOpen(true);
+        }
+        else if (!certificationDetailsForm.values.members[index].issuingOrganization) {
+            props.setType(WARNING_KEY);
+            props.setDataMessage("Please enter the issuing organisation's name");
+            props.setOpen(true);
+        }
+        else if (!certificationDetailsForm.values.members[index].credentialId) {
+            props.setType(WARNING_KEY);
+            props.setDataMessage("Please enter the credentialId");
+            props.setOpen(true);
+        }
+        else if (!certificationDetailsForm.values.members[index].credentialURL) {
+            props.setType(WARNING_KEY);
+            props.setDataMessage("Please enter the credentialURL");
+            props.setOpen(true);
+        }
+        else if (!certificationDetailsForm.values.members[index].credentialStatus &&
+            certificationDetailsForm.values.members[index].issueDate.getTime() >
+                certificationDetailsForm.values.members[index].expirationDate.getTime()) {
+            props.setType(WARNING_KEY);
+            props.setDataMessage("Please select valid expiration date");
+            props.setOpen(true);
+        }
         else {
             certificationDetailsForm.setFieldValue("members[".concat(index, "].saveStatus"), true);
-            props.setCertificationData(certificationDetailsForm.values.members[index]);
+            props.setCertificationData(certificationDetailsForm.values.members);
         }
     };
     var handleDeleteData = function (index) {
         props.removeCertification(index);
         handleServiceRemove(index);
     };
-    return (_jsx(React.Fragment, { children: _jsxs("div", __assign({ className: "certification-div" }, { children: [_jsx("div", __assign({ className: "add-btn-div" }, { children: _jsxs(Button, __assign({ className: "next-button", variant: "contained", onClick: handleServiceAdd }, { children: [_jsx(AddIcon, { className: "add-icon" }), " ", CERTIFICATION_ADD_TEXT] })) })), serviceList.length > 0 &&
+    return (_jsx(React.Fragment, { children: _jsxs("div", __assign({ className: "certification-div" }, { children: [_jsx("div", __assign({ className: "add-btn-div" }, { children: _jsxs(Button, __assign({ className: "next-button", variant: "contained", onClick: function () { return handleServiceAdd(); } }, { children: [_jsx(AddIcon, { className: "add-icon" }), " ", CERTIFICATION_ADD_TEXT] })) })), serviceList.length > 0 &&
                     serviceList.map(function (singleService, index) { return (_jsx("div", __assign({ className: "services" }, { children: _jsx("div", __assign({ className: "first-division" }, { children: _jsxs(StyledContainer, { children: [_jsxs(Grid, __assign({ container: true, className: classes.muiContainer }, { children: [_jsx(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: FULL_SIZE_GRID, lg: FULL_SIZE_GRID, sx: {
                                                     display: "flex",
                                                     alignItems: "center",
                                                     justifyContent: "space-between",
                                                     marginBottom: 1,
-                                                } }, { children: _jsxs(Typography, __assign({ className: classes.Heading2 }, { children: ["Certification ", index + 1, " Details"] })) })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID }, { children: [_jsxs("p", { children: [CERTIFICATION_NAME_TEXT, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { required: true, disabled: props.disabled, id: FormAttributes.name.id, placeholder: FormAttributes.name.placeholder, className: classes.boxInputField, size: "small", name: "members[".concat(index, "].name"), onBlur: certificationDetailsForm.handleBlur, onChange: certificationDetailsForm.handleChange, value: certificationDetailsForm.values.members[index].name, error: getError("members[".concat(index, "].name")), helperText: getError("members[".concat(index, "].name")) })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "right-grid" }, { children: [_jsxs("p", { children: [CERTIFICATION_ORIGIN_TEXT, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { required: true, disabled: props.disabled, id: FormAttributes.issuingOrganization.id, placeholder: FormAttributes.issuingOrganization.placeholder, className: classes.boxInputField, size: "small", name: "members[".concat(index, "].issuingOrganization"), onBlur: certificationDetailsForm.handleBlur, onChange: certificationDetailsForm.handleChange, value: certificationDetailsForm.values.members[index]
+                                                } }, { children: _jsxs(Typography, __assign({ className: classes.Heading2 }, { children: ["Certification ", index + 1, " Details"] })) })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID }, { children: [_jsxs("p", { children: [CERTIFICATION_NAME_TEXT, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { required: true, disabled: props.disabled, id: FormAttributes.name.id, placeholder: FormAttributes.name.placeholder, label: FormAttributes.name.label, className: classes.boxInputField, size: "small", name: "members[".concat(index, "].name"), onBlur: certificationDetailsForm.handleBlur, onChange: certificationDetailsForm.handleChange, value: certificationDetailsForm.values.members[index].name, error: getError("members[".concat(index, "].name")), helperText: getError("members[".concat(index, "].name")) })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "right-grid" }, { children: [_jsxs("p", { children: [CERTIFICATION_ORIGIN_TEXT, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { required: true, disabled: props.disabled, id: FormAttributes.issuingOrganization.id, placeholder: FormAttributes.issuingOrganization.placeholder, label: FormAttributes.issuingOrganization.label, className: classes.boxInputField, size: "small", name: "members[".concat(index, "].issuingOrganization"), onBlur: certificationDetailsForm.handleBlur, onChange: certificationDetailsForm.handleChange, value: certificationDetailsForm.values.members[index]
                                                             .issuingOrganization, error: getError("members[".concat(index, "].issuingOrganization")), helperText: getError("members[".concat(index, "].issuingOrganization")) })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: FULL_SIZE_GRID, lg: FULL_SIZE_GRID, mt: 2 }, { children: [_jsx("span", { children: CREDENTIAL_EXPIRY_TEXT }), _jsx(Checkbox, { checked: certificationDetailsForm.values.members[index]
                                                             .credentialStatus, value: certificationDetailsForm.values.members[index]
                                                             .credentialStatus, onChange: function (event) {
                                                             return certificationDetailsForm.setFieldValue("members[".concat(index, "].credentialStatus"), event.target.checked);
-                                                        }, inputProps: { "aria-label": "controlled" } })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, mt: 2 }, { children: [_jsxs("p", { children: [CERTIFICATION_ISSUE_DATE, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(Calendar, { setDate: function (date) { return handleIssueDate(date, index); }, status: true })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "right-grid", mt: 2 }, { children: [_jsxs("p", { children: [CERTIFICATION_EXPIRY_DATE, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(Calendar, { setDate: function (date) { return handleExpirationDate(date, index); }, status: true, disabled: certificationDetailsForm.values.members[index]
-                                                            .credentialStatus })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "credential-grid" }, { children: [_jsxs("p", { children: [CREDENTIAL_ID_TEXT, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { required: true, disabled: props.disabled, id: FormAttributes.credentialId.id, placeholder: FormAttributes.credentialId.placeholder, className: classes.boxInputField, size: "small", name: "members[".concat(index, "].credentialId"), onBlur: certificationDetailsForm.handleBlur, onChange: certificationDetailsForm.handleChange, value: certificationDetailsForm.values.members[index]
-                                                            .credentialId, error: getError("members[".concat(index, "].credentialId")), helperText: getError("members[".concat(index, "].credentialId")) })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "credential-grid right-grid" }, { children: [_jsxs("p", { children: [CREDENTIAL_URL_TEXT, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { id: FormAttributes.credentialURL.id, placeholder: FormAttributes.credentialURL.placeholder, required: true, disabled: props.disabled, size: "small", className: classes.boxInputField, name: "members[".concat(index, "].credentialURL"), onBlur: certificationDetailsForm.handleBlur, onChange: certificationDetailsForm.handleChange, value: certificationDetailsForm.values.members[index]
+                                                        }, inputProps: { "aria-label": "controlled" } })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, mt: 2 }, { children: [_jsxs("p", { children: [CERTIFICATION_ISSUE_DATE, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(Calendar, { setDate: function (date) { return handleIssueDate(date, index); }, status: true, value: certificationDetailsForm.values.members[index]
+                                                            .issueDate, calendarDisabled: props.disabled })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "right-grid", mt: 2 }, { children: [_jsxs("p", { children: [CERTIFICATION_EXPIRY_DATE, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(Calendar, { setDate: function (date) { return handleExpirationDate(date, index); }, status: true, calendarDisabled: certificationDetailsForm.values.members[index]
+                                                            .credentialStatus || props.disabled, value: certificationDetailsForm.values.members[index]
+                                                            .expirationDate })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "credential-grid" }, { children: [_jsxs("p", { children: [CREDENTIAL_ID_TEXT, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { required: true, disabled: props.disabled, id: FormAttributes.credentialId.id, placeholder: FormAttributes.credentialId.placeholder, label: FormAttributes.credentialId.label, className: classes.boxInputField, size: "small", name: "members[".concat(index, "].credentialId"), onBlur: certificationDetailsForm.handleBlur, onChange: certificationDetailsForm.handleChange, value: certificationDetailsForm.values.members[index]
+                                                            .credentialId, error: getError("members[".concat(index, "].credentialId")), helperText: getError("members[".concat(index, "].credentialId")) })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "credential-grid right-grid" }, { children: [_jsxs("p", { children: [CREDENTIAL_URL_TEXT, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { id: FormAttributes.credentialURL.id, placeholder: FormAttributes.credentialURL.placeholder, label: FormAttributes.credentialURL.label, required: true, disabled: props.disabled, size: "small", className: classes.boxInputField, name: "members[".concat(index, "].credentialURL"), onBlur: certificationDetailsForm.handleBlur, onChange: certificationDetailsForm.handleChange, value: certificationDetailsForm.values.members[index]
                                                             .credentialURL, error: getError("members[".concat(index, "].credentialURL")), helperText: getError("members[".concat(index, "].credentialURL")) })] }))] })), !props.disabled ? (_jsx("div", __assign({ className: "final-button-div" }, { children: !certificationDetailsForm.values.members[index]
                                             .saveStatus ? (_jsx(Button, __assign({ className: "save-button", variant: "outlined", onClick: function () { return handleSaveData(index); } }, { children: SAVE_BTN_TEXT }))) : (_jsx(Button, __assign({ className: "save-button", variant: "outlined", onClick: function () { return handleDeleteData(index); } }, { children: DELETE_BTN_TEXT }))) }))) : null] }) })) }), index)); })] })) }));
 };

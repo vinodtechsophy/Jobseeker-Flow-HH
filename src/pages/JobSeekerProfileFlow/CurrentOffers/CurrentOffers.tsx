@@ -43,6 +43,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
 
   const [serviceList, setServiceList] = React.useState<any>([]);
   const [serviceListFiles, setServiceListFiles] = React.useState<any>([]);
+  const [prefillOfferLetters, setPrefillOfferLetters] = React.useState<any>(props?.prefilData?.map((files) => files.letterFiles) || []);
   const [fixedCtc, setFixedCtc] = React.useState<{
     fixedCtcLakh: string;
     fixedCtcThousand: string;
@@ -85,11 +86,10 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
     fieldDisabled: false,
     fixedCtc: {},
     variableCtc: {},
+    totalCtc: "",
   };
 
   const currentOfferSubmit = (index: any) => {
-    offerAddForm.values.members[index].fixedCtc = fixedCtc;
-    offerAddForm.values.members[index].variableCtc = variableCtc;
     if (
       !offerAddForm.values.members[index].joiningDate ||
       !offerAddForm.values.members[index].joiningLocation ||
@@ -104,10 +104,10 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
       props.setDataMessage("Please upload offer letter");
       props.setOpen(true);
     } else if (
-      fixedCtc.fixedCtcLakh === "" ||
-      fixedCtc.fixedCtcThousand === "" ||
-      variableCtc.variableCtcLakh === "" ||
-      variableCtc.variableCtcThousand === ""
+      offerAddForm.values.members[index].fixedCtc.fixedCtcLakh === "" ||
+      offerAddForm.values.members[index].fixedCtc.fixedCtcThousand === "" ||
+      offerAddForm.values.members[index].variableCtc.variableCtcLakh === "" ||
+      offerAddForm.values.members[index].variableCtc.variableCtcThousand === ""
     ) {
       props.setType(WARNING_KEY);
       props.setDataMessage("Please provide CTC details");
@@ -155,41 +155,56 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
         .required("offr details required")
         .min(1, "add at least one offer"),
     }),
-    onSubmit: (values, { setSubmitting }) => {},
+    onSubmit: (values, { setSubmitting }) => { },
     enableReinitialize: true,
   });
 
-  const handleFixedCtc = (value: string, index: number) => {
-    if (index === 0 && value)
-      setFixedCtc({
-        fixedCtcLakh: value,
-        fixedCtcThousand: fixedCtc.fixedCtcThousand,
-      });
-    else if (index === 1 && value)
-      setFixedCtc({
-        fixedCtcLakh: fixedCtc.fixedCtcLakh,
-        fixedCtcThousand: value,
-      });
+  const handleFixedCtc = (value: string, pos: number, index: any) => {
+    if (pos === 0)
+      offerAddForm.values.members[index].fixedCtc.fixedCtcLakh = value ? value : '0';
+    else if (pos === 1)
+      offerAddForm.values.members[index].fixedCtc.fixedCtcThousand = value ? value : '0';
+
+   // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
+    handleTotalCtc(index);
   };
 
-  const handleVariableCtc = (value: string, index: number) => {
-    if (index === 0 && value)
-      setVariableCtc({
-        variableCtcLakh: value,
-        variableCtcThousand: variableCtc.variableCtcThousand,
-      });
-    else if (index === 1 && value)
-      setVariableCtc({
-        variableCtcLakh: variableCtc.variableCtcLakh,
-        variableCtcThousand: value,
-      });
+  const handleVariableCtc = (value: string, pos: number, index: any) => {
+    if (pos === 0)
+      offerAddForm.values.members[index].variableCtc.variableCtcLakh = value ? value : '0';
+    else if (pos === 1)
+      offerAddForm.values.members[index].variableCtc.variableCtcThousand = value ? value : '0';
+
+   // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
+    handleTotalCtc(index);
   };
 
-  const handleServiceAdd = () => {
+  const handleTotalCtc = (index: any) => {
+    offerAddForm.values.members[index].totalCtc = (
+      (parseInt(offerAddForm.values.members[index].fixedCtc.fixedCtcLakh)
+        + parseInt(offerAddForm.values.members[index].variableCtc.variableCtcLakh))
+      * 100000
+      + (parseInt(offerAddForm.values.members[index].fixedCtc.fixedCtcThousand)
+        + parseInt(offerAddForm.values.members[index].variableCtc.variableCtcThousand))
+      * 1000).toString();
+
+   // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
+  }
+
+  const handleServiceAdd = (prefillValue?: any) => {
     offerAddForm.setValues((prevValues) => ({
-      members: [...prevValues.members, { ...initialValuesForForm }],
+      members: [...prevValues.members, { ...initialValuesForForm, ...prefillValue }],
     }));
-    setServiceList((prevState: any) => [...prevState, { service: "" }]);
+    setServiceList((prevState: any) => [...prevState, { ...initialValuesForForm, ...prefillValue }]);
+  };
+
+  const AddMultipleService = (prefillArray?: any[]) => {
+    if (prefillArray) {
+      offerAddForm.setValues((prevValues) => ({
+        members: [...prefillArray],
+      }));
+      setServiceList((prevState: any) => [...prefillArray]);
+    }
   };
 
   const getError = (name: string) => {
@@ -199,7 +214,9 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
   };
 
   useEffect(() => {
-    if (serviceList.length === 0) handleServiceAdd();
+    if (props.prefilData) {
+      AddMultipleService(props.prefilData);
+    } else if (serviceList.length === 0) handleServiceAdd();
   }, []);
 
   const receiveFileContent = (files: any, index: number) => {
@@ -222,7 +239,8 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
         <Button
           className="next-button stack-button"
           variant="contained"
-          onClick={handleServiceAdd}
+          onClick={() => handleServiceAdd()}
+          disabled={props.disabled}
         >
           <AddIcon className="add-icon" /> {OFFER_ADD_TEXT}
         </Button>
@@ -281,6 +299,8 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                         );
                       }}
                       status={true}
+                      value={offerAddForm.values.members[index].joiningDate}
+                      calendarDisabled={props.disabled || offerAddForm.values.members[index].fieldDisabled}
                     />
                   </Grid>
                   <Grid
@@ -303,6 +323,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                       required
                       id={FormAttributes.joiningLocation.id}
                       placeholder={FormAttributes.joiningLocation.placeholder}
+                      label={FormAttributes.joiningLocation.label}
                       className={classes.boxInputField}
                       size="small"
                       name={`members[${index}].joiningLocation`}
@@ -333,6 +354,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                       required
                       id={FormAttributes.employerName.id}
                       placeholder={FormAttributes.employerName.placeholder}
+                      label={FormAttributes.employerName.label}
                       className={classes.boxInputField}
                       size="small"
                       name={`members[${index}].employerName`}
@@ -362,6 +384,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                       }
                       id={FormAttributes.designation.id}
                       placeholder={FormAttributes.designation.placeholder}
+                      label={FormAttributes.employerName.label}
                       required
                       size="small"
                       className={classes.boxInputField}
@@ -384,7 +407,10 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                         props.disabled ||
                         offerAddForm.values.members[index].fieldDisabled
                       }
-                      setValues={handleFixedCtc}
+                      setValues={(val: string, ind: number) => {
+                        handleFixedCtc(val, ind, index)
+                      }}
+                      value={offerAddForm.values.members[index].fixedCtc}
                     />
                     <InlineInputs
                       InlineInputsArray={CTCDetails}
@@ -393,7 +419,10 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                         props.disabled ||
                         offerAddForm.values.members[index].fieldDisabled
                       }
-                      setValues={handleVariableCtc}
+                      setValues={(val: string, ind: number) => {
+                        handleVariableCtc(val, ind, index)
+                      }}
+                      value={offerAddForm.values.members[index].variableCtc}
                     />
                     <div>
                       <div className="experience-card-title">
@@ -403,10 +432,9 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                       </div>
                       <div className="inline-div">
                         <TextField
-                          disabled={props.disabled}
+                          disabled
                           type="text"
                           label={TOTAL_CTC_LABEL}
-                          onChange={(e) => console.log("val ", e.target.value)}
                           placeholder={TCTC_PLACEHOLDER}
                           InputProps={{
                             inputProps: {
@@ -414,6 +442,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                             },
                           }}
                           size="small"
+                          value={offerAddForm.values.members[index].totalCtc}
                         />
                         <div className="tctc-text">
                           <span>{TCTC_SUB_TEXT}</span>
@@ -430,13 +459,14 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                     lg={HALF_SIZE_GRID}
                     className={classes.limitWidth}
                   >
-                    {!offerAddForm.values.members[index].saveStatus && (
+                    {(!offerAddForm.values.members[index].fieldDisabled && !props.disabled) ? (
                       <DropZoneUpload
                         receiveFileContent={receiveFileContent}
                         data={index}
+                        disabled={props.disabled}
                       />
-                    )}
-                    {serviceListFiles[index] && serviceListFiles[index][0] ? (
+                    ) : null}
+                    {serviceListFiles[index] && serviceListFiles?.length > 0 && serviceListFiles[index]?.length > 0 ? (
                       <Box>
                         <Button className="next-button" variant="contained">
                           {serviceListFiles[index][0]?.name}
@@ -444,9 +474,36 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                         <Button
                           type="button"
                           disabled={
-                            offerAddForm.values.members[index].saveStatus
+                            offerAddForm.values.members[index].saveStatus ||
+                            props.disabled
                           }
                           onClick={() => removeFile(index)}
+                          className="remove-btn"
+                        >
+                            <DeleteIcon
+                            color={
+                              (offerAddForm.values.members[index].fieldDisabled || props.disabled) 
+                                ? DISABLED_KEY
+                                : ERROR_KEY
+                            }
+                          />
+                        </Button>
+                      </Box>
+                    ) : null}
+
+                    {(!serviceListFiles[index] && prefillOfferLetters?.length > 0 && prefillOfferLetters[index]?.length > 0) ? (
+                      <Box>
+                        <Button className="next-button" variant="contained">
+                          {prefillOfferLetters[index][0].path}
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            const letter = prefillOfferLetters
+                            letter.splice(index, 1);
+                            console.log(letter)
+                            setPrefillOfferLetters([...letter])
+                          }}
                           className="remove-btn"
                         >
                           <DeleteIcon

@@ -58,7 +58,7 @@ import BookmarkIcon from "../../../src/assets/bookmark.svg";
 import { LISTING_GENERIC_HEADERS } from "./ColumnHeader";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import { PAGE_SIZE_ARRAY } from "../../constants";
-import { contestLinkedJobsekeers, getAggregateData, } from "../../services/JobSeekerService";
+import { statusFilterContestLinkedJobsekeers, getAggregateData, } from "../../services/JobSeekerService";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import moment from "moment";
 var AllJs = function (props) {
@@ -109,7 +109,7 @@ var AllJs = function (props) {
             enablePivot: true,
             enableValue: true,
             resizable: true,
-            cellStyle: { "border-right-color": "#DFE5FF" },
+            cellStyle: { "borderRightColor": "#DFE5FF" },
         };
     }, []);
     var setColumnsDisplay = function (columnList) {
@@ -151,7 +151,7 @@ var AllJs = function (props) {
         var _a, _b, _c, _d, _e, _f;
         return __generator(this, function (_g) {
             switch (_g.label) {
-                case 0: return [4 /*yield*/, contestLinkedJobsekeers(contestId, pageNo, pageSize)];
+                case 0: return [4 /*yield*/, statusFilterContestLinkedJobsekeers(contestId, "", pageNo, pageSize)];
                 case 1:
                     response = _g.sent();
                     if (response.data.success) {
@@ -186,22 +186,6 @@ var AllJs = function (props) {
                     if (response.data.success) {
                         result = response.data.data.filter(function (data) { return data.status === "TOTAL_JOB_SEEKERS"; });
                         result1 = response.data.data.filter(function (data) { return data.status === "JOB_SEEKER_DUPLICATE"; });
-                        // setAgCount({
-                        //   submitted: result[0].count,
-                        //   consent: 0,
-                        //   hhShortlisting: 0,
-                        //   employerDuplication: result1[0].count,
-                        //   employerShortlisting: 0,
-                        // });
-                    }
-                    else {
-                        // setAgCount({
-                        //   submitted: 0,
-                        //   consent: 0,
-                        //   hhShortlisting: 0,
-                        //   employerDuplication: 0,
-                        //   employerShortlisting: 0,
-                        // });
                     }
                     return [2 /*return*/];
             }
