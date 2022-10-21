@@ -66,7 +66,7 @@ import Checkbox from "@mui/material/Checkbox";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import clsx from "clsx";
 import { mainStages, subStages } from "./ManageConstants";
-import { manageJobseekerPatch } from "../../services/JobSeekerService";
+import { manageJobseekerPatch, GenericProcess, } from "../../services/JobSeekerService";
 import { useAppDispatch } from "../../services/StoreHooks";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -359,11 +359,15 @@ export var MainStageDropDown = function (params) {
                 case 0:
                     jobSeekerId = params.data._id;
                     payload = {
-                        jobSeekerMainStage: event.target.value,
-                        jobSeekerSubStage: "N/A",
-                        jobSeekerComment: "N/A",
+                        processDefinitionKey: "Process_wnxmrag",
+                        businessKey: jobSeekerId,
+                        variables: {
+                            action: "jobSeekerMainStage",
+                            jobSeekerMainStage: event.target.value,
+                            jobSeekerId: jobSeekerId,
+                        },
                     };
-                    return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
+                    return [4 /*yield*/, GenericProcess(payload)];
                 case 1:
                     response = _a.sent();
                     if (response.data.success) {
@@ -421,8 +425,13 @@ export var SubStageDropDown = function (params) {
                     setMainStageVal(params.data.jobSeekerMainStage);
                     jobSeekerId = params.data._id;
                     payload = {
-                        jobSeekerSubStage: event.target.value,
-                        jobSeekerComment: "N/A",
+                        processDefinitionKey: "Process_wnxmrag",
+                        businessKey: jobSeekerId,
+                        variables: {
+                            action: "jobSeekerSubStage",
+                            jobSeekerSubStage: event.target.value,
+                            jobSeekerId: jobSeekerId,
+                        },
                     };
                     return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
                 case 1:

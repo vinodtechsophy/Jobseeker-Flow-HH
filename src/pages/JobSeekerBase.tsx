@@ -20,11 +20,19 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const notifyDataState = useAppSelector((state) => state.notificationAlert);
-
-  const [activeTab, setActiveTab] = React.useState(0);
+  const activeTabState = useAppSelector((state) => state.tabsState);
+  const [activeTab, setActiveTab] = React.useState(
+    activeTabState.activeTab || 0
+  );
   const [dataMessage, setDataMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [type, setType] = React.useState("");
+
+  useEffect(() => {
+    if (activeTabState.activeTab !== activeTab) {
+      setActiveTab(activeTabState.activeTab);
+    }
+  }, [activeTabState]);
 
   const jobSeekerTabs = [
     {

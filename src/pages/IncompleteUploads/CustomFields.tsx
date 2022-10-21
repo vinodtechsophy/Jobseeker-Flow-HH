@@ -3,6 +3,8 @@ import { makeStyles } from "@mui/styles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import LocalPhoneRoundedIcon from "@mui/icons-material/LocalPhoneRounded";
 import DehazeIcon from "@mui/icons-material/Dehaze";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { useAppDispatch, useAppSelector } from "../../services/StoreHooks";
 
 const useStyles = makeStyles(() => ({
   buttonContainer: {
@@ -24,42 +26,47 @@ const useStyles = makeStyles(() => ({
   uploadText: {
     color: "#4d6cd9",
   },
-  commonAlignment:{
+  commonAlignment: {
     textAlign: "center",
   },
 }));
 
-export const Icons = (params) => {
-  
+export const Icons = (params: any) => {
   const classes = useStyles();
+  const dispatch = useAppDispatch();
   const handleClick = () => {
     console.log("Hello");
   };
 
+  console.log(params.data.profileLastCompletedStep);
+  const handleStepOpen = () => {
+    dispatch({
+      type: "STEP_CHANGE",
+      data: {
+        step: params.data.profileLastCompletedStep,
+        tab: 0,
+      },
+    });
+  };
+
+  const state = useAppSelector((state) => state.tabsState);
+  console.log(state);
+
   return (
     <>
-    <div
-      className={classes.commonAlignment}
-    >
-      <VisibilityIcon 
-      className={classes.iconColor} 
-      onClick={handleClick} 
-      />
+      <div className={classes.commonAlignment}>
+        <VisibilityIcon className={classes.iconColor} onClick={handleClick} />
 
-      <LocalPhoneRoundedIcon
-        className={classes.iconColor}
-        onClick={handleClick}
-      />
-      
-      <DehazeIcon 
-      className={classes.iconColor} 
-      onClick={handleClick} 
-      />
-    </div> 
-   
-  </>
-  
-  )}
+        <LocalPhoneRoundedIcon
+          className={classes.iconColor}
+          onClick={handleClick}
+        />
+        <OpenInNewIcon className={classes.iconColor} onClick={handleStepOpen} />
+        <DehazeIcon className={classes.iconColor} onClick={handleClick} />
+      </div>
+    </>
+  );
+};
 
 const CustomFields = () => {
   return <div>CustomFields</div>;

@@ -38,7 +38,7 @@ export const FORM_SUBMISSION_SUCCESS = "Details are successfully submitted";
 export const EXPEXTED_CTC_DET = "Please enter expected CTC";
 export const IMAGE_UPLOAD_ERROR =
   "Something went wrong in image upload, please try again";
-export const FILE_UPLOAD = "Please upload a file"
+export const FILE_UPLOAD = "Please upload a file";
 export const FORM_INVALID_STATUS =
   "Form is not validated, kindly fill all the required details";
 export const SPECIAL_CHAR_ERR_MSG = "cannot have special characters or numbers";
@@ -109,6 +109,9 @@ export const ALPHA_NUMERIC_REGEX = /^[a-zA-Z0-9 \b]+$/;
 export const URL_REGEX = new RegExp(
   "(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?"
 );
+
+export const DELETE_DOCUMENT = "/dms/v1/documents?id=";
+export const DOWNLOAD_DOCUMENT = "/dms/v1/documents/download?id=";
 
 export const CONFIRMATION_BOX_BUTTON = ["Yes", "Cancel"];
 
@@ -193,7 +196,4 @@ export const JOB_SEEKER_COMLETE_PROFILE_TEXT = {
   alyticsTitle: "Your Profile Submission Statistics For this Contest",
 };
 
-export const JOB_TYPE_OPTIONS = [
-  'Full-Time',
-  'Contract'
-];
+export const JOB_TYPE_OPTIONS = ["Full-Time", "Contract"];

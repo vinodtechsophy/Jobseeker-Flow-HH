@@ -27,6 +27,7 @@ import {
 } from "../../constants";
 import { Form } from "react-formio";
 import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
+import { myOptions } from "../../utils/FileService";
 
 const JobSeekerProfileJD: FC<any> = (props): ReactElement => {
   const userDataState = useAppSelector((state) => state.currentUser);
@@ -56,19 +57,19 @@ const JobSeekerProfileJD: FC<any> = (props): ReactElement => {
   }, []);
 
   const getDataFill = async () => {
-    try
-    {setLoader(true);
-    const profileDataFetched = await getJobSeekerProfile(
-      props.profileDataId || userDataState.userData.profileId
-    );
-    if (profileDataFetched?.data?.data?.profileJDQuestionsMap) {
-      setPrefillDetails({
-        data: {
-          ...profileDataFetched?.data?.data?.profileJDQuestionsMap,
-        },
-      });
-    }}
-    catch (error: any) {
+    try {
+      setLoader(true);
+      const profileDataFetched = await getJobSeekerProfile(
+        props.profileDataId || userDataState.userData.profileId
+      );
+      if (profileDataFetched?.data?.data?.profileJDQuestionsMap) {
+        setPrefillDetails({
+          data: {
+            ...profileDataFetched?.data?.data?.profileJDQuestionsMap,
+          },
+        });
+      }
+    } catch (error: any) {
       console.log(error);
       props.setType(ERROR_KEY);
       props.setDataMessage("Something went wrong");
@@ -76,7 +77,7 @@ const JobSeekerProfileJD: FC<any> = (props): ReactElement => {
     }
     setLoader(false);
   };
- 
+
   const fetchForm = async () => {
     const formMarkup = await getFormData(JD_PATCH_FORM, "", props.contestId);
     if (formMarkup?.data?.data[0]?.formData?.jdQuestionForm) {
@@ -86,9 +87,8 @@ const JobSeekerProfileJD: FC<any> = (props): ReactElement => {
       if (jdMarkup?.data?.data?.components?.components) {
         setMenuForm(jdMarkup?.data?.data?.components);
         setLoader(false);
-      } 
-    }
-    else {
+      }
+    } else {
       setLoader(false);
       setGotData(true);
     }
@@ -135,36 +135,38 @@ const JobSeekerProfileJD: FC<any> = (props): ReactElement => {
     setLoader(false);
   };
 
-  const handleBack = () =>{
-     if(userDataState.userData.workStatus === 'Fresh Graduate' || userDataState.userData.workStatus === "Not-Working"){
+  const handleBack = () => {
+    if (
+      userDataState.userData.workStatus === "Fresh Graduate" ||
+      userDataState.userData.workStatus === "Not-Working"
+    ) {
       props.setActiveStep(3);
-     } else {
+    } else {
       props.setActiveStep(4);
-     }
-  }
+    }
+  };
 
   return (
     <div className="job-seeker-profile-content">
-
       <Form
         ref={myRefTag}
         form={menuForm}
         submission={prefillDetails}
         onChange={(schema: any) => handleChange(schema)}
+        options={myOptions}
       />
-      {gotData && 
-       <div className="head-title-text">
-       JD Specific Questions has not been configured for this contest
-     </div>
-      }
-        
-     
+      {gotData && (
+        <div className="head-title-text">
+          JD Specific Questions has not been configured for this contest
+        </div>
+      )}
+
       {props.hasButtons ? (
-            <PreviousNextButtons
-              handleNext={submitFormData}
-              handleBack={handleBack}
-            />
-          ) : null}
+        <PreviousNextButtons
+          handleNext={submitFormData}
+          handleBack={handleBack}
+        />
+      ) : null}
       {loader && (
         <Stack alignItems="center">
           <CircularProgress />

@@ -308,3 +308,49 @@ export var JobSeekersInCoolingPeriodWithContest = function (contestId, filter, p
         }
     });
 }); };
+export var JobSeekersMainStageAggregateWithContest = function (contestId) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, axios
+                    .get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/job-seekers/aggregate?groupBy=jobSeekerMainStage&filters=contestId:").concat(contestId, ",consentStatus:JOB_SEEKER_CONSENT_PASS"), {
+                    headers: {
+                        Authorization: "Bearer ".concat(sessionStorage.getItem("react-token")),
+                    },
+                })
+                    .catch(function (error) {
+                    console.log(error);
+                })];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+export var JobSeekersCoolingPeriodAggregateWithContest = function (contestId) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, axios
+                    .get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/job-seekers/aggregate?groupBy=coolingPeriod&filters=contestId:").concat(contestId, ",consentStatus:JOB_SEEKER_CONSENT_PASS"), {
+                    headers: {
+                        Authorization: "Bearer ".concat(sessionStorage.getItem("react-token")),
+                    },
+                })
+                    .catch(function (error) {
+                    console.log(error);
+                })];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+export var GenericProcess = function (processPayload) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/, axios
+                .post("".concat(process.env.REACT_APP_MAIN_SERVER_URL ||
+                "https://api.dev.hiringhood.com/", "workflow/v1/process/start"), processPayload, {
+                headers: {
+                    Authorization: "Bearer ".concat(sessionStorage.getItem("react-token")),
+                },
+            })
+                .catch(function (error) {
+                console.log(error);
+            })];
+    });
+}); };

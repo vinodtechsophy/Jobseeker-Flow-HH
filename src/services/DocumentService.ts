@@ -1,4 +1,48 @@
+import { request, ResponseProps } from "../request";
+import { DELETE_DOCUMENT, DOWNLOAD_DOCUMENT } from "../constants";
 import axios from "axios";
+
+export const uploadDocument = async (url, data) => {
+  const apiEndpoint = `${process.env.REACT_APP_API_GATEWAY_URL}${url}`;
+  console.log(process.env.REACT_APP_API_GATEWAY_URL);
+  console.log(apiEndpoint);
+  const r: ResponseProps = (await request.postForm(
+    apiEndpoint,
+    data
+  )) as ResponseProps;
+
+  if (r.success) {
+    return { success: r.success, message: r.message, data: r.data };
+  }
+
+  return { success: false };
+};
+
+export const deleteDocument = async (id) => {
+  const apiEndpoint = `${process.env.REACT_APP_API_GATEWAY_URL}${DELETE_DOCUMENT}${id}`;
+  const r: ResponseProps = (await request.delete(apiEndpoint)) as ResponseProps;
+
+  if (r.success) {
+    return { success: r.success, message: r.message, data: r.data };
+  }
+
+  return { success: false };
+};
+
+export const downloadDocument = async (id: string) => {
+  const token = sessionStorage.getItem("react-token");
+  const apiEndpoint = `${process.env.REACT_APP_API_GATEWAY_URL}${DOWNLOAD_DOCUMENT}${id}`;
+
+  const response = await axios.get(apiEndpoint, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+
+      responseType: "blob", // VERY IMPORTANT 'arrayBuffer'
+    },
+  });
+  console.log(response);
+  return response;
+};
 
 export const downloadFile = async (id: string) => {
   let token = sessionStorage.getItem("react-token");

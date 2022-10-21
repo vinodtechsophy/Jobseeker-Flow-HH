@@ -89,9 +89,7 @@ var CurrentOffers = function (props) {
             props.setOpen(true);
         }
         else if (offerAddForm.values.members[index].fixedCtc.fixedCtcLakh === "" ||
-            offerAddForm.values.members[index].fixedCtc.fixedCtcThousand === "" ||
-            offerAddForm.values.members[index].variableCtc.variableCtcLakh === "" ||
-            offerAddForm.values.members[index].variableCtc.variableCtcThousand === "") {
+            offerAddForm.values.members[index].variableCtc.variableCtcLakh === "") {
             props.setType(WARNING_KEY);
             props.setDataMessage("Please provide CTC details");
             props.setOpen(true);

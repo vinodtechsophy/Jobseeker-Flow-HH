@@ -34,7 +34,63 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+import { request } from "../request";
+import { DELETE_DOCUMENT, DOWNLOAD_DOCUMENT } from "../constants";
 import axios from "axios";
+export var uploadDocument = function (url, data) { return __awaiter(void 0, void 0, void 0, function () {
+    var apiEndpoint, r;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                apiEndpoint = "".concat(process.env.REACT_APP_API_GATEWAY_URL).concat(url);
+                console.log(process.env.REACT_APP_API_GATEWAY_URL);
+                console.log(apiEndpoint);
+                return [4 /*yield*/, request.postForm(apiEndpoint, data)];
+            case 1:
+                r = (_a.sent());
+                if (r.success) {
+                    return [2 /*return*/, { success: r.success, message: r.message, data: r.data }];
+                }
+                return [2 /*return*/, { success: false }];
+        }
+    });
+}); };
+export var deleteDocument = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var apiEndpoint, r;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                apiEndpoint = "".concat(process.env.REACT_APP_API_GATEWAY_URL).concat(DELETE_DOCUMENT).concat(id);
+                return [4 /*yield*/, request.delete(apiEndpoint)];
+            case 1:
+                r = (_a.sent());
+                if (r.success) {
+                    return [2 /*return*/, { success: r.success, message: r.message, data: r.data }];
+                }
+                return [2 /*return*/, { success: false }];
+        }
+    });
+}); };
+export var downloadDocument = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, apiEndpoint, response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                token = sessionStorage.getItem("react-token");
+                apiEndpoint = "".concat(process.env.REACT_APP_API_GATEWAY_URL).concat(DOWNLOAD_DOCUMENT).concat(id);
+                return [4 /*yield*/, axios.get(apiEndpoint, {
+                        headers: {
+                            Authorization: "Bearer ".concat(token),
+                            responseType: "blob", // VERY IMPORTANT 'arrayBuffer'
+                        },
+                    })];
+            case 1:
+                response = _a.sent();
+                console.log(response);
+                return [2 /*return*/, response];
+        }
+    });
+}); };
 export var downloadFile = function (id) { return __awaiter(void 0, void 0, void 0, function () {
     var token, response;
     return __generator(this, function (_a) {

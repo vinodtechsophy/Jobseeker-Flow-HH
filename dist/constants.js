@@ -81,6 +81,8 @@ export var NUMBER_ONLY_REGEX = /^[0-9\b]+$/;
 export var LETTERS_ONLY_REGEX = /^[a-zA-Z \b]+$/;
 export var ALPHA_NUMERIC_REGEX = /^[a-zA-Z0-9 \b]+$/;
 export var URL_REGEX = new RegExp("(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?");
+export var DELETE_DOCUMENT = "/dms/v1/documents?id=";
+export var DOWNLOAD_DOCUMENT = "/dms/v1/documents/download?id=";
 export var CONFIRMATION_BOX_BUTTON = ["Yes", "Cancel"];
 export var GET_CONTEST_DETAILS = "form-runtime/v1/form-data?filter=id:";
 export var PATCH_CONTEST_DETAILS = "/form-runtime/v1/form-data";
@@ -151,7 +153,4 @@ export var JOB_SEEKER_COMLETE_PROFILE_TEXT = {
     notification4: "Hope this job seeker converts into placement and we wish you all the best!!",
     alyticsTitle: "Your Profile Submission Statistics For this Contest",
 };
-export var JOB_TYPE_OPTIONS = [
-    'Full-Time',
-    'Contract'
-];
+export var JOB_TYPE_OPTIONS = ["Full-Time", "Contract"];

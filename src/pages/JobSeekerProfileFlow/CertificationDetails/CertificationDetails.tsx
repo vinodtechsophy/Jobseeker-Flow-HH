@@ -321,6 +321,7 @@ const CertificationDetails: FC<any> = (props): ReactElement => {
                     >
                       <span>{CREDENTIAL_EXPIRY_TEXT}</span>
                       <Checkbox
+                        disabled={props.disabled}
                         checked={
                           certificationDetailsForm.values.members[index]
                             .credentialStatus

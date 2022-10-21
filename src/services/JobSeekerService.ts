@@ -329,3 +329,56 @@ export const JobSeekersInCoolingPeriodWithContest = async (
       console.log(error);
     });
 };
+
+export const JobSeekersMainStageAggregateWithContest = async (
+  contestId?: string
+) => {
+  return await axios
+    .get(
+      `${process.env.REACT_APP_MAIN_SERVER_URL}hiringhood/v1/job-seekers/aggregate?groupBy=jobSeekerMainStage&filters=contestId:${contestId},consentStatus:JOB_SEEKER_CONSENT_PASS`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,
+        },
+      }
+    )
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+export const JobSeekersCoolingPeriodAggregateWithContest = async (
+  contestId?: string
+) => {
+  return await axios
+    .get(
+      `${process.env.REACT_APP_MAIN_SERVER_URL}hiringhood/v1/job-seekers/aggregate?groupBy=coolingPeriod&filters=contestId:${contestId},consentStatus:JOB_SEEKER_CONSENT_PASS`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,
+        },
+      }
+    )
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+export const GenericProcess = async (processPayload: any) => {
+  return axios
+    .post(
+      `${
+        process.env.REACT_APP_MAIN_SERVER_URL ||
+        "https://api.dev.hiringhood.com/"
+      }workflow/v1/process/start`,
+      processPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,
+        },
+      }
+    )
+    .catch((error) => {
+      console.log(error);
+    });
+};

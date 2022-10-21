@@ -10,7 +10,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React from "react";
+import React, { useEffect } from "react";
 import JobSeekerProfileFlow from "./JobSeekerProfileFlow/JobSeekerProfileFlow";
 import TabWrapper, { TabPanel } from "../components/TabWrapper/TabWrapper";
 import { Grid } from "@mui/material";
@@ -30,10 +30,16 @@ var JobSeekerBase = function (props) {
     var classes = useStyles();
     var dispatch = useAppDispatch();
     var notifyDataState = useAppSelector(function (state) { return state.notificationAlert; });
-    var _a = React.useState(0), activeTab = _a[0], setActiveTab = _a[1];
+    var activeTabState = useAppSelector(function (state) { return state.tabsState; });
+    var _a = React.useState(activeTabState.activeTab || 0), activeTab = _a[0], setActiveTab = _a[1];
     var _b = React.useState(""), dataMessage = _b[0], setDataMessage = _b[1];
     var _c = React.useState(false), open = _c[0], setOpen = _c[1];
     var _d = React.useState(""), type = _d[0], setType = _d[1];
+    useEffect(function () {
+        if (activeTabState.activeTab !== activeTab) {
+            setActiveTab(activeTabState.activeTab);
+        }
+    }, [activeTabState]);
     var jobSeekerTabs = [
         {
             title: "Add Profile",

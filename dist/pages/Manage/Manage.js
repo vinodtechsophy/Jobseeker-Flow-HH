@@ -58,7 +58,7 @@ import ColumnSelection from "../../components/ColumnSelection/ColumnSelection";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import { PAGE_SIZE_ARRAY } from "../../constants";
-import { getAggregateData, consentStatusFilterContestLinkedJobsekeers, JobSeekersStagefilterWithContest, JobSeekersInCoolingPeriodWithContest, } from "../../services/JobSeekerService";
+import { consentStatusFilterContestLinkedJobsekeers, JobSeekersStagefilterWithContest, JobSeekersInCoolingPeriodWithContest, JobSeekersMainStageAggregateWithContest, JobSeekersCoolingPeriodAggregateWithContest, } from "../../services/JobSeekerService";
 import moment from "moment";
 import { makeStyles } from "@mui/styles";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -100,24 +100,38 @@ var Manage = function (props) {
         // getTableRowData(0, 10, id, filterValue);
     };
     useEffect(function () {
-        handleAggregateData(id);
+        handleAggregateData(id, selectedButtonValue);
         getTableRowData(pageNo, pageSize, id, selectedButtonValue);
     }, [pageNo, pageSize, id, selectedButtonValue]);
-    var handleAggregateData = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+    var handleAggregateData = function (id, selectedButtonValue) { return __awaiter(void 0, void 0, void 0, function () {
+        var result5, coolingCount, response, result0, result1, result2, result3, result4;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, getAggregateData(id)];
+                case 0: return [4 /*yield*/, JobSeekersCoolingPeriodAggregateWithContest(id)];
                 case 1:
+                    coolingCount = _a.sent();
+                    if (coolingCount.data.success) {
+                        result5 = coolingCount.data.data.filter(function (data) { return data.status === "TOTAL_JOB_SEEKERS"; });
+                    }
+                    else {
+                        result5 = [];
+                    }
+                    return [4 /*yield*/, JobSeekersMainStageAggregateWithContest(id)];
+                case 2:
                     response = _a.sent();
                     if (response.data.success) {
+                        result0 = response.data.data.filter(function (data) { return data.status === "TOTAL_JOB_SEEKERS"; });
+                        result1 = response.data.data.filter(function (data) { return data.status === "phaseL1"; });
+                        result2 = response.data.data.filter(function (data) { return data.status === "phaseL2"; });
+                        result3 = response.data.data.filter(function (data) { return data.status === "phaseHr"; });
+                        result4 = response.data.data.filter(function (data) { return data.status === "offerRolled"; });
                         setAgCount({
-                            vetted: 0,
-                            phaseL1: 0,
-                            phaseL2: 0,
-                            phaseHR: 0,
-                            offerRolled: 0,
-                            coolingPeriod: 0,
+                            vetted: (result0.length > 0 && result0[0].count) || 0,
+                            phaseL1: (result1.length > 0 && result1[0].count) || 0,
+                            phaseL2: (result2.length > 0 && result2[0].count) || 0,
+                            phaseHR: (result3.length > 0 && result3[0].count) || 0,
+                            offerRolled: (result4.length > 0 && result4[0].count) || 0,
+                            coolingPeriod: (result5.length > 0 && result5[0].count) || 0,
                         });
                     }
                     else {

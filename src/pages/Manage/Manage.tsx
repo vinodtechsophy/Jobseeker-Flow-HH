@@ -28,6 +28,8 @@ import {
   consentStatusFilterContestLinkedJobsekeers,
   JobSeekersStagefilterWithContest,
   JobSeekersInCoolingPeriodWithContest,
+  JobSeekersMainStageAggregateWithContest,
+  JobSeekersCoolingPeriodAggregateWithContest,
 } from "../../services/JobSeekerService";
 import moment from "moment";
 import { makeStyles } from "@mui/styles";
@@ -76,21 +78,48 @@ const Manage = (props) => {
   };
 
   useEffect(() => {
-    handleAggregateData(id);
+    handleAggregateData(id, selectedButtonValue);
     getTableRowData(pageNo, pageSize, id, selectedButtonValue);
   }, [pageNo, pageSize, id, selectedButtonValue]);
 
-  const handleAggregateData = async (id) => {
-    const response: any = await getAggregateData(id);
+  const handleAggregateData = async (id, selectedButtonValue) => {
+    let result5: any;
+    const coolingCount: any = await JobSeekersCoolingPeriodAggregateWithContest(
+      id
+    );
+    if (coolingCount.data.success) {
+      result5 = coolingCount.data.data.filter(
+        (data) => data.status === "TOTAL_JOB_SEEKERS"
+      );
+    } else {
+      result5 = [];
+    }
+
+    const response: any = await JobSeekersMainStageAggregateWithContest(id);
 
     if (response.data.success) {
+      const result0 = response.data.data.filter(
+        (data) => data.status === "TOTAL_JOB_SEEKERS"
+      );
+      const result1 = response.data.data.filter(
+        (data) => data.status === "phaseL1"
+      );
+      const result2 = response.data.data.filter(
+        (data) => data.status === "phaseL2"
+      );
+      const result3 = response.data.data.filter(
+        (data) => data.status === "phaseHr"
+      );
+      const result4 = response.data.data.filter(
+        (data) => data.status === "offerRolled"
+      );
       setAgCount({
-        vetted: 0,
-        phaseL1: 0,
-        phaseL2: 0,
-        phaseHR: 0,
-        offerRolled: 0,
-        coolingPeriod: 0,
+        vetted: (result0.length > 0 && result0[0].count) || 0,
+        phaseL1: (result1.length > 0 && result1[0].count) || 0,
+        phaseL2: (result2.length > 0 && result2[0].count) || 0,
+        phaseHR: (result3.length > 0 && result3[0].count) || 0,
+        offerRolled: (result4.length > 0 && result4[0].count) || 0,
+        coolingPeriod: (result5.length > 0 && result5[0].count) || 0,
       });
     } else {
       setAgCount({

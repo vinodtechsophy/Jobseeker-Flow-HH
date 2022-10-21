@@ -52,7 +52,10 @@ import MailIcon from "@mui/icons-material/Mail";
 import Calendar from "../../components/Calendar/Calendar";
 import clsx from "clsx";
 import { mainStages, subStages } from "./ManageConstants";
-import { manageJobseekerPatch } from "../../services/JobSeekerService";
+import {
+  manageJobseekerPatch,
+  GenericProcess,
+} from "../../services/JobSeekerService";
 import { useAppDispatch } from "../../services/StoreHooks";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -372,11 +375,16 @@ export const MainStageDropDown = (params: any) => {
   const handleChange = async (event: any) => {
     let jobSeekerId = params.data._id;
     let payload = {
-      jobSeekerMainStage: event.target.value,
-      jobSeekerSubStage: "N/A",
-      jobSeekerComment: "N/A",
+      processDefinitionKey: "Process_wnxmrag",
+      businessKey: jobSeekerId,
+      variables: {
+        action: "jobSeekerMainStage",
+        jobSeekerMainStage: event.target.value,
+        jobSeekerId: jobSeekerId,
+      },
     };
-    const response = await manageJobseekerPatch(jobSeekerId, payload);
+
+    const response: any = await GenericProcess(payload);
 
     if (response.data.success) {
       params.setValue(event.target.value);
@@ -450,10 +458,16 @@ export const SubStageDropDown = (params: any) => {
     setMainStageVal(params.data.jobSeekerMainStage);
     let jobSeekerId = params.data._id;
     let payload = {
-      jobSeekerSubStage: event.target.value,
-      jobSeekerComment: "N/A",
+      processDefinitionKey: "Process_wnxmrag",
+      businessKey: jobSeekerId,
+      variables: {
+        action: "jobSeekerSubStage",
+        jobSeekerSubStage: event.target.value,
+        jobSeekerId: jobSeekerId,
+      },
     };
-    const response = await manageJobseekerPatch(jobSeekerId, payload);
+    const response: any = await manageJobseekerPatch(jobSeekerId, payload);
+
     if (response.data.success) {
       params.setValue(event.target.value);
       params.refreshCell();
