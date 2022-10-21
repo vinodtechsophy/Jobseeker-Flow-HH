@@ -25,16 +25,16 @@ import JobSeekerProfileJD from "./JobSeekerProfileJD";
 import JobSeekerProfileUpload from "./JobSeekerProfileUpload";
 import JobSeekerAddProfile from "../../pages/JobSeekerAddProfile/JobSeekerAddProfile";
 var JobSeekerProfileFlow = function (props) {
-    var changeStep = useAppSelector(function (state) { return state.tabsState; });
-    var _a = React.useState(changeStep.activeStep || 0), activeStep = _a[0], setActiveStep = _a[1];
+    // const changeStep = useAppSelector((state) => state.tabsState);
+    var _a = React.useState(0), activeStep = _a[0], setActiveStep = _a[1];
     var _b = React.useState({}), completed = _b[0], setCompleted = _b[1];
     var _c = React.useState(false), gotData = _c[0], setGotData = _c[1];
     var _d = useState(true), progressBar = _d[0], setProgressBar = _d[1];
     var userDataState = useAppSelector(function (state) { return state.currentUser; });
     useEffect(function () { }, [gotData]);
-    useEffect(function () {
-        //fetch data
-    }, [activeStep]);
+    // useEffect(() => {
+    //   //fetch data
+    // }, [activeStep]);
     var steps = [
         "Duplication Check with hiringhood",
         "Upload Resume",

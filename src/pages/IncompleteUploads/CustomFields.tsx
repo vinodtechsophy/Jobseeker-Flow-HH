@@ -33,21 +33,21 @@ const useStyles = makeStyles(() => ({
 
 export const Icons = (params: any) => {
   const classes = useStyles();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const handleClick = () => {
     console.log("Hello");
   };
 
   console.log(params.data.profileLastCompletedStep);
-  const handleStepOpen = () => {
-    dispatch({
-      type: "STEP_CHANGE",
-      data: {
-        step: params.data.profileLastCompletedStep,
-        tab: 0,
-      },
-    });
-  };
+  // const handleStepOpen = () => {
+  //   dispatch({
+  //     type: "STEP_CHANGE",
+  //     data: {
+  //       step: params.data.profileLastCompletedStep,
+  //       tab: 0,
+  //     },
+  //   });
+  // };
 
   const state = useAppSelector((state) => state.tabsState);
   console.log(state);
@@ -61,7 +61,7 @@ export const Icons = (params: any) => {
           className={classes.iconColor}
           onClick={handleClick}
         />
-        <OpenInNewIcon className={classes.iconColor} onClick={handleStepOpen} />
+        <OpenInNewIcon className={classes.iconColor} />
         <DehazeIcon className={classes.iconColor} onClick={handleClick} />
       </div>
     </>
