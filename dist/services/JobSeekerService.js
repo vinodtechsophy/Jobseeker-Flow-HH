@@ -165,6 +165,22 @@ export var getContestAggregateStatistics = function () { return __awaiter(void 0
         }
     });
 }); };
+export var getContestAggregateStatisticsGroupBy = function (contestId, groupBy) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, axios
+                    .get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/job-seekers/aggregate?groupBy=").concat(groupBy, "&filters=contestId:").concat(contestId), {
+                    headers: {
+                        Authorization: "Bearer ".concat(sessionStorage.getItem("react-token")),
+                    },
+                })
+                    .catch(function (error) {
+                    console.log(error);
+                })];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
 export var statusFilterContestLinkedJobsekeers = function (id, status, page, size) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -297,6 +313,22 @@ export var JobSeekersInCoolingPeriodWithContest = function (contestId, filter, p
         switch (_a.label) {
             case 0: return [4 /*yield*/, axios
                     .get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/job-seekers-profiles?contestId=").concat(contestId, "&filters=consentStatus:JOB_SEEKER_CONSENT_PASS,coolingPeriod:").concat(filter, "&page=").concat(page, "&size=").concat(size), {
+                    headers: {
+                        Authorization: "Bearer ".concat(sessionStorage.getItem("react-token")),
+                    },
+                })
+                    .catch(function (error) {
+                    console.log(error);
+                })];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+export var JobSeekersAggregateWithContest = function (contestId, groupBy, status, consentStatus) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, axios
+                    .get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/job-seekers/aggregate?groupBy=").concat(groupBy, "&filters=contestId:").concat(contestId).concat(status ? ",status:" + status : "").concat(consentStatus ? ",consentStatus:" + consentStatus : ""), {
                     headers: {
                         Authorization: "Bearer ".concat(sessionStorage.getItem("react-token")),
                     },

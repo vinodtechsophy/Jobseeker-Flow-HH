@@ -433,7 +433,7 @@ export var SubStageDropDown = function (params) {
                             jobSeekerId: jobSeekerId,
                         },
                     };
-                    return [4 /*yield*/, manageJobseekerPatch(jobSeekerId, payload)];
+                    return [4 /*yield*/, GenericProcess(payload)];
                 case 1:
                     response = _a.sent();
                     if (response.data.success) {

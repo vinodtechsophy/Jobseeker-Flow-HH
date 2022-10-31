@@ -68,27 +68,27 @@ var JobSeekerProfileDetails = function (props) {
     var _h = React.useState({ variableCtcLakh: "", variableCtcThousand: "" }), variableCtc = _h[0], setVariableCtc = _h[1];
     var _j = React.useState({ expectedCtcLakh: "", expectedCtcThousand: "" }), expectedCtc = _j[0], setExpectedCtc = _j[1];
     var handleTotalExperience = function (value, index) {
-        if (index === 0 && value)
+        if (index === 0)
             setTotalExperience({
-                totalExperienceYears: value,
+                totalExperienceYears: value ? value : '0',
                 totalExperienceMonths: totalExperience.totalExperienceMonths,
             });
-        else if (index === 1 && value)
+        else if (index === 1)
             setTotalExperience({
                 totalExperienceYears: totalExperience.totalExperienceYears,
-                totalExperienceMonths: value,
+                totalExperienceMonths: value ? value : '0',
             });
     };
     var handleRelevantExperience = function (value, index) {
-        if (index === 0 && value)
+        if (index === 0)
             setRelevantExperience({
-                relevantExperienceYears: value,
+                relevantExperienceYears: value ? value : '0',
                 relevantExperienceMonths: relevantExperience.relevantExperienceMonths,
             });
-        else if (index === 1 && value)
+        else if (index === 1)
             setRelevantExperience({
                 relevantExperienceYears: relevantExperience.relevantExperienceYears,
-                relevantExperienceMonths: value,
+                relevantExperienceMonths: value ? value : '0',
             });
     };
     var handleFixedCtc = function (value, index) {
@@ -141,6 +141,26 @@ var JobSeekerProfileDetails = function (props) {
                 expectedCtcThousand: value ? value : '0',
             });
     };
+    var validateExperience = function (profileDetails) {
+        return ((parseInt(profileDetails.totalExperience.totalExperienceYears ? profileDetails.totalExperience.totalExperienceYears : '0') * 12
+            + parseInt(profileDetails.totalExperience.totalExperienceMonths ? profileDetails.totalExperience.totalExperienceMonths : '0'))
+            < (parseInt(profileDetails.relevantExperience.relevantExperienceYears ? profileDetails.relevantExperience.relevantExperienceYears : '0') * 12
+                + parseInt(profileDetails.relevantExperience.relevantExperienceMonths ? profileDetails.relevantExperience.relevantExperienceMonths : '0')));
+    };
+    var validateCtc = function (expected) {
+        return parseInt(totalCtc) >= (parseInt(expected.expectedCtcLakh) * 100000 + parseInt(expected.expectedCtcThousand ? expected.expectedCtcThousand : '0') * 1000);
+    };
+    var checkExperienceDetails = function (profileDetailsMap) {
+        return (profileDetailsMap.workStatus != "Fresh Graduate" &&
+            (((parseInt(profileDetailsMap.totalExperience.totalExperienceYears) == 0 ||
+                !profileDetailsMap.totalExperience.totalExperienceYears) &&
+                (parseInt(profileDetailsMap.totalExperience.totalExperienceMonths) == 0 ||
+                    !profileDetailsMap.totalExperience.totalExperienceMonths)) ||
+                ((parseInt(profileDetailsMap.relevantExperience.relevantExperienceYears) == 0 ||
+                    !profileDetailsMap.relevantExperience.relevantExperienceYears) &&
+                    (parseInt(profileDetailsMap.relevantExperience.relevantExperienceMonths) == 0 ||
+                        !profileDetailsMap.relevantExperience.relevantExperienceMonths))));
+    };
     var submitDetails = function () { return __awaiter(void 0, void 0, void 0, function () {
         var profileDetailsMap, profileDetailsResponse, error_1;
         var _a;
@@ -149,16 +169,47 @@ var JobSeekerProfileDetails = function (props) {
                 case 0:
                     setLoader(true);
                     profileDetailsMap = buildDetailsPayload();
-                    if (!profileDetailsMap.expectedCtc.expectedCtcLakh) return [3 /*break*/, 7];
-                    if (!profileDetailsMap.workStatus) return [3 /*break*/, 5];
-                    _b.label = 1;
+                    if (!(profileDetailsMap.expectedCtc.expectedCtcLakh
+                        && parseInt(profileDetailsMap.expectedCtc.expectedCtcLakh) != 0)) return [3 /*break*/, 10];
+                    if (!profileDetailsMap.workStatus) return [3 /*break*/, 8];
+                    if (!checkExperienceDetails(profileDetailsMap)) return [3 /*break*/, 1];
+                    props.setType(WARNING_KEY);
+                    props.setDataMessage("Please fill Experience Details");
+                    props.setOpen(true);
+                    return [3 /*break*/, 7];
                 case 1:
-                    _b.trys.push([1, 3, , 4]);
+                    if (!((profileDetailsMap.workStatus == WorkStatusArray[0] ||
+                        profileDetailsMap.workStatus == WorkStatusArray[1])
+                        && validateExperience(profileDetailsMap))) return [3 /*break*/, 2];
+                    props.setType(WARNING_KEY);
+                    props.setDataMessage("Relevant Experience must not exceed Total Experience");
+                    props.setOpen(true);
+                    return [3 /*break*/, 7];
+                case 2:
+                    if (!((profileDetailsMap.workStatus == WorkStatusArray[0] ||
+                        profileDetailsMap.workStatus == WorkStatusArray[1]) &&
+                        (!profileDetailsMap.fixedCtc.fixedCtcLakh ||
+                            parseInt(profileDetailsMap.fixedCtc.fixedCtcLakh) == 0 ||
+                            !profileDetailsMap.variableCtc.variableCtcLakh ||
+                            parseInt(profileDetailsMap.variableCtc.variableCtcLakh) == 0))) return [3 /*break*/, 3];
+                    props.setType(WARNING_KEY);
+                    props.setDataMessage("Please fill Current CTC details");
+                    props.setOpen(true);
+                    return [3 /*break*/, 7];
+                case 3:
+                    if (!(profileDetailsMap.workStatus != "Fresh Graduate" &&
+                        validateCtc(profileDetailsMap.expectedCtc))) return [3 /*break*/, 4];
+                    props.setType(WARNING_KEY);
+                    props.setDataMessage("Expected CTC must be greater than Total CTC");
+                    props.setOpen(true);
+                    return [3 /*break*/, 7];
+                case 4:
+                    _b.trys.push([4, 6, , 7]);
                     return [4 /*yield*/, updateJobSeekerProfile({
                             profileId: props.profileDataId || userDataState.userData.profileId,
                             profileData: { profileDetailsMap: profileDetailsMap, profileLastCompletedStep: "3" },
                         })];
-                case 2:
+                case 5:
                     profileDetailsResponse = _b.sent();
                     if ((_a = profileDetailsResponse === null || profileDetailsResponse === void 0 ? void 0 : profileDetailsResponse.data) === null || _a === void 0 ? void 0 : _a.success) {
                         dispatchWorkStatus(workStatus);
@@ -168,27 +219,27 @@ var JobSeekerProfileDetails = function (props) {
                         props.handleComplete(2);
                         props.handleNext();
                     }
-                    return [3 /*break*/, 4];
-                case 3:
+                    return [3 /*break*/, 7];
+                case 6:
                     error_1 = _b.sent();
                     console.log(error_1);
                     props.setType(ERROR_KEY);
                     props.setDataMessage(error_1 === null || error_1 === void 0 ? void 0 : error_1.message);
                     props.setOpen(true);
-                    return [3 /*break*/, 4];
-                case 4: return [3 /*break*/, 6];
-                case 5:
+                    return [3 /*break*/, 7];
+                case 7: return [3 /*break*/, 9];
+                case 8:
                     props.setType(WARNING_KEY);
                     props.setDataMessage("Please select Work Status");
                     props.setOpen(true);
-                    _b.label = 6;
-                case 6: return [3 /*break*/, 8];
-                case 7:
+                    _b.label = 9;
+                case 9: return [3 /*break*/, 11];
+                case 10:
                     props.setType(WARNING_KEY);
                     props.setDataMessage(EXPEXTED_CTC_DET);
                     props.setOpen(true);
-                    _b.label = 8;
-                case 8:
+                    _b.label = 11;
+                case 11:
                     setLoader(false);
                     return [2 /*return*/];
             }
@@ -251,7 +302,10 @@ var JobSeekerProfileDetails = function (props) {
     var patchProfileDetails = function (patchData) {
         console.log(patchData);
         setFreshGrad(patchData.freshGraduate);
-        setTotalExp(patchData.totalExperience);
+        setTotalExperience({
+            totalExperienceYears: patchData.totalExperience.totalExperienceYears,
+            totalExperienceMonths: patchData.totalExperience.totalExperienceMonths
+        });
         setRelevantExperience({
             relevantExperienceYears: patchData.relevantExperience.relevantExperienceYears,
             relevantExperienceMonths: patchData.relevantExperience.relevantExperienceMonths,
@@ -270,12 +324,6 @@ var JobSeekerProfileDetails = function (props) {
         });
         setWorkStatus(patchData.workStatus);
         setTotalCtc(patchData.totalCtc);
-    };
-    var setTotalExp = function (patchObj) {
-        setTotalExperience({
-            totalExperienceMonths: patchObj.totalExperienceMonths,
-            totalExperienceYears: patchObj.totalExperienceYears,
-        });
     };
     var setFreshGrad = function (data) {
         if (data === "true") {

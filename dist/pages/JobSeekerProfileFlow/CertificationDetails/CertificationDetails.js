@@ -126,6 +126,8 @@ var CertificationDetails = function (props) {
         certificationDetailsForm.setFieldValue("members[".concat(index, "].expirationDate"), date);
     };
     var handleSaveData = function (index) {
+        var date = new Date();
+        date.setHours(0, 0, 0, 0);
         if (!certificationDetailsForm.values.members[index].issueDate) {
             props.setType(WARNING_KEY);
             props.setDataMessage("Please select issue date");
@@ -158,10 +160,15 @@ var CertificationDetails = function (props) {
             props.setOpen(true);
         }
         else if (!certificationDetailsForm.values.members[index].credentialStatus &&
-            certificationDetailsForm.values.members[index].issueDate.getTime() >
-                certificationDetailsForm.values.members[index].expirationDate.getTime()) {
+            new Date(certificationDetailsForm.values.members[index].issueDate).getTime() >
+                new Date(certificationDetailsForm.values.members[index].expirationDate).getTime()) {
             props.setType(WARNING_KEY);
-            props.setDataMessage("Please select valid expiration date");
+            props.setDataMessage("Expiration date cannot be past issue date");
+            props.setOpen(true);
+        }
+        else if (certificationDetailsForm.values.members[index].issueDate > date) {
+            props.setType(WARNING_KEY);
+            props.setDataMessage("Issue date cannot be future date");
             props.setOpen(true);
         }
         else {

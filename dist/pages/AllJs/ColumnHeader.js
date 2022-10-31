@@ -95,7 +95,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Expected CTC",
-        field: "expectedCTC",
+        field: "expectedCtc",
         hide: false,
         minWidth: 215,
         filterParams: {
@@ -119,7 +119,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Ownership Expiry Date",
-        field: "ownershipExpiryDate",
+        field: "ownershipTillDate",
         filter: "agDateColumnFilter",
         floatingFilterComponentParams: {
             suppressFilterButton: true,
@@ -156,7 +156,7 @@ export var LISTING_GENERIC_HEADERS = [
     },
     {
         headerName: "Job Seeker Main Stage",
-        field: "status",
+        field: "jobSeekerMainStage",
         hide: false,
         minWidth: 230,
         filter: "agTextColumnFilter",
@@ -279,10 +279,10 @@ export var LISTING_GENERIC_HEADERS = [
         filter: "agTextColumnFilter",
         cellRenderer: ResumeUploaded,
         floatingFilterComponentParams: {
-            suppressFilterButton: true
+            suppressFilterButton: true,
         },
         filterParams: {
-            buttons: ["apply", "clear"]
+            buttons: ["apply", "clear"],
         },
     },
 ];

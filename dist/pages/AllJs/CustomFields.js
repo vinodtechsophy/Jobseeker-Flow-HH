@@ -73,13 +73,13 @@ var useStyles = makeStyles(function () { return ({
         color: "#4d6cd9",
     },
 }); });
-export var ResumeUploaded = function () {
+export var ResumeUploaded = function (params) {
     var classes = useStyles();
     var handleViewResume = function () { return __awaiter(void 0, void 0, void 0, function () {
         var response, response1, pdf, downloadLink, blob, url;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, downloadFile("1018755347892011008")];
+                case 0: return [4 /*yield*/, downloadFile(params.data.resumeDocumentId)];
                 case 1:
                     response = _a.sent();
                     response1 = response === null || response === void 0 ? void 0 : response.data;

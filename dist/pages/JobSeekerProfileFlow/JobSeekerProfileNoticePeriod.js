@@ -108,7 +108,7 @@ var JobSeekerProfileNoticePeriod = function (props) {
         };
     };
     var submitNoticePeriodInfo = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var profileNoticePeriodMap, fileIds_1, uploadFiles, error_1, profileDetailsResponse, error_2;
+        var profileNoticePeriodMap, date, fileIds_1, uploadFiles, error_1, profileDetailsResponse, error_2;
         var _a;
         return __generator(this, function (_b) {
             switch (_b.label) {
@@ -121,6 +121,17 @@ var JobSeekerProfileNoticePeriod = function (props) {
                         props.setDataMessage("Please enter all Notice Period details");
                         setLoader(false);
                         return [2 /*return*/];
+                    }
+                    if (profileNoticePeriodMap.lastWorkingDate) {
+                        date = new Date();
+                        date.setHours(0, 0, 0, 0);
+                        if (new Date(profileNoticePeriodMap.lastWorkingDate).getTime() < date.getTime()) {
+                            props.setOpen(true);
+                            props.setType(WARNING_KEY);
+                            props.setDataMessage("Last Working date cannot be past date");
+                            setLoader(false);
+                            return [2 /*return*/];
+                        }
                     }
                     if (!(profileNoticePeriodMap.offerData.length > 0)) return [3 /*break*/, 4];
                     _b.label = 1;
@@ -168,7 +179,9 @@ var JobSeekerProfileNoticePeriod = function (props) {
                     error_1 = _b.sent();
                     props.setOpen(true);
                     props.setType(ERROR_KEY);
-                    props.setDataMessage("File upload failed, cannot process further, please try again");
+                    props.setDataMessage(
+                    // "File upload failed, cannot process further, please try again"
+                    "Invalid format");
                     return [2 /*return*/];
                 case 4:
                     _b.trys.push([4, 6, , 7]);
