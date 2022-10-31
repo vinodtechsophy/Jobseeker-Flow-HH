@@ -101,7 +101,7 @@ var DuplicationFailed = function (props) {
         });
     }); };
     var apiCallDuplicationFailedData = function (filterValue, page, size) { return __awaiter(void 0, void 0, void 0, function () {
-        var response, duplicationFailedRecords;
+        var response, duplicationFailedRecords, result;
         var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         return __generator(this, function (_k) {
             switch (_k.label) {
@@ -110,7 +110,20 @@ var DuplicationFailed = function (props) {
                     response = _k.sent();
                     if ((_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.success) {
                         duplicationFailedRecords = (_c = (_b = response === null || response === void 0 ? void 0 : response.data) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.content;
-                        setRowData(duplicationFailedRecords);
+                        console.log(duplicationFailedRecords);
+                        result = duplicationFailedRecords.map(function (item, index) {
+                            if (item.status === "PDC_PASS") {
+                                item.fdcStatus = "NA";
+                            }
+                            else if (item.status === "FDC_PASS") {
+                                item.status = "PDC_PASS";
+                                item.fdcStatus = "FDC_PASS";
+                            }
+                            var Data = __assign(__assign({}, item), item.fdcStatus[index]);
+                            return Data;
+                        });
+                        console.log(result);
+                        setRowData(result);
                         setTotalPages((_e = (_d = response === null || response === void 0 ? void 0 : response.data) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.totalPages);
                         setPageNo((_g = (_f = response === null || response === void 0 ? void 0 : response.data) === null || _f === void 0 ? void 0 : _f.data) === null || _g === void 0 ? void 0 : _g.pageNo);
                         setPageSize((_j = (_h = response === null || response === void 0 ? void 0 : response.data) === null || _h === void 0 ? void 0 : _h.data) === null || _j === void 0 ? void 0 : _j.pageSize);

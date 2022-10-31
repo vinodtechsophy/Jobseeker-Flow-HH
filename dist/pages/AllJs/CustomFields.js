@@ -52,7 +52,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import LocalPhoneRoundedIcon from "@mui/icons-material/LocalPhoneRounded";
 import DehazeIcon from "@mui/icons-material/Dehaze";
-import { downloadFile } from "../../services/DocumentService";
+import { openFile } from "../../services/DocumentService";
 var useStyles = makeStyles(function () { return ({
     buttonContainer: {
         "&.MuiButton-root": {
@@ -74,24 +74,17 @@ var useStyles = makeStyles(function () { return ({
     },
 }); });
 export var ResumeUploaded = function (params) {
+    console.log(params);
     var classes = useStyles();
     var handleViewResume = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response, response1, pdf, downloadLink, blob, url;
+        var resumeId;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, downloadFile(params.data.resumeDocumentId)];
+                case 0:
+                    resumeId = params.getValue();
+                    return [4 /*yield*/, openFile(resumeId)];
                 case 1:
-                    response = _a.sent();
-                    response1 = response === null || response === void 0 ? void 0 : response.data;
-                    pdf = response1;
-                    downloadLink = document.createElement("a");
-                    blob = new Blob(["\ufeff", pdf]);
-                    url = URL.createObjectURL(blob);
-                    downloadLink.href = url;
-                    downloadLink.download = "data.pdf";
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
-                    document.body.removeChild(downloadLink);
+                    _a.sent();
                     return [2 /*return*/];
             }
         });
