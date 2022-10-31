@@ -466,7 +466,7 @@ export const SubStageDropDown = (params: any) => {
         jobSeekerId: jobSeekerId,
       },
     };
-    const response: any = await manageJobseekerPatch(jobSeekerId, payload);
+    const response: any = await GenericProcess(payload);
 
     if (response.data.success) {
       params.setValue(event.target.value);

@@ -3,7 +3,10 @@ import { Box } from "@mui/material";
 import GraphCo from "../../../src/assets/GraphCo.png";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
-import { getContestAggregateStatistics } from "../../services/JobSeekerService";
+import {
+  getContestAggregateStatistics,
+  getContestAggregateStatisticsGroupBy,
+} from "../../services/JobSeekerService";
 
 const useStyles = makeStyles({
   graphImg: {
@@ -132,29 +135,90 @@ const Item = styled(Box)(({ theme }) => ({
 
 const Graph: FC<any> = (props): ReactElement => {
   const classes = useStyles();
-  const [contestStatistics, setContestStatistics] = useState<any>({});
+  // const [contestStatistics, setContestStatistics] = useState<any>({});
+  const [aggregateCount, setAggregateCount] = useState<any>([]);
+  const [aggregatePercentage, setAggregatePercentage] = useState<any>([]);
 
-  const apiCallContestStatistics = async () => {
+  const apiCallAggregateContestStatistics = async () => {
+    let count: any = [];
+    let percentage: any = [];
     const response = await getContestAggregateStatistics();
-    prepareData(response?.data?.data);
+    if (response?.data?.success) {
+      const result = response.data.data.filter(
+        (data) => data.status === "PROFILE_DUPLICATE"
+      );
+      count[0] = result[0]?.count;
+      percentage[0] = result[0]?.percentage;
+      const result1 = response.data.data.filter(
+        (data) => data.status === "TOTAL_PROFILES_UPLOADED"
+      );
+      count[1] = result1[0]?.count;
+      percentage[1] = result1[0]?.percentage;
+    }
+    const response1 = await getContestAggregateStatisticsGroupBy(
+      props.contestId,
+      "consentStatus"
+    );
+    if (response1?.data?.success) {
+      const result2 = response1.data.data.filter(
+        (data) => data.status === "JOB_SEEKER_CONSENT_PENDING"
+      );
+      count[2] = result2[0]?.count;
+      percentage[2] = "_ _";
+
+      const result3 = response1.data.data.filter(
+        (data) => data.status === "JOB_SEEKER_CONSENT_PASS"
+      );
+      count[3] = result3[0]?.count;
+      percentage[3] = "_ _";
+    }
+    const response2 = await getContestAggregateStatisticsGroupBy(
+      props.contestId,
+      "jobSeekerMainStage"
+    );
+    if (response2?.data?.success) {
+      const result4 = response2.data.data.filter(
+        (data) => data.status === "hhShortListing"
+      );
+      count[4] = result4[0]?.count;
+      percentage[4] = "_ _";
+      const result5 = response2.data.data.filter(
+        (data) => data.status === "employerDuplication"
+      );
+      count[5] = result5[0]?.count;
+      percentage[5] = "_ _";
+      const result6 = response2.data.data.filter(
+        (data) => data.status === "employerShortlisting"
+      );
+      count[6] = result6[0]?.count;
+      percentage[6] = "_ _";
+      const result7 = response2.data.data.filter(
+        (data) => data.status === "phaseHr"
+      );
+      count[7] = "_ _";
+      percentage[7] = "_ _";
+    }
+    setAggregateCount(count);
+    setAggregatePercentage(percentage);
+    // prepareData(response?.data?.data);
   };
 
   useEffect(() => {
-    apiCallContestStatistics();
+    apiCallAggregateContestStatistics();
   }, []);
   // useEffect(() => console.log(contestStatistics), [contestStatistics]);
-  const prepareData = (agregateData: any) => {
-    const t = {};
-    agregateData.map(
-      (data: { count: number; status: string; percentage: string }) => {
-        Object.assign(t, {
-          [data.status]: { count: data.count, percentage: data.percentage },
-        });
-      }
-    );
-    setContestStatistics(t);
-  };
-  useEffect(() => {}, [contestStatistics]);
+  // const prepareData = (agregateData: any) => {
+  //   const t = {};
+  //   agregateData.map(
+  //     (data: { count: number; status: string; percentage: string }) => {
+  //       Object.assign(t, {
+  //         [data.status]: { count: data.count, percentage: data.percentage },
+  //       });
+  //     }
+  //   );
+  //   setContestStatistics(t);
+  // };
+  // useEffect(() => {}, [contestStatistics]);
 
   return (
     <Box position="relative">
@@ -165,26 +229,28 @@ const Graph: FC<any> = (props): ReactElement => {
           className={classes.leftDiv}
         >
           <Item className={classes.leftItem1}>
-            {contestStatistics?.PROFILE_DUPLICATE?.percentage || "_ _"}
+            {aggregatePercentage[0] || "_ _"}
           </Item>
           <Item className={classes.leftItem2}>
-            {contestStatistics?.TOTAL_PROFILES_UPLOADED?.percentage || "_ _"}
+            {aggregatePercentage[1] || "_ _"}
           </Item>
           <Item className={classes.leftItem3}>
-            {contestStatistics?.AWAITING_JOB_SEEKEER_CONSENT?.percentage ||
-              "_ _"}
+            {aggregatePercentage[2] || "_ _"}
           </Item>
           <Item className={classes.leftItem4}>
-            {contestStatistics?.JOB_SEEKEER_CONSENT_APPROVED?.percentage ||
-              "_ _"}
+            {aggregatePercentage[3] || "_ _"}
           </Item>
-          <Item className={classes.leftItem5}>0</Item>
+          <Item className={classes.leftItem5}>
+            {aggregatePercentage[4] || "_ _"}
+          </Item>
           <Item className={classes.leftItem6}>
-            {contestStatistics?.PROFILE_DUPLICATE?.percentage || "_ _"}
+            {aggregatePercentage[5] || "_ _"}
           </Item>
-          <Item className={classes.leftItem7}>0</Item>
+          <Item className={classes.leftItem7}>
+            {aggregatePercentage[6] || "_ _"}
+          </Item>
           <Item className={classes.leftItem8}>
-            {contestStatistics?.PROFILE_ACTIVE?.percentage || "_ _"}
+            {aggregatePercentage[7] || "_ _"}
           </Item>
         </Box>
         <Box>
@@ -202,24 +268,28 @@ const Graph: FC<any> = (props): ReactElement => {
           className={classes.rightDiv}
         >
           <Item className={classes.rightItem1}>
-            {contestStatistics?.PROFILE_DUPLICATE?.count || "_ _"}
+            {aggregateCount[0] || "_ _"}
           </Item>
           <Item className={classes.rightItem2}>
-            {contestStatistics?.TOTAL_PROFILES_UPLOADED?.count || "_ _"}
+            {aggregateCount[1] || "_ _"}
           </Item>
           <Item className={classes.rightItem3}>
-            {contestStatistics?.AWAITING_JOB_SEEKEER_CONSENT?.count || "_ _"}
+            {aggregateCount[2] || "_ _"}
           </Item>
           <Item className={classes.rightItem4}>
-            {contestStatistics?.JOB_SEEKEER_CONSENT_APPROVED?.count || "_ _"}
+            {aggregateCount[3] || "_ _"}
           </Item>
-          <Item className={classes.rightItem5}>0</Item>
+          <Item className={classes.rightItem5}>
+            {aggregateCount[4] || "_ _"}
+          </Item>
           <Item className={classes.rightItem6}>
-            {contestStatistics?.PROFILE_DUPLICATE?.count || "_ _"}
+            {aggregateCount[5] || "_ _"}
           </Item>
-          <Item className={classes.rightItem7}>0</Item>
+          <Item className={classes.rightItem7}>
+            {aggregateCount[6] || "_ _"}
+          </Item>
           <Item className={classes.rightItem8}>
-            {contestStatistics?.PROFILE_ACTIVE?.count || "_ _"}
+            {aggregateCount[7] || "_ _"}
           </Item>
         </Box>
       </Box>

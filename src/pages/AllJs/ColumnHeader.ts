@@ -1,10 +1,10 @@
 import {
-    CheckboxSelectionCallbackParams,
-    HeaderCheckboxSelectionCallbackParams,
-  } from "ag-grid-community";
-import {  Icons, ResumeUploaded } from "./CustomFields";
+  CheckboxSelectionCallbackParams,
+  HeaderCheckboxSelectionCallbackParams,
+} from "ag-grid-community";
+import { Icons, ResumeUploaded } from "./CustomFields";
 import { CONTEST_ABOUT_EMPLOYER } from "../../constants";
-  
+
 export const dateFilterParams = {
   comparator: (filterLocalDateAtMidnight, cellValue) => {
     console.log(cellValue);
@@ -31,279 +31,276 @@ export const dateFilterParams = {
     return 0;
   },
 };
-  
 
-  export const checkboxSelection = function (
-    params: CheckboxSelectionCallbackParams
-  ) {
-    return params.columnApi.getRowGroupColumns().length === 0;
-  };
-  
-  export const headerCheckboxSelection = function (
-    params: HeaderCheckboxSelectionCallbackParams
-  ) {
-    return params.columnApi.getRowGroupColumns().length === 0;
-  };
-  
-  export const LISTING_GENERIC_HEADERS = [
-    {
-      headerName: "All",
-      checkboxSelection: checkboxSelection,
-      headerCheckboxSelection: headerCheckboxSelection,
-      maxWidth: 50,
-      floatingFilter: false,
-    },
-    {
-      headerName: "Actions",
-      floatingFilter: false,
-      cellRenderer: Icons,
-    },
-    {
-      headerName: "Job seeker Name",
-      field: "name",
-      filter: "agTextColumnFilter",
-      minWidth: 200,
-      hide: false,
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-    },
-    {
-      headerName: "Job Seeker ID",
-      field: "_id",
-      hide: false,
-      minWidth: 200,
-      filter: "agTextColumnFilter",
-      filterParams: dateFilterParams,
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-    },
-    {
-      headerName: "Technology",
-      field: "technology",
-      filter: "agTextColumnFilter",
-      minWidth: 200,
-      hide: false,
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-    },
-    {
-      headerName: "Experience",
-      field: "experience",
-      hide: false,
-      minWidth: 180,
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-      filter: "agNumberColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-    },
-    {
-      headerName: "Expected CTC",
-      field: "expectedCTC",
-      hide: false,
-      minWidth: 215,
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-      filter: "agTextColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-    },
-    {
-      headerName: "Profile Uploaded",
-      field: "appliedDate",
-      hide: false,
-      minWidth: 215,
-      filter: "agDateColumnFilter",
-      filterParams: dateFilterParams,
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-      
-    },
-    {
-      headerName: "Ownership Expiry Date",
-      field: "ownershipExpiryDate",
-      filter: "agDateColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-      hide: false,
-      minWidth: 215,
-      filterParams: dateFilterParams,
-    },
-    {
-      headerName: "Profile Owned by",
-      field: "referredBy",
-      hide: false,
-      minWidth: 180,
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-      filter: "agTextColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-    },
-    {
-      headerName: "Last/Current Contest Participated",
-      field: "lastCurrentContestParticipated",
-      hide: false,
-      minWidth: 180,
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-      filter: "agTextColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-    },
-    {
-      headerName: "Job Seeker Main Stage",
-      field: "status",
-      hide: false,
-      minWidth: 230,
-      filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-    },
-    {
-      headerName: "Job Seeker Sub Stage",
-      field: "jobSeekerSubStage",
-      hide: false,
-      minWidth: 200,
-      filter: "agTextColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-    },
-    {
-      headerName: "Job Seeker Comment",
-      field: "jobSeekerComment",
-      hide: false,
-      minWidth: 200,
-      filter: "agTextColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-    },
-    {
-      headerName: "Belongs to Collection(s)",
-      field: "belongstoCollection",
-      hide: false,
-      minWidth: 200,
-      filter: "agTextColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-    },
+export const checkboxSelection = function (
+  params: CheckboxSelectionCallbackParams
+) {
+  return params.columnApi.getRowGroupColumns().length === 0;
+};
 
-    {
-      headerName: "Phone Number",
-      field: "mobileNumber",
-      hide: false,
-      minWidth: 200,
-      filter: "agNumberColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
+export const headerCheckboxSelection = function (
+  params: HeaderCheckboxSelectionCallbackParams
+) {
+  return params.columnApi.getRowGroupColumns().length === 0;
+};
+
+export const LISTING_GENERIC_HEADERS = [
+  {
+    headerName: "All",
+    checkboxSelection: checkboxSelection,
+    headerCheckboxSelection: headerCheckboxSelection,
+    maxWidth: 50,
+    floatingFilter: false,
+  },
+  {
+    headerName: "Actions",
+    floatingFilter: false,
+    cellRenderer: Icons,
+  },
+  {
+    headerName: "Job seeker Name",
+    field: "name",
+    filter: "agTextColumnFilter",
+    minWidth: 200,
+    hide: false,
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
     },
-    {
-      headerName: "Email Address",
-      field: "emailId",
-      hide: false,
-      minWidth: 200,
-      filter: "agTextColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
+    filterParams: {
+      buttons: ["apply", "clear"],
     },
-    {
-      headerName: "Current Location",
-      field: "currentLocation",
-      hide: false,
-      minWidth: 200,
-      filter: "agTextColumnFilter",
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
+  },
+  {
+    headerName: "Job Seeker ID",
+    field: "_id",
+    hide: false,
+    minWidth: 200,
+    filter: "agTextColumnFilter",
+    filterParams: dateFilterParams,
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
     },
-    {
-      headerName: "Currently Working",
-      field: "currentlyWorking",
-      hide: false,
-      minWidth: 215,
-      filter: "agNumberColumnFilter",
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
+  },
+  {
+    headerName: "Technology",
+    field: "technology",
+    filter: "agTextColumnFilter",
+    minWidth: 200,
+    hide: false,
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
     },
-    {
-      headerName: "Notice Period",
-      field: "noticePeriod",
-      hide: false,
-      minWidth: 215,
-      filter: "agNumberColumnFilter",
-      filterParams: {
-        buttons: ["apply", "clear"],
-      },
-      floatingFilterComponentParams: {
-        suppressFilterButton: true,
-      },
+    filterParams: {
+      buttons: ["apply", "clear"],
     },
-    
-    {
-      headerName: "Resume Uploaded",
-      field: "resumeDocumentId",
-      hide: false,
-      minWidth: 215,
-      filter: "agTextColumnFilter",
-      cellRenderer: ResumeUploaded,
-      floatingFilterComponentParams: {
-        suppressFilterButton: true
-      },
-      filterParams: {
-        buttons: ["apply", "clear"]
-      },
+  },
+  {
+    headerName: "Experience",
+    field: "experience",
+    hide: false,
+    minWidth: 180,
+    filterParams: {
+      buttons: ["apply", "clear"],
     },
-  ];
-  
-  export const relations = [CONTEST_ABOUT_EMPLOYER];
-  
+    filter: "agNumberColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+  },
+  {
+    headerName: "Expected CTC",
+    field: "expectedCtc",
+    hide: false,
+    minWidth: 215,
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+    filter: "agTextColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+  },
+  {
+    headerName: "Profile Uploaded",
+    field: "appliedDate",
+    hide: false,
+    minWidth: 215,
+    filter: "agDateColumnFilter",
+    filterParams: dateFilterParams,
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+  },
+  {
+    headerName: "Ownership Expiry Date",
+    field: "ownershipTillDate",
+    filter: "agDateColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+    hide: false,
+    minWidth: 215,
+    filterParams: dateFilterParams,
+  },
+  {
+    headerName: "Profile Owned by",
+    field: "referredBy",
+    hide: false,
+    minWidth: 180,
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+    filter: "agTextColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+  },
+  {
+    headerName: "Last/Current Contest Participated",
+    field: "lastCurrentContestParticipated",
+    hide: false,
+    minWidth: 180,
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+    filter: "agTextColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+  },
+  {
+    headerName: "Job Seeker Main Stage",
+    field: "jobSeekerMainStage",
+    hide: false,
+    minWidth: 230,
+    filter: "agTextColumnFilter",
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+  },
+  {
+    headerName: "Job Seeker Sub Stage",
+    field: "jobSeekerSubStage",
+    hide: false,
+    minWidth: 200,
+    filter: "agTextColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+  },
+  {
+    headerName: "Job Seeker Comment",
+    field: "jobSeekerComment",
+    hide: false,
+    minWidth: 200,
+    filter: "agTextColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+  },
+  {
+    headerName: "Belongs to Collection(s)",
+    field: "belongstoCollection",
+    hide: false,
+    minWidth: 200,
+    filter: "agTextColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+  },
+
+  {
+    headerName: "Phone Number",
+    field: "mobileNumber",
+    hide: false,
+    minWidth: 200,
+    filter: "agNumberColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+  },
+  {
+    headerName: "Email Address",
+    field: "emailId",
+    hide: false,
+    minWidth: 200,
+    filter: "agTextColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+  },
+  {
+    headerName: "Current Location",
+    field: "currentLocation",
+    hide: false,
+    minWidth: 200,
+    filter: "agTextColumnFilter",
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+  },
+  {
+    headerName: "Currently Working",
+    field: "currentlyWorking",
+    hide: false,
+    minWidth: 215,
+    filter: "agNumberColumnFilter",
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+  },
+  {
+    headerName: "Notice Period",
+    field: "noticePeriod",
+    hide: false,
+    minWidth: 215,
+    filter: "agNumberColumnFilter",
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+  },
+
+  {
+    headerName: "Resume Uploaded",
+    field: "resumeDocumentId",
+    hide: false,
+    minWidth: 215,
+    filter: "agTextColumnFilter",
+    cellRenderer: ResumeUploaded,
+    floatingFilterComponentParams: {
+      suppressFilterButton: true,
+    },
+    filterParams: {
+      buttons: ["apply", "clear"],
+    },
+  },
+];
+
+export const relations = [CONTEST_ABOUT_EMPLOYER];

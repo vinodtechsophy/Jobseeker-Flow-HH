@@ -100,6 +100,17 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
       setLoader(false);
       return;
     }
+    if(profileNoticePeriodMap.lastWorkingDate){
+      const date = new Date();
+      date.setHours(0,0,0,0);
+      if(new Date(profileNoticePeriodMap.lastWorkingDate).getTime() < date.getTime()){
+      props.setOpen(true);
+      props.setType(WARNING_KEY);
+      props.setDataMessage("Last Working date cannot be past date");
+      setLoader(false);
+      return;
+      }
+    }
     if (profileNoticePeriodMap.offerData.length > 0) {
       try {
         const fileIds: { employerName: string; id: string }[] = [];
@@ -141,7 +152,8 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
         props.setOpen(true);
         props.setType(ERROR_KEY);
         props.setDataMessage(
-          "File upload failed, cannot process further, please try again"
+          // "File upload failed, cannot process further, please try again"
+          "Invalid format"
         );
         return;
       }

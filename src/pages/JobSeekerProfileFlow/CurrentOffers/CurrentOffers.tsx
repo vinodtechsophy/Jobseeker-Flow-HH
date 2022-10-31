@@ -382,7 +382,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                       }
                       id={FormAttributes.designation.id}
                       placeholder={FormAttributes.designation.placeholder}
-                      label={FormAttributes.employerName.label}
+                      label={FormAttributes.designation.label}
                       required
                       size="small"
                       className={classes.boxInputField}

@@ -148,12 +148,29 @@ export const getContestAggregateStatistics = async () => {
       console.log(error);
     });
 };
+export const getContestAggregateStatisticsGroupBy = async (
+  contestId: string,
+  groupBy: string
+) => {
+  return await axios
+    .get(
+      `${process.env.REACT_APP_MAIN_SERVER_URL}hiringhood/v1/job-seekers/aggregate?groupBy=${groupBy}&filters=contestId:${contestId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,
+        },
+      }
+    )
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 export const statusFilterContestLinkedJobsekeers = async (
-  id: string,
-  status: string,
-  page: number,
-  size: number
+  id?: string,
+  status?: string,
+  page?: number,
+  size?: number
 ) => {
   return await axios
     .get(
@@ -319,6 +336,30 @@ export const JobSeekersInCoolingPeriodWithContest = async (
   return await axios
     .get(
       `${process.env.REACT_APP_MAIN_SERVER_URL}hiringhood/v1/job-seekers-profiles?contestId=${contestId}&filters=consentStatus:JOB_SEEKER_CONSENT_PASS,coolingPeriod:${filter}&page=${page}&size=${size}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,
+        },
+      }
+    )
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+export const JobSeekersAggregateWithContest = async (
+  contestId: string,
+  groupBy: string,
+  status?: string,
+  consentStatus?: string
+) => {
+  return await axios
+    .get(
+      `${
+        process.env.REACT_APP_MAIN_SERVER_URL
+      }hiringhood/v1/job-seekers/aggregate?groupBy=${groupBy}&filters=contestId:${contestId}${
+        status ? ",status:" + status : ""
+      }${consentStatus ? ",consentStatus:" + consentStatus : ""}`,
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,

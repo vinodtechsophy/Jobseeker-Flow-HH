@@ -29,11 +29,11 @@ const useStyles = makeStyles(() => ({
     color: "#4d6cd9",
   },
 }));
-export const ResumeUploaded = () => {
+export const ResumeUploaded = (params) => {
   const classes = useStyles();
 
   const handleViewResume = async () => {
-    let response = await downloadFile("1018755347892011008");
+    let response = await downloadFile(params.data.resumeDocumentId);
     let response1 = response?.data;
     var pdf = response1;
     var downloadLink = document.createElement("a");

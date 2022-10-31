@@ -148,7 +148,7 @@ const JobSeekerCompleteProfile = (props) => {
           <Typography variant="h4" textAlign={"center"} padding={"3vw"}>
             {JOB_SEEKER_COMLETE_PROFILE_TEXT.alyticsTitle}
           </Typography>
-          <Graph />
+          <Graph contestId={props.contestId} />
         </Box>
       </Box>
     </>

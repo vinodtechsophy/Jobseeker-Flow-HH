@@ -227,7 +227,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
                     required
                     id="payrollEmployer"
                     disabled={props.disabled}
-                    label={COMPANY_NAME_LABEL}
+                    label={PAYROLL_NAME_TEXT}
                     className={classes.boxInputField}
                     size="small"
                     onBlur={experiencedSeekerForm.handleBlur}
@@ -247,7 +247,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
                     required
                     id="endClient"
                     disabled={props.disabled}
-                    label={COMPANY_NAME_LABEL}
+                    label={END_CLIENT_TEXT}
                     className={classes.boxInputField}
                     size="small"
                     onBlur={experiencedSeekerForm.handleBlur}
@@ -276,7 +276,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
                     required
                     id="lastEmployer"
                     disabled={props.disabled}
-                    label={COMPANY_NAME_LABEL}
+                    label={LAST_EMPLOYER_TEXT}
                     className={classes.boxInputField}
                     size="small"
                     onBlur={experiencedSeekerForm.handleBlur}
@@ -290,7 +290,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
                     required
                     id="currentEmployer"
                     disabled={props.disabled}
-                    label={COMPANY_NAME_LABEL}
+                    label={CURRENT_EMPLOYER_TEXT}
                     className={classes.boxInputField}
                     size="small"
                     onBlur={experiencedSeekerForm.handleBlur}

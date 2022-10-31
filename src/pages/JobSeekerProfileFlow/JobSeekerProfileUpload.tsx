@@ -28,6 +28,7 @@ import {
   FORM_SUBMISSION_SUCCESS,
   FILE_UPLOAD,
   WARNING_KEY,
+  IMAGE_FORMAT_ERROR,
 } from "../../constants";
 import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
 import { getFileDetails } from "../../services/DocumentService";
@@ -213,7 +214,7 @@ const JobSeekerProfileUpload: FC<any> = (props): ReactElement => {
         const uploadResponse = await UploadFiles(uploadPayloadBuild()).catch(
           (error) => {
             props.setType(ERROR_KEY);
-            props.setDataMessage(IMAGE_UPLOAD_ERROR);
+            props.setDataMessage(IMAGE_FORMAT_ERROR);
             props.setOpen(true);
             console.log(error);
           }

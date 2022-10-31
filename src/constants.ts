@@ -25,7 +25,7 @@ export const FULL_SIZE_GRID = 12;
 export const HALF_SIZE_GRID = 6;
 export const DASHED_BORDER = "2px dashed blue";
 export const BROWSE_FILE_MSG = "Browse File";
-export const FILE_SIZE_MSG = "Size: 5MB, png, pdf, jpg.";
+export const FILE_SIZE_MSG = "Size: 5MB pdf";
 
 export const MONTH_LABEL = "Month";
 export const YEAR_LABEL = "Year";
@@ -38,6 +38,7 @@ export const FORM_SUBMISSION_SUCCESS = "Details are successfully submitted";
 export const EXPEXTED_CTC_DET = "Please enter expected CTC";
 export const IMAGE_UPLOAD_ERROR =
   "Something went wrong in image upload, please try again";
+export const IMAGE_FORMAT_ERROR = "Invalid format";
 export const FILE_UPLOAD = "Please upload a file";
 export const FORM_INVALID_STATUS =
   "Form is not validated, kindly fill all the required details";

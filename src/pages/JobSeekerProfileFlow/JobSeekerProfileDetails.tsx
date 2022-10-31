@@ -73,28 +73,28 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
   }>({ expectedCtcLakh: "", expectedCtcThousand: "" });
 
   const handleTotalExperience = (value: string, index: number) => {
-    if (index === 0 && value)
+    if (index === 0)
       setTotalExperience({
-        totalExperienceYears: value,
+        totalExperienceYears: value ? value : '0',
         totalExperienceMonths: totalExperience.totalExperienceMonths,
       });
-    else if (index === 1 && value)
+    else if (index === 1)
       setTotalExperience({
         totalExperienceYears: totalExperience.totalExperienceYears,
-        totalExperienceMonths: value,
+        totalExperienceMonths: value ? value : '0',
       });
   };
 
   const handleRelevantExperience = (value: string, index: number) => {
-    if (index === 0 && value)
+    if (index === 0)
       setRelevantExperience({
-        relevantExperienceYears: value,
+        relevantExperienceYears: value ? value : '0',
         relevantExperienceMonths: relevantExperience.relevantExperienceMonths,
       });
-    else if (index === 1 && value)
+    else if (index === 1)
       setRelevantExperience({
         relevantExperienceYears: relevantExperience.relevantExperienceYears,
-        relevantExperienceMonths: value,
+        relevantExperienceMonths: value ? value : '0',
       });
   };
 
@@ -153,35 +153,87 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
       });
   };
 
+  const validateExperience = (profileDetails: any) => {
+    return ((parseInt(profileDetails.totalExperience.totalExperienceYears ? profileDetails.totalExperience.totalExperienceYears : '0') * 12
+      + parseInt(profileDetails.totalExperience.totalExperienceMonths ? profileDetails.totalExperience.totalExperienceMonths : '0'))
+      < (parseInt(profileDetails.relevantExperience.relevantExperienceYears ? profileDetails.relevantExperience.relevantExperienceYears : '0') * 12
+        + parseInt(profileDetails.relevantExperience.relevantExperienceMonths ? profileDetails.relevantExperience.relevantExperienceMonths : '0')));
+  }
+
+  const validateCtc = (expected: any) => {
+    return parseInt(totalCtc) >= (parseInt(expected.expectedCtcLakh) * 100000 + parseInt(expected.expectedCtcThousand ? expected.expectedCtcThousand : '0') * 1000);
+  }
+
+  const checkExperienceDetails = (profileDetailsMap: any) => {
+    return (profileDetailsMap.workStatus != "Fresh Graduate" &&
+      (((parseInt(profileDetailsMap.totalExperience.totalExperienceYears) == 0 ||
+        !profileDetailsMap.totalExperience.totalExperienceYears) &&
+        (parseInt(profileDetailsMap.totalExperience.totalExperienceMonths) == 0 ||
+          !profileDetailsMap.totalExperience.totalExperienceMonths)) ||
+        ((parseInt(profileDetailsMap.relevantExperience.relevantExperienceYears) == 0 ||
+          !profileDetailsMap.relevantExperience.relevantExperienceYears) &&
+          (parseInt(profileDetailsMap.relevantExperience.relevantExperienceMonths) == 0 ||
+            !profileDetailsMap.relevantExperience.relevantExperienceMonths))))
+  }
+
   const submitDetails = async () => {
     setLoader(true);
     const profileDetailsMap = buildDetailsPayload();
-    if (profileDetailsMap.expectedCtc.expectedCtcLakh) {
-      if(profileDetailsMap.workStatus){
-      try {
-        const profileDetailsResponse = await updateJobSeekerProfile({
-          profileId: props.profileDataId || userDataState.userData.profileId,
-          profileData: { profileDetailsMap, profileLastCompletedStep: "3" },
-        });
-        if (profileDetailsResponse?.data?.success) {
-          dispatchWorkStatus(workStatus);
-          props.setType(SUCCESS_KEY);
-          props.setDataMessage(FORM_SUBMISSION_SUCCESS);
+    if (profileDetailsMap.expectedCtc.expectedCtcLakh
+      && parseInt(profileDetailsMap.expectedCtc.expectedCtcLakh) != 0) {
+      if (profileDetailsMap.workStatus) {
+        if (checkExperienceDetails(profileDetailsMap)) {
+          props.setType(WARNING_KEY);
+          props.setDataMessage("Please fill Experience Details");
           props.setOpen(true);
-          props.handleComplete(2);
-          props.handleNext();
         }
-      } catch (error: any) {
-        console.log(error);
-        props.setType(ERROR_KEY);
-        props.setDataMessage(error?.message);
+        else if ((profileDetailsMap.workStatus == WorkStatusArray[0] ||
+          profileDetailsMap.workStatus == WorkStatusArray[1])
+          && validateExperience(profileDetailsMap)) {
+          props.setType(WARNING_KEY);
+          props.setDataMessage("Relevant Experience must not exceed Total Experience");
+          props.setOpen(true);
+        } else if ((profileDetailsMap.workStatus == WorkStatusArray[0] ||
+          profileDetailsMap.workStatus == WorkStatusArray[1]) &&
+          (!profileDetailsMap.fixedCtc.fixedCtcLakh ||
+            parseInt(profileDetailsMap.fixedCtc.fixedCtcLakh) == 0 ||
+            !profileDetailsMap.variableCtc.variableCtcLakh ||
+            parseInt(profileDetailsMap.variableCtc.variableCtcLakh) == 0)
+        ) {
+          props.setType(WARNING_KEY);
+          props.setDataMessage("Please fill Current CTC details");
+          props.setOpen(true);
+        } else if (profileDetailsMap.workStatus != "Fresh Graduate" &&
+          validateCtc(profileDetailsMap.expectedCtc)) {
+          props.setType(WARNING_KEY);
+          props.setDataMessage("Expected CTC must be greater than Total CTC");
+          props.setOpen(true);
+        } else {
+          try {
+            const profileDetailsResponse = await updateJobSeekerProfile({
+              profileId: props.profileDataId || userDataState.userData.profileId,
+              profileData: { profileDetailsMap, profileLastCompletedStep: "3" },
+            });
+            if (profileDetailsResponse?.data?.success) {
+              dispatchWorkStatus(workStatus);
+              props.setType(SUCCESS_KEY);
+              props.setDataMessage(FORM_SUBMISSION_SUCCESS);
+              props.setOpen(true);
+              props.handleComplete(2);
+              props.handleNext();
+            }
+          } catch (error: any) {
+            console.log(error);
+            props.setType(ERROR_KEY);
+            props.setDataMessage(error?.message);
+            props.setOpen(true);
+          }
+        }
+      } else {
+        props.setType(WARNING_KEY);
+        props.setDataMessage("Please select Work Status");
         props.setOpen(true);
       }
-    } else {
-      props.setType(WARNING_KEY);
-      props.setDataMessage("Please select Work Status");
-      props.setOpen(true);
-    }
     } else {
       props.setType(WARNING_KEY);
       props.setDataMessage(EXPEXTED_CTC_DET);
@@ -243,7 +295,10 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
   const patchProfileDetails = (patchData: any) => {
     console.log(patchData);
     setFreshGrad(patchData.freshGraduate);
-    setTotalExp(patchData.totalExperience);
+    setTotalExperience({
+      totalExperienceYears: patchData.totalExperience.totalExperienceYears,
+      totalExperienceMonths: patchData.totalExperience.totalExperienceMonths
+    })
     setRelevantExperience({
       relevantExperienceYears:
         patchData.relevantExperience.relevantExperienceYears,
@@ -266,12 +321,6 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
     setTotalCtc(patchData.totalCtc);
   };
 
-  const setTotalExp = (patchObj: any) => {
-    setTotalExperience({
-      totalExperienceMonths: patchObj.totalExperienceMonths,
-      totalExperienceYears: patchObj.totalExperienceYears,
-    });
-  };
   const setFreshGrad = (data: any) => {
     if (data === "true") {
       setFreshGraduate(true);
@@ -320,7 +369,7 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
                   onChange={(e) => {
                     setFreshGraduate(e?.target?.checked)
 
-                    if(e.target.checked === true){
+                    if (e.target.checked === true) {
                       emptyExperienceCTCDetatils();
                       setWorkStatus("Fresh Graduate");
                     } else {
