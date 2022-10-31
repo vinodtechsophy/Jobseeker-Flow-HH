@@ -78,7 +78,26 @@ const DuplicationFailed: FC<any> = (props) => {
     );
     if (response?.data?.success) {
       const duplicationFailedRecords = response?.data?.data?.content;
-      setRowData(duplicationFailedRecords);
+      console.log(duplicationFailedRecords);
+
+      let result = duplicationFailedRecords.map((item, index) => {
+        if (item.status === "PDC_PASS") {
+          item.fdcStatus = "NA";
+        } else if (item.status === "FDC_PASS") {
+          item.status = "PDC_PASS";
+          item.fdcStatus = "FDC_PASS";
+        }
+
+        let Data = {
+          ...item,
+          ...item.fdcStatus[index],
+        };
+
+        return Data;
+      });
+      console.log(result)
+
+      setRowData(result);
       setTotalPages(response?.data?.data?.totalPages);
       setPageNo(response?.data?.data?.pageNo);
       setPageSize(response?.data?.data?.pageSize);
@@ -199,7 +218,7 @@ const DuplicationFailed: FC<any> = (props) => {
           countsList={[
             {
               _id: 1,
-              count: (agCount?.PDC_PASS ? agCount?.PDC_PASS : 0) + (agCount?.FDC_FAIL ? agCount?.FDC_FAIL :  0) + (agCount?.PDC_FAIL ? agCount?.PDC_FAIL : 0),
+              count: (agCount?.PDC_PASS ? agCount?.PDC_PASS : 0) + (agCount?.FDC_FAIL ? agCount?.FDC_FAIL : 0) + (agCount?.PDC_FAIL ? agCount?.PDC_FAIL : 0),
             },
             { _id: 2, count: agCount.PDC_FAIL },
             { _id: 3, count: agCount.PDC_PASS },
@@ -267,7 +286,7 @@ const DuplicationFailed: FC<any> = (props) => {
           pageChange={pageChange}
           pageSizeChange={pageSizeChange}
           currentPage={pageNo + 1}
-          // onCellValueChanged={onCellValueChanged}
+        // onCellValueChanged={onCellValueChanged}
         />
       </Grid>
     </Grid>

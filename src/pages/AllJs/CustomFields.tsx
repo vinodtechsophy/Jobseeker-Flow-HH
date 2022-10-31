@@ -6,7 +6,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import LocalPhoneRoundedIcon from "@mui/icons-material/LocalPhoneRounded";
 import DehazeIcon from "@mui/icons-material/Dehaze";
-import { downloadFile } from "../../services/DocumentService";
+import { downloadFile, openFile } from "../../services/DocumentService";
 
 const useStyles = makeStyles(() => ({
   buttonContainer: {
@@ -30,21 +30,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 export const ResumeUploaded = (params) => {
+  console.log(params);
   const classes = useStyles();
 
   const handleViewResume = async () => {
-    let response = await downloadFile(params.data.resumeDocumentId);
-    let response1 = response?.data;
-    var pdf = response1;
-    var downloadLink = document.createElement("a");
-    var blob = new Blob(["\ufeff", pdf]);
-    var url = URL.createObjectURL(blob);
-    downloadLink.href = url;
-    downloadLink.download = "data.pdf";
-
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+    const resumeId = params.getValue();
+    await openFile(resumeId);
   };
   return (
     <div

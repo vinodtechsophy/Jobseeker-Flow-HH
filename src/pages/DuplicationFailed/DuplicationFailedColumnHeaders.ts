@@ -197,7 +197,7 @@ export const LISTING_GENERIC_HEADERS = [
   },
   {
     headerName: "FDC Status",
-    field: "status",
+    field: "fdcStatus",
     hide: false,
     minWidth: 215,
     filter: "agTextColumnFilter",
