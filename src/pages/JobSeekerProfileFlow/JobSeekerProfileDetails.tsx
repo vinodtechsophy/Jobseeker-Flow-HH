@@ -75,26 +75,26 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
   const handleTotalExperience = (value: string, index: number) => {
     if (index === 0)
       setTotalExperience({
-        totalExperienceYears: value ? value : '0',
+        totalExperienceYears: value ? value : "0",
         totalExperienceMonths: totalExperience.totalExperienceMonths,
       });
     else if (index === 1)
       setTotalExperience({
         totalExperienceYears: totalExperience.totalExperienceYears,
-        totalExperienceMonths: value ? value : '0',
+        totalExperienceMonths: value ? value : "0",
       });
   };
 
   const handleRelevantExperience = (value: string, index: number) => {
     if (index === 0)
       setRelevantExperience({
-        relevantExperienceYears: value ? value : '0',
+        relevantExperienceYears: value ? value : "0",
         relevantExperienceMonths: relevantExperience.relevantExperienceMonths,
       });
     else if (index === 1)
       setRelevantExperience({
         relevantExperienceYears: relevantExperience.relevantExperienceYears,
-        relevantExperienceMonths: value ? value : '0',
+        relevantExperienceMonths: value ? value : "0",
       });
   };
 
@@ -104,14 +104,13 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
         fixedCtcLakh: value,
         fixedCtcThousand: fixedCtc.fixedCtcThousand,
       });
-      handleTotalCtc(value ? value : '0', '', '', '')
-    }
-    else if (index === 1) {
+      handleTotalCtc(value ? value : "0", "", "", "");
+    } else if (index === 1) {
       setFixedCtc({
         fixedCtcLakh: fixedCtc.fixedCtcLakh,
         fixedCtcThousand: value,
       });
-      handleTotalCtc('', value ? value : '0', '', '')
+      handleTotalCtc("", value ? value : "0", "", "");
     }
   };
 
@@ -121,80 +120,141 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
         variableCtcLakh: value,
         variableCtcThousand: variableCtc.variableCtcThousand,
       });
-      handleTotalCtc('', '', value ? value : '0', '')
-    }
-    else if (index === 1) {
+      handleTotalCtc("", "", value ? value : "0", "");
+    } else if (index === 1) {
       setVariableCtc({
         variableCtcLakh: variableCtc.variableCtcLakh,
         variableCtcThousand: value,
       });
-      handleTotalCtc('', '', '', value ? value : '0')
+      handleTotalCtc("", "", "", value ? value : "0");
     }
   };
 
   const handleTotalCtc = (fL: string, fT: string, vL: string, vT: string) => {
-    setTotalCtc((
-      (parseInt(fL ? fL : (fixedCtc.fixedCtcLakh ? fixedCtc.fixedCtcLakh : '0')) +
-        parseInt(vL ? vL : (variableCtc.variableCtcLakh ? variableCtc.variableCtcLakh : '0'))) * 100000 +
-      (parseInt(fT ? fT : (fixedCtc.fixedCtcThousand ? fixedCtc.fixedCtcThousand : '0'))
-        + parseInt(vT ? vT : (variableCtc.variableCtcThousand ? variableCtc.variableCtcThousand : '0'))) * 1000).toString());
-  }
+    setTotalCtc(
+      (
+        (parseInt(
+          fL ? fL : fixedCtc.fixedCtcLakh ? fixedCtc.fixedCtcLakh : "0"
+        ) +
+          parseInt(
+            vL
+              ? vL
+              : variableCtc.variableCtcLakh
+              ? variableCtc.variableCtcLakh
+              : "0"
+          )) *
+          100000 +
+        (parseInt(
+          fT ? fT : fixedCtc.fixedCtcThousand ? fixedCtc.fixedCtcThousand : "0"
+        ) +
+          parseInt(
+            vT
+              ? vT
+              : variableCtc.variableCtcThousand
+              ? variableCtc.variableCtcThousand
+              : "0"
+          )) *
+          1000
+      ).toString()
+    );
+  };
 
   const handleExpectedCtc = (value: string, index: number) => {
     if (index === 0)
       setExpectedCtc({
-        expectedCtcLakh: value ? value : '0',
+        expectedCtcLakh: value ? value : "0",
         expectedCtcThousand: expectedCtc.expectedCtcThousand,
       });
     else if (index === 1)
       setExpectedCtc({
         expectedCtcLakh: expectedCtc.expectedCtcLakh,
-        expectedCtcThousand: value ? value : '0',
+        expectedCtcThousand: value ? value : "0",
       });
   };
 
   const validateExperience = (profileDetails: any) => {
-    return ((parseInt(profileDetails.totalExperience.totalExperienceYears ? profileDetails.totalExperience.totalExperienceYears : '0') * 12
-      + parseInt(profileDetails.totalExperience.totalExperienceMonths ? profileDetails.totalExperience.totalExperienceMonths : '0'))
-      < (parseInt(profileDetails.relevantExperience.relevantExperienceYears ? profileDetails.relevantExperience.relevantExperienceYears : '0') * 12
-        + parseInt(profileDetails.relevantExperience.relevantExperienceMonths ? profileDetails.relevantExperience.relevantExperienceMonths : '0')));
-  }
+    return (
+      parseInt(
+        profileDetails.totalExperience.totalExperienceYears
+          ? profileDetails.totalExperience.totalExperienceYears
+          : "0"
+      ) *
+        12 +
+        parseInt(
+          profileDetails.totalExperience.totalExperienceMonths
+            ? profileDetails.totalExperience.totalExperienceMonths
+            : "0"
+        ) <
+      parseInt(
+        profileDetails.relevantExperience.relevantExperienceYears
+          ? profileDetails.relevantExperience.relevantExperienceYears
+          : "0"
+      ) *
+        12 +
+        parseInt(
+          profileDetails.relevantExperience.relevantExperienceMonths
+            ? profileDetails.relevantExperience.relevantExperienceMonths
+            : "0"
+        )
+    );
+  };
 
   const validateCtc = (expected: any) => {
-    return parseInt(totalCtc) >= (parseInt(expected.expectedCtcLakh) * 100000 + parseInt(expected.expectedCtcThousand ? expected.expectedCtcThousand : '0') * 1000);
-  }
+    return (
+      parseInt(totalCtc) >=
+      parseInt(expected.expectedCtcLakh) * 100000 +
+        parseInt(
+          expected.expectedCtcThousand ? expected.expectedCtcThousand : "0"
+        ) *
+          1000
+    );
+  };
 
   const checkExperienceDetails = (profileDetailsMap: any) => {
-    return (profileDetailsMap.workStatus != "Fresh Graduate" &&
-      (((parseInt(profileDetailsMap.totalExperience.totalExperienceYears) == 0 ||
+    return (
+      profileDetailsMap.workStatus != "Fresh Graduate" &&
+      (((parseInt(profileDetailsMap.totalExperience.totalExperienceYears) ==
+        0 ||
         !profileDetailsMap.totalExperience.totalExperienceYears) &&
-        (parseInt(profileDetailsMap.totalExperience.totalExperienceMonths) == 0 ||
+        (parseInt(profileDetailsMap.totalExperience.totalExperienceMonths) ==
+          0 ||
           !profileDetailsMap.totalExperience.totalExperienceMonths)) ||
-        ((parseInt(profileDetailsMap.relevantExperience.relevantExperienceYears) == 0 ||
+        ((parseInt(
+          profileDetailsMap.relevantExperience.relevantExperienceYears
+        ) == 0 ||
           !profileDetailsMap.relevantExperience.relevantExperienceYears) &&
-          (parseInt(profileDetailsMap.relevantExperience.relevantExperienceMonths) == 0 ||
-            !profileDetailsMap.relevantExperience.relevantExperienceMonths))))
-  }
+          (parseInt(
+            profileDetailsMap.relevantExperience.relevantExperienceMonths
+          ) == 0 ||
+            !profileDetailsMap.relevantExperience.relevantExperienceMonths)))
+    );
+  };
 
   const submitDetails = async () => {
     setLoader(true);
     const profileDetailsMap = buildDetailsPayload();
-    if (profileDetailsMap.expectedCtc.expectedCtcLakh
-      && parseInt(profileDetailsMap.expectedCtc.expectedCtcLakh) != 0) {
+    if (
+      profileDetailsMap.expectedCtc.expectedCtcLakh &&
+      parseInt(profileDetailsMap.expectedCtc.expectedCtcLakh) != 0
+    ) {
       if (profileDetailsMap.workStatus) {
         if (checkExperienceDetails(profileDetailsMap)) {
           props.setType(WARNING_KEY);
           props.setDataMessage("Please fill Experience Details");
           props.setOpen(true);
-        }
-        else if ((profileDetailsMap.workStatus == WorkStatusArray[0] ||
-          profileDetailsMap.workStatus == WorkStatusArray[1])
-          && validateExperience(profileDetailsMap)) {
+        } else if (
+          (profileDetailsMap.workStatus == WorkStatusArray[0] ||
+            profileDetailsMap.workStatus == WorkStatusArray[1]) &&
+          validateExperience(profileDetailsMap)
+        ) {
           props.setType(WARNING_KEY);
-          props.setDataMessage("Relevant Experience must not exceed Total Experience");
+          props.setDataMessage(
+            "Relevant Experience must not exceed Total Experience"
+          );
           props.setOpen(true);
-        } else if ((profileDetailsMap.workStatus == WorkStatusArray[0] ||
-          profileDetailsMap.workStatus == WorkStatusArray[1]) &&
+        } else if (
+          (profileDetailsMap.workStatus == WorkStatusArray[0] ||
+            profileDetailsMap.workStatus == WorkStatusArray[1]) &&
           (!profileDetailsMap.fixedCtc.fixedCtcLakh ||
             parseInt(profileDetailsMap.fixedCtc.fixedCtcLakh) == 0 ||
             !profileDetailsMap.variableCtc.variableCtcLakh ||
@@ -203,15 +263,18 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
           props.setType(WARNING_KEY);
           props.setDataMessage("Please fill Current CTC details");
           props.setOpen(true);
-        } else if (profileDetailsMap.workStatus != "Fresh Graduate" &&
-          validateCtc(profileDetailsMap.expectedCtc)) {
+        } else if (
+          profileDetailsMap.workStatus != "Fresh Graduate" &&
+          validateCtc(profileDetailsMap.expectedCtc)
+        ) {
           props.setType(WARNING_KEY);
           props.setDataMessage("Expected CTC must be greater than Total CTC");
           props.setOpen(true);
         } else {
           try {
             const profileDetailsResponse = await updateJobSeekerProfile({
-              profileId: props.profileDataId || userDataState.userData.profileId,
+              profileId:
+                props.profileDataId || userDataState.userData.profileId,
               profileData: { profileDetailsMap, profileLastCompletedStep: "3" },
             });
             if (profileDetailsResponse?.data?.success) {
@@ -252,7 +315,7 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
       relevantExperience,
       freshGraduate: freshGraduate.toString(),
       workStatus,
-      currentlyWorking: workStatus === WorkStatusArray[0] ? "Yes" : "No"
+      currentlyWorking: workStatus === WorkStatusArray[0] ? "Yes" : "No",
     };
   };
 
@@ -297,8 +360,8 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
     setFreshGrad(patchData.freshGraduate);
     setTotalExperience({
       totalExperienceYears: patchData.totalExperience.totalExperienceYears,
-      totalExperienceMonths: patchData.totalExperience.totalExperienceMonths
-    })
+      totalExperienceMonths: patchData.totalExperience.totalExperienceMonths,
+    });
     setRelevantExperience({
       relevantExperienceYears:
         patchData.relevantExperience.relevantExperienceYears,
@@ -332,12 +395,12 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
   const emptyExperienceCTCDetatils = () => {
     setRelevantExperience({
       relevantExperienceYears: "",
-      relevantExperienceMonths: ""
-    })
+      relevantExperienceMonths: "",
+    });
     setTotalExperience({
       totalExperienceMonths: "",
       totalExperienceYears: "",
-    })
+    });
     setFixedCtc({
       fixedCtcLakh: "",
       fixedCtcThousand: "",
@@ -346,14 +409,17 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
       variableCtcLakh: "",
       variableCtcThousand: "",
     });
-  }
+  };
 
   return (
     <>
       {!loader ? (
         <div className="job-seeker-profile-content">
           <p className="step-content-title-text">{EXPERIENCE_TITLE}</p>
-          <div className="experience-details-card">
+          <div
+            id="experience-details-container"
+            className="experience-details-card"
+          >
             <div className="experience-card-title">
               <div>
                 <span>
@@ -361,21 +427,22 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
                   <span className="asterisk-span"> *</span>
                 </span>
               </div>
-              <div>
+              <div id="check-fg-container">
                 <span>{FRESHER_TEXT}</span>
                 <Checkbox
+                  id="check-fg"
+                  name="checkFreshGraduate"
                   disabled={!props.hasButtons}
                   checked={freshGraduate}
                   onChange={(e) => {
-                    setFreshGraduate(e?.target?.checked)
+                    setFreshGraduate(e?.target?.checked);
 
                     if (e.target.checked === true) {
                       emptyExperienceCTCDetatils();
                       setWorkStatus("Fresh Graduate");
                     } else {
-                      setWorkStatus("")
+                      setWorkStatus("");
                     }
-
                   }}
                   inputProps={{ "aria-label": "controlled" }}
                 />
@@ -395,34 +462,40 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
               value={relevantExperience}
             />
           </div>
-          <div className="generic-container">
-            <div className="inline-div">
+          <div
+            id="work-status-parent-parent-container"
+            className="generic-container"
+          >
+            <div id="work-status-parent-container" className="inline-div">
               <div>
                 <p className="step-content-title-text">
                   {" "}
                   {WORK_STATUS_TEXT} <span className="asterisk-span"> *</span>
                 </p>
               </div>
-              <div className="work-status-select">
-                <FormControl sx={{ minWidth: 250 }}>
+              <div id="work-status-container" className="work-status-select">
+                <FormControl
+                  id="work-status-formcontrol"
+                  sx={{ minWidth: 250 }}
+                >
                   <InputLabel id="demo-simple-select-helper-label">
                     {WORK_STATUS_TEXT}
                   </InputLabel>
                   <Select
+                    id="work-status-dropdown"
+                    name="workStatusDropDown"
                     disabled={!props.hasButtons || freshGraduate}
-                    value={freshGraduate ? 'Fresh Graduate' : workStatus}
+                    value={freshGraduate ? "Fresh Graduate" : workStatus}
                     label={WORK_STATUS_TEXT}
                     onChange={(e) => {
-                      if (e.target.value !== 'Fresh Graduate') {
+                      if (e.target.value !== "Fresh Graduate") {
                         setFreshGraduate(false);
-                      }
-                      else {
+                      } else {
                         emptyExperienceCTCDetatils();
                         setFreshGraduate(true);
                       }
-                      setWorkStatus(e.target.value)
+                      setWorkStatus(e.target.value);
                     }}
-
                   >
                     {WorkStatusArray.map((item: string) => (
                       <MenuItem key={item} value={item}>
@@ -434,7 +507,7 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
               </div>
             </div>
           </div>
-          <div className="conditional-container">
+          <div id="ctc-root-container" className="conditional-container">
             <div>
               <p className="ctc-details-text"> {CTC_DETAIL_TEXT}</p>
             </div>
@@ -452,14 +525,15 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
               setValues={handleVariableCtc}
               value={variableCtc}
             />
-            <div>
+            <div id="total-ctc-parent-container">
               <div className="experience-card-title">
                 <div>
                   <p>{TOTAL_CTC_TEXT}</p>
                 </div>
               </div>
-              <div className="inline-div">
+              <div id="total-ctc-textbox-container" className="inline-div">
                 <TextField
+                  id="total-ctc-textbox"
                   disabled
                   type="text"
                   value={totalCtc}
@@ -485,7 +559,10 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
                 {EXPECTED_CTC_TEXT} <span className="asterisk-span"> *</span>
               </p>
             </div>
-            <div className="experience-details-card">
+            <div
+              id="expected-ctc-container"
+              className="experience-details-card"
+            >
               <InlineInputs
                 required
                 InlineInputsArray={CTCDetails}

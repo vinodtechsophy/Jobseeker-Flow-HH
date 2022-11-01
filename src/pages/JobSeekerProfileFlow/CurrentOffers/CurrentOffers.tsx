@@ -43,7 +43,9 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
 
   const [serviceList, setServiceList] = React.useState<any>([]);
   const [serviceListFiles, setServiceListFiles] = React.useState<any>([]);
-  const [prefillOfferLetters, setPrefillOfferLetters] = React.useState<any>(props?.prefilData?.map((files) => files.letterFiles) || []);
+  const [prefillOfferLetters, setPrefillOfferLetters] = React.useState<any>(
+    props?.prefilData?.map((files) => files.letterFiles) || []
+  );
   const [fixedCtc, setFixedCtc] = React.useState<{
     fixedCtcLakh: string;
     fixedCtcThousand: string;
@@ -153,47 +155,66 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
         .required("offr details required")
         .min(1, "add at least one offer"),
     }),
-    onSubmit: (values, { setSubmitting }) => { },
+    onSubmit: (values, { setSubmitting }) => {},
     enableReinitialize: true,
   });
 
   const handleFixedCtc = (value: string, pos: number, index: any) => {
     if (pos === 0)
-      offerAddForm.values.members[index].fixedCtc.fixedCtcLakh = value ? value : '0';
+      offerAddForm.values.members[index].fixedCtc.fixedCtcLakh = value
+        ? value
+        : "0";
     else if (pos === 1)
-      offerAddForm.values.members[index].fixedCtc.fixedCtcThousand = value ? value : '0';
+      offerAddForm.values.members[index].fixedCtc.fixedCtcThousand = value
+        ? value
+        : "0";
 
-   // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
+    // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
     handleTotalCtc(index);
   };
 
   const handleVariableCtc = (value: string, pos: number, index: any) => {
     if (pos === 0)
-      offerAddForm.values.members[index].variableCtc.variableCtcLakh = value ? value : '0';
+      offerAddForm.values.members[index].variableCtc.variableCtcLakh = value
+        ? value
+        : "0";
     else if (pos === 1)
-      offerAddForm.values.members[index].variableCtc.variableCtcThousand = value ? value : '0';
+      offerAddForm.values.members[index].variableCtc.variableCtcThousand = value
+        ? value
+        : "0";
 
-   // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
+    // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
     handleTotalCtc(index);
   };
 
   const handleTotalCtc = (index: any) => {
     offerAddForm.values.members[index].totalCtc = (
-      (parseInt(offerAddForm.values.members[index].fixedCtc.fixedCtcLakh)
-        + parseInt(offerAddForm.values.members[index].variableCtc.variableCtcLakh))
-      * 100000
-      + (parseInt(offerAddForm.values.members[index].fixedCtc.fixedCtcThousand)
-        + parseInt(offerAddForm.values.members[index].variableCtc.variableCtcThousand))
-      * 1000).toString();
+      (parseInt(offerAddForm.values.members[index].fixedCtc.fixedCtcLakh) +
+        parseInt(
+          offerAddForm.values.members[index].variableCtc.variableCtcLakh
+        )) *
+        100000 +
+      (parseInt(offerAddForm.values.members[index].fixedCtc.fixedCtcThousand) +
+        parseInt(
+          offerAddForm.values.members[index].variableCtc.variableCtcThousand
+        )) *
+        1000
+    ).toString();
 
-   // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
-  }
+    // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
+  };
 
   const handleServiceAdd = (prefillValue?: any) => {
     offerAddForm.setValues((prevValues) => ({
-      members: [...prevValues.members, { ...initialValuesForForm, ...prefillValue }],
+      members: [
+        ...prevValues.members,
+        { ...initialValuesForForm, ...prefillValue },
+      ],
     }));
-    setServiceList((prevState: any) => [...prevState, { ...initialValuesForForm, ...prefillValue }]);
+    setServiceList((prevState: any) => [
+      ...prevState,
+      { ...initialValuesForForm, ...prefillValue },
+    ]);
   };
 
   const AddMultipleService = (prefillArray?: any[]) => {
@@ -233,8 +254,9 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
 
   return (
     <React.Fragment>
-      <div className="add-btn-div">
+      <div id="add-offer-detailes-button-container" className="add-btn-div">
         <Button
+          id="add-offer-detailes-container"
           className="next-button stack-button"
           variant="contained"
           onClick={() => handleServiceAdd()}
@@ -298,7 +320,10 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                       }}
                       status={true}
                       value={offerAddForm.values.members[index].joiningDate}
-                      calendarDisabled={props.disabled || offerAddForm.values.members[index].fieldDisabled}
+                      calendarDisabled={
+                        props.disabled ||
+                        offerAddForm.values.members[index].fieldDisabled
+                      }
                     />
                   </Grid>
                   <Grid
@@ -406,7 +431,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                         offerAddForm.values.members[index].fieldDisabled
                       }
                       setValues={(val: string, ind: number) => {
-                        handleFixedCtc(val, ind, index)
+                        handleFixedCtc(val, ind, index);
                       }}
                       value={offerAddForm.values.members[index].fixedCtc}
                     />
@@ -418,7 +443,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                         offerAddForm.values.members[index].fieldDisabled
                       }
                       setValues={(val: string, ind: number) => {
-                        handleVariableCtc(val, ind, index)
+                        handleVariableCtc(val, ind, index);
                       }}
                       value={offerAddForm.values.members[index].variableCtc}
                     />
@@ -430,6 +455,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                       </div>
                       <div className="inline-div">
                         <TextField
+                          id="total-ctc-textbox"
                           disabled
                           type="text"
                           label={TOTAL_CTC_LABEL}
@@ -457,14 +483,17 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                     lg={HALF_SIZE_GRID}
                     className={classes.limitWidth}
                   >
-                    {(!offerAddForm.values.members[index].fieldDisabled && !props.disabled) ? (
+                    {!offerAddForm.values.members[index].fieldDisabled &&
+                    !props.disabled ? (
                       <DropZoneUpload
                         receiveFileContent={receiveFileContent}
                         data={index}
                         disabled={props.disabled}
                       />
                     ) : null}
-                    {serviceListFiles[index] && serviceListFiles?.length > 0 && serviceListFiles[index]?.length > 0 ? (
+                    {serviceListFiles[index] &&
+                    serviceListFiles?.length > 0 &&
+                    serviceListFiles[index]?.length > 0 ? (
                       <Box>
                         <Button className="next-button" variant="contained">
                           {serviceListFiles[index][0]?.name}
@@ -478,9 +507,10 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                           onClick={() => removeFile(index)}
                           className="remove-btn"
                         >
-                            <DeleteIcon
+                          <DeleteIcon
                             color={
-                              (offerAddForm.values.members[index].fieldDisabled || props.disabled) 
+                              offerAddForm.values.members[index]
+                                .fieldDisabled || props.disabled
                                 ? DISABLED_KEY
                                 : ERROR_KEY
                             }
@@ -489,7 +519,9 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                       </Box>
                     ) : null}
 
-                    {(!serviceListFiles[index] && prefillOfferLetters?.length > 0 && prefillOfferLetters[index]?.length > 0) ? (
+                    {!serviceListFiles[index] &&
+                    prefillOfferLetters?.length > 0 &&
+                    prefillOfferLetters[index]?.length > 0 ? (
                       <Box>
                         <Button className="next-button" variant="contained">
                           {prefillOfferLetters[index][0].path}
@@ -497,10 +529,10 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                         <Button
                           type="button"
                           onClick={() => {
-                            const letter = prefillOfferLetters
+                            const letter = prefillOfferLetters;
                             letter.splice(index, 1);
-                            console.log(letter)
-                            setPrefillOfferLetters([...letter])
+                            console.log(letter);
+                            setPrefillOfferLetters([...letter]);
                           }}
                           className="remove-btn"
                         >
@@ -520,6 +552,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                   <div className="final-button-div">
                     {!offerAddForm.values.members[index].saveStatus ? (
                       <Button
+                        id={SAVE_BTN_TEXT + "-button"}
                         className="save-button"
                         variant="outlined"
                         onClick={() => {
@@ -530,6 +563,7 @@ const CurrentOffers: FC<any> = (props): ReactElement => {
                       </Button>
                     ) : (
                       <Button
+                        id={DELETE_BTN_TEXT + "-button"}
                         className="save-button"
                         variant="outlined"
                         onClick={() => {

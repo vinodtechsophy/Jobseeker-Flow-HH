@@ -100,15 +100,18 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
       setLoader(false);
       return;
     }
-    if(profileNoticePeriodMap.lastWorkingDate){
+    if (profileNoticePeriodMap.lastWorkingDate) {
       const date = new Date();
-      date.setHours(0,0,0,0);
-      if(new Date(profileNoticePeriodMap.lastWorkingDate).getTime() < date.getTime()){
-      props.setOpen(true);
-      props.setType(WARNING_KEY);
-      props.setDataMessage("Last Working date cannot be past date");
-      setLoader(false);
-      return;
+      date.setHours(0, 0, 0, 0);
+      if (
+        new Date(profileNoticePeriodMap.lastWorkingDate).getTime() <
+        date.getTime()
+      ) {
+        props.setOpen(true);
+        props.setType(WARNING_KEY);
+        props.setDataMessage("Last Working date cannot be past date");
+        setLoader(false);
+        return;
       }
     }
     if (profileNoticePeriodMap.offerData.length > 0) {
@@ -287,9 +290,13 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
                     <span className="asterisk-span"> *</span>
                   </span>
                 </div>
-                <div className="notice-period-radio">
+                <div
+                  id="notice-status-radio-container"
+                  className="notice-period-radio"
+                >
                   <FormControl>
                     <RadioGroup
+                      id="notice-status-radio"
                       value={noticeStatus}
                       onChange={(e) => setNoticeStatus(e.target.value)}
                     >
@@ -326,12 +333,16 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
                     calendarDisabled={!props.hasButtons}
                   />
                 </div>
-                <div className="job-change-field">
+                <div
+                  id="late-joining-textbox-container"
+                  className="job-change-field"
+                >
                   <p>
                     {LATE_JOINING_TEXT}
                     <span className="asterisk-span"> *</span>
                   </p>
                   <TextField
+                    id="late-joining-textbox"
                     type="text"
                     multiline
                     fullWidth
@@ -363,12 +374,13 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
                   />
                 </div>
               ) : noticeStatus === NoticeOptions[1] ? (
-                <div>
+                <div id="official-notice-period-textbox-container">
                   <p>
                     {OFFICIAL_NOTICE_PERIOD_TEXT}
                     <span className="asterisk-span"> *</span>
                   </p>
                   <TextField
+                    id="official-notice-period-textbox"
                     disabled={!props.hasButtons}
                     className={classes.inputField}
                     type="number"
@@ -396,12 +408,16 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
             </div>
             {noticeStatus !== "" ? (
               <React.Fragment>
-                <div className="job-change-field">
+                <div
+                  id="job-change-reason-textbox-container"
+                  className="job-change-field"
+                >
                   <p>
                     {CHANGE_REASON_TEXT}
                     <span className="asterisk-span"> *</span>
                   </p>
                   <TextField
+                    id="job-change-reason-textbox"
                     required
                     disabled={!props.hasButtons}
                     type="text"
@@ -426,6 +442,7 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
                   </p>
                   <FormControl>
                     <RadioGroup
+                      id="negotiable-status-radiogroup"
                       value={negotiableStatus}
                       onChange={(e) => setNegotiableStatus(e.target.value)}
                     >
@@ -452,7 +469,10 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
               </React.Fragment>
             ) : null}
             {negotiableStatus === YesNoOptions[0] ? (
-              <div className="notice-period-conditional">
+              <div
+                id="notice-period-textbox-container"
+                className="notice-period-conditional"
+              >
                 <p>
                   {NEGOTIABLE_YES_TEXT}
                   {noticeStatus === NoticeOptions[1] ? (
@@ -460,13 +480,15 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
                   ) : null}
                 </p>
                 <TextField
+                  id="notice-period-textbox"
                   disabled={!props.hasButtons}
                   className={classes.inputField}
                   type="number"
                   label={NEGOTIABLE_LABEL}
                   value={negotiablePeriod}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    if(JSON.stringify(e.target.value).includes(".")) return false;
+                    if (JSON.stringify(e.target.value).includes("."))
+                      return false;
                     const regex = NUMBER_ONLY_REGEX;
                     if (
                       Number(e.target.value) > 99 ||
@@ -477,7 +499,7 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
                         .slice(0, 2);
                     }
                     if (!regex.test(e.target.value) && e.target.value !== "")
-                    return false;
+                      return false;
                     setNegotiablePeriod(e.target.value);
                   }}
                   size="small"
@@ -485,13 +507,17 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
               </div>
             ) : null}
             {noticeStatus === NoticeOptions[1] ? (
-              <div className="notice-period-conditional">
+              <div
+                id="buyout-status-radiogroup-container"
+                className="notice-period-conditional"
+              >
                 <p>
                   {BUYOUT_QUESTION_TEXT}
                   <span className="asterisk-span"> *</span>
                 </p>
                 <FormControl>
                   <RadioGroup
+                    id="buyout-status-radiogroup"
                     value={buyoutStatus}
                     onChange={(e) => setBuyoutStatus(e.target.value)}
                   >
@@ -510,13 +536,17 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
             ) : null}
             {noticeStatus === NoticeOptions[0] || !currentlyWorking ? (
               <React.Fragment>
-                <div className="notice-period-conditional">
+                <div
+                  id="offer-status-radiogroup-container"
+                  className="notice-period-conditional"
+                >
                   <p>
                     {OFFER_IN_HAND}
                     <span className="asterisk-span"> *</span>
                   </p>
                   <FormControl>
                     <RadioGroup
+                      id="offer-status-radiogroup"
                       value={offerStatus}
                       onChange={(e) => setOfferStatus(e.target.value)}
                     >
@@ -533,12 +563,16 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
                   </FormControl>
                 </div>
                 {offerStatus === YesNoOptions[1] ? (
-                  <div className="job-change-field">
+                  <div
+                    id="noOfferReason-textbox-container"
+                    className="job-change-field"
+                  >
                     <p>
                       {NO_OFFER_REASON}
                       <span className="asterisk-span"> *</span>
                     </p>
                     <TextField
+                      id="noOfferReason-textbox"
                       required
                       disabled={!props.hasButtons}
                       type="text"

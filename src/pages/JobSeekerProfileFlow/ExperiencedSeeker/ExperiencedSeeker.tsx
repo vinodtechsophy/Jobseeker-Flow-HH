@@ -96,7 +96,10 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
     useEffect(() => {
       if (props.experiencedPrefillData) {
         if (props.experiencedPrefillData?.jobDurationType)
-          experiencedSeekerForm.setFieldValue("jobDurationType", props.experiencedPrefillData?.jobDurationType)
+          experiencedSeekerForm.setFieldValue(
+            "jobDurationType",
+            props.experiencedPrefillData?.jobDurationType
+          );
         if (props.experiencedPrefillData?.city)
           experiencedSeekerForm.setFieldValue(
             "city",
@@ -163,7 +166,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
                     <span className="asterisk-span"> *</span>
                   </p>
                 </div>
-                <div>
+                <div id="jobDurationType-container">
                   <FormControl>
                     <RadioGroup
                       id="jobDurationType"
@@ -188,7 +191,7 @@ const ExperiencedSeeker: FC<any> = React.forwardRef(
                   </FormControl>
                 </div>
                 {props.workStatus === WorkStatusType.JOBLESS ? (
-                  <div className="reason-field">
+                  <div id="notWorkingReason-container" className="reason-field">
                     <TextField
                       required
                       id="notWorkingReason"

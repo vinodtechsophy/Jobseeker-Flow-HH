@@ -52,7 +52,7 @@ const Calendar = (props) => {
   };
 
   return (
-    <div className="row datePicker">
+    <div id="calendar-root-container" className="row datePicker">
       {props.status ? (
         <div style={{ position: "relative", display: "flex" }}>
           <TextField

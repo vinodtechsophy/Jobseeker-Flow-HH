@@ -157,7 +157,7 @@ const CertificationDetails: FC<any> = (props): ReactElement => {
 
   const handleSaveData = (index) => {
     const date = new Date();
-    date.setHours(0,0,0,0);
+    date.setHours(0, 0, 0, 0);
     if (!certificationDetailsForm.values.members[index].issueDate) {
       props.setType(WARNING_KEY);
       props.setDataMessage("Please select issue date");
@@ -189,25 +189,28 @@ const CertificationDetails: FC<any> = (props): ReactElement => {
       props.setOpen(true);
     } else if (
       !certificationDetailsForm.values.members[index].credentialStatus &&
-      new Date(certificationDetailsForm.values.members[index].issueDate).getTime() >
-        new Date(certificationDetailsForm.values.members[index].expirationDate).getTime()
+      new Date(
+        certificationDetailsForm.values.members[index].issueDate
+      ).getTime() >
+        new Date(
+          certificationDetailsForm.values.members[index].expirationDate
+        ).getTime()
     ) {
-        props.setType(WARNING_KEY);
-        props.setDataMessage("Expiration date cannot be past issue date");
-        props.setOpen(true);
-      } else if(certificationDetailsForm.values.members[index].issueDate > date){
-        props.setType(WARNING_KEY);
-        props.setDataMessage("Issue date cannot be future date");
-        props.setOpen(true);
-      }
-     else {
+      props.setType(WARNING_KEY);
+      props.setDataMessage("Expiration date cannot be past issue date");
+      props.setOpen(true);
+    } else if (
+      certificationDetailsForm.values.members[index].issueDate > date
+    ) {
+      props.setType(WARNING_KEY);
+      props.setDataMessage("Issue date cannot be future date");
+      props.setOpen(true);
+    } else {
       certificationDetailsForm.setFieldValue(
         `members[${index}].saveStatus`,
         true
       );
-      props.setCertificationData(
-        certificationDetailsForm.values.members
-      );
+      props.setCertificationData(certificationDetailsForm.values.members);
     }
   };
 
@@ -218,9 +221,13 @@ const CertificationDetails: FC<any> = (props): ReactElement => {
 
   return (
     <React.Fragment>
-      <div className="certification-div">
+      <div
+        id="certificationDetails-root-container"
+        className="certification-div"
+      >
         <div className="add-btn-div">
           <Button
+            id="add-certificate-button"
             className="next-button"
             variant="contained"
             onClick={() => handleServiceAdd()}
@@ -327,6 +334,7 @@ const CertificationDetails: FC<any> = (props): ReactElement => {
                     >
                       <span>{CREDENTIAL_EXPIRY_TEXT}</span>
                       <Checkbox
+                        id="credential-expiry-status-checkbox"
                         disabled={props.disabled}
                         checked={
                           certificationDetailsForm.values.members[index]

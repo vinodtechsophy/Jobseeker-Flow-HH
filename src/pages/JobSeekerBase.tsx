@@ -41,24 +41,24 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
           setType={setType}
           setOpen={setOpen}
           setDataMessage={setDataMessage}
-          contestId={"1032910127951769600"}
+          contestId={id}
         />
       ),
     },
     {
       title: "Duplication Failed",
       index: 1,
-      component: <DuplicationFailed contestId={"1032910127951769600"} />,
+      component: <DuplicationFailed contestId={id} />,
     },
     {
       title: "Incomplete Uploads ",
       index: 2,
-      component: <IncompleteUploads id={"1032910127951769600"} />,
+      component: <IncompleteUploads id={id} />,
     },
     {
       title: "All JS",
       index: 3,
-      component: <AllJs contestId={"1032910127951769600"} />,
+      component: <AllJs contestId={id} />,
     },
     {
       title: "Vetting",
@@ -73,7 +73,7 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
     {
       title: "Manage Profiles",
       index: 6,
-      component: <Manage id={"1032910127951769600"} />,
+      component: <Manage id={id} />,
     },
     {
       title: "Broadcast",

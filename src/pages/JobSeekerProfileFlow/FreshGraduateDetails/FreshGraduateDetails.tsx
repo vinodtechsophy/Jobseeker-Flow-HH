@@ -55,7 +55,7 @@ const FreshGraduateDetails: FC<any> = React.forwardRef(
           .required("Please add Institute Start Date")
           .min(1),
       }),
-      onSubmit: (values, { setSubmitting }) => { },
+      onSubmit: (values, { setSubmitting }) => {},
       enableReinitialize: true,
     });
 
@@ -69,7 +69,7 @@ const FreshGraduateDetails: FC<any> = React.forwardRef(
 
     useImperativeHandle(ref, () => ({
       childMethod() {
-       return freshGraduateForm.values;
+        return freshGraduateForm.values;
       },
     }));
 
@@ -145,6 +145,7 @@ const FreshGraduateDetails: FC<any> = React.forwardRef(
               <div>
                 <p className="institute-field">{INSTITUTE_NAME_TEXT}</p>
                 <TextField
+                  id="institute-name-textbox"
                   required
                   disabled={props.disabled}
                   label={COLLEGE_NAME_LABEL}
@@ -170,6 +171,7 @@ const FreshGraduateDetails: FC<any> = React.forwardRef(
               <p className="institute-field">{INSTITUTE_LOCATION_TEXT}</p>
               <Stack direction="row" spacing={3}>
                 <TextField
+                  id="institute-city-textbox"
                   required
                   disabled={props.disabled}
                   label={CITY_LABEL}
@@ -183,6 +185,7 @@ const FreshGraduateDetails: FC<any> = React.forwardRef(
                   helperText={getError(`instituteCity`)}
                 />
                 <TextField
+                  id="institute-country-textbox"
                   required
                   disabled={props.disabled}
                   label={COUNTRY_LABEL}
@@ -206,7 +209,11 @@ const FreshGraduateDetails: FC<any> = React.forwardRef(
               className="add-team-grid"
             >
               <p className="institute-field">{COLLEGE_START_TEXT}</p>
-              <Calendar setDate={handleStartDate} value={props?.fresherPrefillData?.collegeStartDate} calendarDisabled={props.disabled} />
+              <Calendar
+                setDate={handleStartDate}
+                value={props?.fresherPrefillData?.collegeStartDate}
+                calendarDisabled={props.disabled}
+              />
             </Grid>
             <Grid
               item
@@ -217,7 +224,12 @@ const FreshGraduateDetails: FC<any> = React.forwardRef(
               className="add-team-grid"
             >
               <p className="institute-field">{COLLEGE_END_TEXT}</p>
-              <Calendar setDate={handleEndDate} status={false}  value={props?.fresherPrefillData?.collegeEndDate} calendarDisabled={props.disabled}/>
+              <Calendar
+                setDate={handleEndDate}
+                status={false}
+                value={props?.fresherPrefillData?.collegeEndDate}
+                calendarDisabled={props.disabled}
+              />
             </Grid>
           </Grid>
         </div>
