@@ -28,7 +28,9 @@ var InlineInputs = function (props) {
         if (JSON.stringify(props.value).length > 5)
             setInputValues(function (arr) { return Object.values(props.value); });
     }, []);
-    return (_jsxs("div", { children: [props.InlineInputTitle ? (_jsx("div", __assign({ className: "experience-card-title" }, { children: _jsx("div", { children: _jsxs("p", { children: [props.InlineInputTitle, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }) }) }))) : null, _jsx("div", __assign({ className: "inline-div" }, { children: props.InlineInputsArray.map(function (input, index) { return (_jsxs(React.Fragment, { children: [_jsx("div", __assign({ className: "number-input-field" }, { children: _jsx(TextField, { disabled: props.disabled, type: input.type, label: input.label, value: input.type === "number" ? Number(inputValues[index]) : inputValues[index], placeholder: input.placeholder, onInput: function (e) {
+    return (_jsxs("div", __assign({ id: "root-component-container" }, { children: [props.InlineInputTitle ? (_jsx("div", __assign({ className: "experience-card-title" }, { children: _jsx("div", { children: _jsxs("p", { children: [props.InlineInputTitle, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }) }) }))) : null, _jsx("div", __assign({ id: "root-inline-inputbox-container", className: "inline-div" }, { children: props.InlineInputsArray.map(function (input, index) { return (_jsxs(React.Fragment, { children: [_jsx("div", __assign({ id: input.label + "-inline-inputbox-container", className: "number-input-field" }, { children: _jsx(TextField, { id: input.label + "-inline-inputbox", name: input.label + "InlineInputbox", disabled: props.disabled, type: input.type, label: input.label, value: input.type === "number"
+                                    ? Number(inputValues[index])
+                                    : inputValues[index], placeholder: input.placeholder, onInput: function (e) {
                                     var _a;
                                     if (input.type === "number") {
                                         if (Number(e.target.value) > Number(input.max)) {
@@ -56,6 +58,6 @@ var InlineInputs = function (props) {
                                         : {
                                             maxLength: input === null || input === void 0 ? void 0 : input.maxLength,
                                         },
-                                }, size: "small" }) })), _jsx("div", __assign({ className: "input-align" }, { children: _jsx("span", { children: input.label }) }))] }, input.label)); }) }))] }));
+                                }, size: "small" }) })), _jsx("div", __assign({ className: "input-align" }, { children: _jsx("span", { children: input.label }) }))] }, input.label)); }) }))] })));
 };
 export default InlineInputs;

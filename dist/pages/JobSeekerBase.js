@@ -44,22 +44,22 @@ var JobSeekerBase = function (props) {
         {
             title: "Add Profile",
             index: 0,
-            component: (_jsx(JobSeekerProfileFlow, { setType: setType, setOpen: setOpen, setDataMessage: setDataMessage, contestId: "1032910127951769600" })),
+            component: (_jsx(JobSeekerProfileFlow, { setType: setType, setOpen: setOpen, setDataMessage: setDataMessage, contestId: id })),
         },
         {
             title: "Duplication Failed",
             index: 1,
-            component: _jsx(DuplicationFailed, { contestId: "1032910127951769600" }),
+            component: _jsx(DuplicationFailed, { contestId: id }),
         },
         {
             title: "Incomplete Uploads ",
             index: 2,
-            component: _jsx(IncompleteUploads, { id: "1032910127951769600" }),
+            component: _jsx(IncompleteUploads, { id: id }),
         },
         {
             title: "All JS",
             index: 3,
-            component: _jsx(AllJs, { contestId: "1032910127951769600" }),
+            component: _jsx(AllJs, { contestId: id }),
         },
         {
             title: "Vetting",
@@ -74,7 +74,7 @@ var JobSeekerBase = function (props) {
         {
             title: "Manage Profiles",
             index: 6,
-            component: _jsx(Manage, { id: "1032910127951769600" }),
+            component: _jsx(Manage, { id: id }),
         },
         {
             title: "Broadcast",

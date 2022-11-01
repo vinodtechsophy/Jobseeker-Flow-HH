@@ -141,34 +141,46 @@ var CurrentOffers = function (props) {
     });
     var handleFixedCtc = function (value, pos, index) {
         if (pos === 0)
-            offerAddForm.values.members[index].fixedCtc.fixedCtcLakh = value ? value : '0';
+            offerAddForm.values.members[index].fixedCtc.fixedCtcLakh = value
+                ? value
+                : "0";
         else if (pos === 1)
-            offerAddForm.values.members[index].fixedCtc.fixedCtcThousand = value ? value : '0';
+            offerAddForm.values.members[index].fixedCtc.fixedCtcThousand = value
+                ? value
+                : "0";
         // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
         handleTotalCtc(index);
     };
     var handleVariableCtc = function (value, pos, index) {
         if (pos === 0)
-            offerAddForm.values.members[index].variableCtc.variableCtcLakh = value ? value : '0';
+            offerAddForm.values.members[index].variableCtc.variableCtcLakh = value
+                ? value
+                : "0";
         else if (pos === 1)
-            offerAddForm.values.members[index].variableCtc.variableCtcThousand = value ? value : '0';
+            offerAddForm.values.members[index].variableCtc.variableCtcThousand = value
+                ? value
+                : "0";
         // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
         handleTotalCtc(index);
     };
     var handleTotalCtc = function (index) {
-        offerAddForm.values.members[index].totalCtc = ((parseInt(offerAddForm.values.members[index].fixedCtc.fixedCtcLakh)
-            + parseInt(offerAddForm.values.members[index].variableCtc.variableCtcLakh))
-            * 100000
-            + (parseInt(offerAddForm.values.members[index].fixedCtc.fixedCtcThousand)
-                + parseInt(offerAddForm.values.members[index].variableCtc.variableCtcThousand))
-                * 1000).toString();
+        offerAddForm.values.members[index].totalCtc = ((parseInt(offerAddForm.values.members[index].fixedCtc.fixedCtcLakh) +
+            parseInt(offerAddForm.values.members[index].variableCtc.variableCtcLakh)) *
+            100000 +
+            (parseInt(offerAddForm.values.members[index].fixedCtc.fixedCtcThousand) +
+                parseInt(offerAddForm.values.members[index].variableCtc.variableCtcThousand)) *
+                1000).toString();
         // offerAddForm.setFieldValue(`members[${index}].saveStatus`, true);
     };
     var handleServiceAdd = function (prefillValue) {
         offerAddForm.setValues(function (prevValues) { return ({
-            members: __spreadArray(__spreadArray([], prevValues.members, true), [__assign(__assign({}, initialValuesForForm), prefillValue)], false),
+            members: __spreadArray(__spreadArray([], prevValues.members, true), [
+                __assign(__assign({}, initialValuesForForm), prefillValue),
+            ], false),
         }); });
-        setServiceList(function (prevState) { return __spreadArray(__spreadArray([], prevState, true), [__assign(__assign({}, initialValuesForForm), prefillValue)], false); });
+        setServiceList(function (prevState) { return __spreadArray(__spreadArray([], prevState, true), [
+            __assign(__assign({}, initialValuesForForm), prefillValue),
+        ], false); });
     };
     var AddMultipleService = function (prefillArray) {
         if (prefillArray) {
@@ -202,7 +214,7 @@ var CurrentOffers = function (props) {
         setServiceListFiles(function () { return tempArray; });
         offerAddForm.values.members[index].letterFiles = null;
     };
-    return (_jsxs(React.Fragment, { children: [_jsx("div", __assign({ className: "add-btn-div" }, { children: _jsxs(Button, __assign({ className: "next-button stack-button", variant: "contained", onClick: function () { return handleServiceAdd(); }, disabled: props.disabled }, { children: [_jsx(AddIcon, { className: "add-icon" }), " ", OFFER_ADD_TEXT] })) })), serviceList.length > 0 &&
+    return (_jsxs(React.Fragment, { children: [_jsx("div", __assign({ id: "add-offer-detailes-button-container", className: "add-btn-div" }, { children: _jsxs(Button, __assign({ id: "add-offer-detailes-container", className: "next-button stack-button", variant: "contained", onClick: function () { return handleServiceAdd(); }, disabled: props.disabled }, { children: [_jsx(AddIcon, { className: "add-icon" }), " ", OFFER_ADD_TEXT] })) })), serviceList.length > 0 &&
                 serviceList.map(function (singleService, index) {
                     var _a, _b, _c;
                     return (_jsx("div", __assign({ className: "services" }, { children: _jsx("div", __assign({ className: "first-division" }, { children: _jsxs(StyledContainer, { children: [_jsxs(Grid, __assign({ container: true, className: classes.muiContainer }, { children: [_jsx(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: FULL_SIZE_GRID, lg: FULL_SIZE_GRID, sx: {
@@ -212,7 +224,8 @@ var CurrentOffers = function (props) {
                                                     marginBottom: 1,
                                                 } }, { children: _jsxs(Typography, __assign({ className: classes.Heading2 }, { children: ["Add Offer ", index + 1, " Details"] })) })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "add-team-grid" }, { children: [_jsxs("p", { children: [PROPOSED_DATE, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(Calendar, { setDate: function (date) {
                                                             offerAddForm.setFieldValue("members[".concat(index, "].joiningDate"), date);
-                                                        }, status: true, value: offerAddForm.values.members[index].joiningDate, calendarDisabled: props.disabled || offerAddForm.values.members[index].fieldDisabled })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "add-team-grid" }, { children: [_jsxs("p", { children: [JOIN_LOCATION, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { disabled: props.disabled ||
+                                                        }, status: true, value: offerAddForm.values.members[index].joiningDate, calendarDisabled: props.disabled ||
+                                                            offerAddForm.values.members[index].fieldDisabled })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "add-team-grid" }, { children: [_jsxs("p", { children: [JOIN_LOCATION, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { disabled: props.disabled ||
                                                             offerAddForm.values.members[index].fieldDisabled, required: true, id: FormAttributes.joiningLocation.id, placeholder: FormAttributes.joiningLocation.placeholder, label: FormAttributes.joiningLocation.label, className: classes.boxInputField, size: "small", name: "members[".concat(index, "].joiningLocation"), onBlur: offerAddForm.handleBlur, onChange: offerAddForm.handleChange, value: offerAddForm.values.members[index].joiningLocation, error: getError("members[".concat(index, "].joiningLocation")), helperText: getError("members[".concat(index, "].joiningLocation")) })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "add-team-grid" }, { children: [_jsxs("p", { children: [EMPLOYER_NAME, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { disabled: props.disabled ||
                                                             offerAddForm.values.members[index].fieldDisabled, required: true, id: FormAttributes.employerName.id, placeholder: FormAttributes.employerName.placeholder, label: FormAttributes.employerName.label, className: classes.boxInputField, size: "small", name: "members[".concat(index, "].employerName"), onBlur: offerAddForm.handleBlur, onChange: offerAddForm.handleChange, value: offerAddForm.values.members[index].employerName, error: getError("members[".concat(index, "].employerName")), helperText: getError("members[".concat(index, "].employerName")) })] })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: "add-team-grid" }, { children: [_jsxs("p", { children: [OFFERED_ROLE, _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] }), _jsx(TextField, { disabled: props.disabled ||
                                                             offerAddForm.values.members[index].fieldDisabled, id: FormAttributes.designation.id, placeholder: FormAttributes.designation.placeholder, label: FormAttributes.designation.label, required: true, size: "small", className: classes.boxInputField, name: "members[".concat(index, "].designation"), onBlur: offerAddForm.handleBlur, onChange: offerAddForm.handleChange, value: offerAddForm.values.members[index].designation, error: getError("members[".concat(index, "].designation")), helperText: getError("members[".concat(index, "].designation")) })] })), _jsxs("p", __assign({ className: "sub-text" }, { children: ["Offer CTC in INR", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] })), _jsxs("div", __assign({ className: "inner-div" }, { children: [_jsx(InlineInputs, { InlineInputsArray: CTCDetails, InlineInputTitle: FIXED_CTC_TEXT, disabled: props.disabled ||
@@ -221,23 +234,29 @@ var CurrentOffers = function (props) {
                                                         }, value: offerAddForm.values.members[index].fixedCtc }), _jsx(InlineInputs, { InlineInputsArray: CTCDetails, InlineInputTitle: VARIABLE_CTC_TEXT, disabled: props.disabled ||
                                                             offerAddForm.values.members[index].fieldDisabled, setValues: function (val, ind) {
                                                             handleVariableCtc(val, ind, index);
-                                                        }, value: offerAddForm.values.members[index].variableCtc }), _jsxs("div", { children: [_jsx("div", __assign({ className: "experience-card-title" }, { children: _jsx("div", { children: _jsx("p", { children: TOTAL_CTC_TEXT }) }) })), _jsxs("div", __assign({ className: "inline-div" }, { children: [_jsx(TextField, { disabled: true, type: "text", label: TOTAL_CTC_LABEL, placeholder: TCTC_PLACEHOLDER, InputProps: {
+                                                        }, value: offerAddForm.values.members[index].variableCtc }), _jsxs("div", { children: [_jsx("div", __assign({ className: "experience-card-title" }, { children: _jsx("div", { children: _jsx("p", { children: TOTAL_CTC_TEXT }) }) })), _jsxs("div", __assign({ className: "inline-div" }, { children: [_jsx(TextField, { id: "total-ctc-textbox", disabled: true, type: "text", label: TOTAL_CTC_LABEL, placeholder: TCTC_PLACEHOLDER, InputProps: {
                                                                             inputProps: {
                                                                                 maxLength: 12,
                                                                             },
-                                                                        }, size: "small", value: offerAddForm.values.members[index].totalCtc }), _jsx("div", __assign({ className: "tctc-text" }, { children: _jsx("span", { children: TCTC_SUB_TEXT }) }))] }))] })] })), _jsx("p", __assign({ className: "sub-text" }, { children: "Attach Offer Letter" })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: classes.limitWidth }, { children: [(!offerAddForm.values.members[index].fieldDisabled && !props.disabled) ? (_jsx(DropZoneUpload, { receiveFileContent: receiveFileContent, data: index, disabled: props.disabled })) : null, serviceListFiles[index] && (serviceListFiles === null || serviceListFiles === void 0 ? void 0 : serviceListFiles.length) > 0 && ((_a = serviceListFiles[index]) === null || _a === void 0 ? void 0 : _a.length) > 0 ? (_jsxs(Box, { children: [_jsx(Button, __assign({ className: "next-button", variant: "contained" }, { children: (_b = serviceListFiles[index][0]) === null || _b === void 0 ? void 0 : _b.name })), _jsx(Button, __assign({ type: "button", disabled: offerAddForm.values.members[index].saveStatus ||
-                                                                    props.disabled, onClick: function () { return removeFile(index); }, className: "remove-btn" }, { children: _jsx(DeleteIcon, { color: (offerAddForm.values.members[index].fieldDisabled || props.disabled)
+                                                                        }, size: "small", value: offerAddForm.values.members[index].totalCtc }), _jsx("div", __assign({ className: "tctc-text" }, { children: _jsx("span", { children: TCTC_SUB_TEXT }) }))] }))] })] })), _jsx("p", __assign({ className: "sub-text" }, { children: "Attach Offer Letter" })), _jsxs(Grid, __assign({ item: true, xs: FULL_SIZE_GRID, sm: FULL_SIZE_GRID, md: HALF_SIZE_GRID, lg: HALF_SIZE_GRID, className: classes.limitWidth }, { children: [!offerAddForm.values.members[index].fieldDisabled &&
+                                                        !props.disabled ? (_jsx(DropZoneUpload, { receiveFileContent: receiveFileContent, data: index, disabled: props.disabled })) : null, serviceListFiles[index] &&
+                                                        (serviceListFiles === null || serviceListFiles === void 0 ? void 0 : serviceListFiles.length) > 0 &&
+                                                        ((_a = serviceListFiles[index]) === null || _a === void 0 ? void 0 : _a.length) > 0 ? (_jsxs(Box, { children: [_jsx(Button, __assign({ className: "next-button", variant: "contained" }, { children: (_b = serviceListFiles[index][0]) === null || _b === void 0 ? void 0 : _b.name })), _jsx(Button, __assign({ type: "button", disabled: offerAddForm.values.members[index].saveStatus ||
+                                                                    props.disabled, onClick: function () { return removeFile(index); }, className: "remove-btn" }, { children: _jsx(DeleteIcon, { color: offerAddForm.values.members[index]
+                                                                        .fieldDisabled || props.disabled
                                                                         ? DISABLED_KEY
-                                                                        : ERROR_KEY }) }))] })) : null, (!serviceListFiles[index] && (prefillOfferLetters === null || prefillOfferLetters === void 0 ? void 0 : prefillOfferLetters.length) > 0 && ((_c = prefillOfferLetters[index]) === null || _c === void 0 ? void 0 : _c.length) > 0) ? (_jsxs(Box, { children: [_jsx(Button, __assign({ className: "next-button", variant: "contained" }, { children: prefillOfferLetters[index][0].path })), _jsx(Button, __assign({ type: "button", onClick: function () {
+                                                                        : ERROR_KEY }) }))] })) : null, !serviceListFiles[index] &&
+                                                        (prefillOfferLetters === null || prefillOfferLetters === void 0 ? void 0 : prefillOfferLetters.length) > 0 &&
+                                                        ((_c = prefillOfferLetters[index]) === null || _c === void 0 ? void 0 : _c.length) > 0 ? (_jsxs(Box, { children: [_jsx(Button, __assign({ className: "next-button", variant: "contained" }, { children: prefillOfferLetters[index][0].path })), _jsx(Button, __assign({ type: "button", onClick: function () {
                                                                     var letter = prefillOfferLetters;
                                                                     letter.splice(index, 1);
                                                                     console.log(letter);
                                                                     setPrefillOfferLetters(__spreadArray([], letter, true));
                                                                 }, className: "remove-btn" }, { children: _jsx(DeleteIcon, { color: !offerAddForm.values.members[index].saveStatus
                                                                         ? ERROR_KEY
-                                                                        : DISABLED_KEY }) }))] })) : null] }))] })), !props.disabled ? (_jsx("div", __assign({ className: "final-button-div" }, { children: !offerAddForm.values.members[index].saveStatus ? (_jsx(Button, __assign({ className: "save-button", variant: "outlined", onClick: function () {
+                                                                        : DISABLED_KEY }) }))] })) : null] }))] })), !props.disabled ? (_jsx("div", __assign({ className: "final-button-div" }, { children: !offerAddForm.values.members[index].saveStatus ? (_jsx(Button, __assign({ id: SAVE_BTN_TEXT + "-button", className: "save-button", variant: "outlined", onClick: function () {
                                                 currentOfferSubmit(index);
-                                            } }, { children: SAVE_BTN_TEXT }))) : (_jsx(Button, __assign({ className: "save-button", variant: "outlined", onClick: function () {
+                                            } }, { children: SAVE_BTN_TEXT }))) : (_jsx(Button, __assign({ id: DELETE_BTN_TEXT + "-button", className: "save-button", variant: "outlined", onClick: function () {
                                                 handleDeleteData(index);
                                             } }, { children: DELETE_BTN_TEXT }))) }))) : null] }) })) }), index));
                 })] }));
