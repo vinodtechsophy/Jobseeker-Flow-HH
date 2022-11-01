@@ -14,8 +14,10 @@ import JobSeekerProfileUpload from "./JobSeekerProfileUpload";
 import JobSeekerAddProfile from "../../pages/JobSeekerAddProfile/JobSeekerAddProfile";
 
 const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
-  // const changeStep = useAppSelector((state) => state.tabsState);
-  const [activeStep, setActiveStep] = React.useState(0);
+  const changeStep = useAppSelector((state) => state.tabsState);
+  const [activeStep, setActiveStep] = React.useState(
+    changeStep.activeStep || 0
+  );
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
   }>({});
@@ -23,11 +25,9 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
   const [progressBar, setProgressBar] = useState(true);
 
   const userDataState = useAppSelector((state) => state.currentUser);
+  console.log("Active Step " + JSON.stringify(changeStep));
 
   useEffect(() => {}, [gotData]);
-  // useEffect(() => {
-  //   //fetch data
-  // }, [activeStep]);
 
   const steps = [
     "Duplication Check with hiringhood",

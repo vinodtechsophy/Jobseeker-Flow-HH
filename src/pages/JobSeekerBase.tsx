@@ -20,17 +20,17 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const notifyDataState = useAppSelector((state) => state.notificationAlert);
-  // const activeTabState = useAppSelector((state) => state.tabsState);
+  const activeTabState = useAppSelector((state) => state.tabsState);
   const [activeTab, setActiveTab] = React.useState(0);
   const [dataMessage, setDataMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [type, setType] = React.useState("");
 
-  // useEffect(() => {
-  //   if (activeTabState.activeTab !== activeTab) {
-  //     setActiveTab(activeTabState.activeTab);
-  //   }
-  // }, [activeTabState]);
+  useEffect(() => {
+    if (activeTabState.activeTab !== activeTab) {
+      setActiveTab(activeTabState.activeTab);
+    }
+  }, [activeTabState]);
 
   const jobSeekerTabs = [
     {
@@ -41,24 +41,24 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
           setType={setType}
           setOpen={setOpen}
           setDataMessage={setDataMessage}
-          contestId={id}
+          contestId={"1032910127951769600"}
         />
       ),
     },
     {
       title: "Duplication Failed",
       index: 1,
-      component: <DuplicationFailed contestId={id} />,
+      component: <DuplicationFailed contestId={"1032910127951769600"} />,
     },
     {
       title: "Incomplete Uploads ",
       index: 2,
-      component: <IncompleteUploads id={id} />,
+      component: <IncompleteUploads id={"1032910127951769600"} />,
     },
     {
       title: "All JS",
       index: 3,
-      component: <AllJs contestId={id} />,
+      component: <AllJs contestId={"1032910127951769600"} />,
     },
     {
       title: "Vetting",
@@ -73,7 +73,7 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
     {
       title: "Manage Profiles",
       index: 6,
-      component: <Manage id={id} />,
+      component: <Manage id={"1032910127951769600"} />,
     },
     {
       title: "Broadcast",
