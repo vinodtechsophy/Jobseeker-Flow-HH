@@ -10,7 +10,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React from "react";
+import React, { useEffect } from "react";
 import JobSeekerProfileFlow from "./JobSeekerProfileFlow/JobSeekerProfileFlow";
 import TabWrapper, { TabPanel } from "../components/TabWrapper/TabWrapper";
 import { Grid } from "@mui/material";
@@ -30,36 +30,36 @@ var JobSeekerBase = function (props) {
     var classes = useStyles();
     var dispatch = useAppDispatch();
     var notifyDataState = useAppSelector(function (state) { return state.notificationAlert; });
-    // const activeTabState = useAppSelector((state) => state.tabsState);
+    var activeTabState = useAppSelector(function (state) { return state.tabsState; });
     var _a = React.useState(0), activeTab = _a[0], setActiveTab = _a[1];
     var _b = React.useState(""), dataMessage = _b[0], setDataMessage = _b[1];
     var _c = React.useState(false), open = _c[0], setOpen = _c[1];
     var _d = React.useState(""), type = _d[0], setType = _d[1];
-    // useEffect(() => {
-    //   if (activeTabState.activeTab !== activeTab) {
-    //     setActiveTab(activeTabState.activeTab);
-    //   }
-    // }, [activeTabState]);
+    useEffect(function () {
+        if (activeTabState.activeTab !== activeTab) {
+            setActiveTab(activeTabState.activeTab);
+        }
+    }, [activeTabState]);
     var jobSeekerTabs = [
         {
             title: "Add Profile",
             index: 0,
-            component: (_jsx(JobSeekerProfileFlow, { setType: setType, setOpen: setOpen, setDataMessage: setDataMessage, contestId: id })),
+            component: (_jsx(JobSeekerProfileFlow, { setType: setType, setOpen: setOpen, setDataMessage: setDataMessage, contestId: "1032910127951769600" })),
         },
         {
             title: "Duplication Failed",
             index: 1,
-            component: _jsx(DuplicationFailed, { contestId: id }),
+            component: _jsx(DuplicationFailed, { contestId: "1032910127951769600" }),
         },
         {
             title: "Incomplete Uploads ",
             index: 2,
-            component: _jsx(IncompleteUploads, { id: id }),
+            component: _jsx(IncompleteUploads, { id: "1032910127951769600" }),
         },
         {
             title: "All JS",
             index: 3,
-            component: _jsx(AllJs, { contestId: id }),
+            component: _jsx(AllJs, { contestId: "1032910127951769600" }),
         },
         {
             title: "Vetting",
@@ -74,7 +74,7 @@ var JobSeekerBase = function (props) {
         {
             title: "Manage Profiles",
             index: 6,
-            component: _jsx(Manage, { id: id }),
+            component: _jsx(Manage, { id: "1032910127951769600" }),
         },
         {
             title: "Broadcast",

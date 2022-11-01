@@ -15,7 +15,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import LocalPhoneRoundedIcon from "@mui/icons-material/LocalPhoneRounded";
 import DehazeIcon from "@mui/icons-material/Dehaze";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { useAppSelector } from "../../services/StoreHooks";
+import { useAppDispatch, useAppSelector } from "../../services/StoreHooks";
 var useStyles = makeStyles(function () { return ({
     buttonContainer: {
         "&.MuiButton-root": {
@@ -41,23 +41,23 @@ var useStyles = makeStyles(function () { return ({
 }); });
 export var Icons = function (params) {
     var classes = useStyles();
-    // const dispatch = useAppDispatch();
+    var dispatch = useAppDispatch();
     var handleClick = function () {
         console.log("Hello");
     };
     console.log(params.data.profileLastCompletedStep);
-    // const handleStepOpen = () => {
-    //   dispatch({
-    //     type: "STEP_CHANGE",
-    //     data: {
-    //       step: params.data.profileLastCompletedStep,
-    //       tab: 0,
-    //     },
-    //   });
-    // };
+    var handleStepOpen = function () {
+        dispatch({
+            type: "STEP_CHANGE",
+            data: {
+                step: params.data.profileLastCompletedStep - 1,
+                tab: 0,
+            },
+        });
+    };
     var state = useAppSelector(function (state) { return state.tabsState; });
     console.log(state);
-    return (_jsx(_Fragment, { children: _jsxs("div", __assign({ className: classes.commonAlignment }, { children: [_jsx(VisibilityIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(LocalPhoneRoundedIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(OpenInNewIcon, { className: classes.iconColor }), _jsx(DehazeIcon, { className: classes.iconColor, onClick: handleClick })] })) }));
+    return (_jsx(_Fragment, { children: _jsxs("div", __assign({ className: classes.commonAlignment }, { children: [_jsx(VisibilityIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(LocalPhoneRoundedIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(OpenInNewIcon, { className: classes.iconColor, onClick: handleStepOpen }), _jsx(DehazeIcon, { className: classes.iconColor, onClick: handleClick })] })) }));
 };
 var CustomFields = function () {
     return _jsx("div", { children: "CustomFields" });
