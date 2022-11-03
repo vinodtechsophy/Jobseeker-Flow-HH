@@ -46,7 +46,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React, { useState, useRef, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useRef, useMemo, useEffect, useCallback, } from "react";
 import { Button, Grid, Typography, Box, Checkbox } from "@mui/material";
 import StepCount from "../../components/StepCount";
 import { LISTING_GENERIC_HEADERS } from "./DuplicationFailedColumnHeaders";
@@ -58,6 +58,7 @@ import BookmarkIcon from "../../../src/assets/bookmark.svg";
 import { PAGE_SIZE_ARRAY } from "../../constants";
 import AgGridWithPagination from "../GridItem/AgGridWithPagination";
 import { getDuplicationFailedProfiles, getDuplicationFailedProfilesAggregate, } from "../../services/JobSeekerService";
+import moment from "moment";
 var DuplicationFailed = function (props) {
     var _a = useState(1), selectedButtonId = _a[0], setSelectedButtonId = _a[1];
     var _b = useState("SUBMITTED"), selectedButtonValue = _b[0], setSelectedButtonValue = _b[1];
@@ -110,8 +111,10 @@ var DuplicationFailed = function (props) {
                     response = _k.sent();
                     if ((_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.success) {
                         duplicationFailedRecords = (_c = (_b = response === null || response === void 0 ? void 0 : response.data) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.content;
-                        console.log(duplicationFailedRecords);
                         result = duplicationFailedRecords.map(function (item, index) {
+                            var janmDin = item.dateOfBirth;
+                            if (janmDin)
+                                item.dateOfBirth = moment(janmDin).utc().format("DD-MM-YYYY");
                             if (item.status === "PDC_PASS") {
                                 item.fdcStatus = "NA";
                             }
@@ -119,10 +122,12 @@ var DuplicationFailed = function (props) {
                                 item.status = "PDC_PASS";
                                 item.fdcStatus = "FDC_PASS";
                             }
-                            var Data = __assign(__assign({}, item), item.fdcStatus[index]);
-                            return Data;
+                            else {
+                                item.status = "PDC_PASS";
+                                item.fdcStatus = "FDC_FAIL";
+                            }
+                            return item;
                         });
-                        console.log(result);
                         setRowData(result);
                         setTotalPages((_e = (_d = response === null || response === void 0 ? void 0 : response.data) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.totalPages);
                         setPageNo((_g = (_f = response === null || response === void 0 ? void 0 : response.data) === null || _f === void 0 ? void 0 : _f.data) === null || _g === void 0 ? void 0 : _g.pageNo);
@@ -146,7 +151,7 @@ var DuplicationFailed = function (props) {
             enablePivot: true,
             enableValue: true,
             resizable: true,
-            cellStyle: { "borderRightColor": "#DFE5FF" },
+            cellStyle: { borderRightColor: "#DFE5FF" },
         };
     }, []);
     var autoGroupColumnDef = useMemo(function () {
@@ -231,7 +236,9 @@ var DuplicationFailed = function (props) {
                     ], countsList: [
                         {
                             _id: 1,
-                            count: ((agCount === null || agCount === void 0 ? void 0 : agCount.PDC_PASS) ? agCount === null || agCount === void 0 ? void 0 : agCount.PDC_PASS : 0) + ((agCount === null || agCount === void 0 ? void 0 : agCount.FDC_FAIL) ? agCount === null || agCount === void 0 ? void 0 : agCount.FDC_FAIL : 0) + ((agCount === null || agCount === void 0 ? void 0 : agCount.PDC_FAIL) ? agCount === null || agCount === void 0 ? void 0 : agCount.PDC_FAIL : 0),
+                            count: ((agCount === null || agCount === void 0 ? void 0 : agCount.PDC_PASS) ? agCount === null || agCount === void 0 ? void 0 : agCount.PDC_PASS : 0) +
+                                ((agCount === null || agCount === void 0 ? void 0 : agCount.FDC_FAIL) ? agCount === null || agCount === void 0 ? void 0 : agCount.FDC_FAIL : 0) +
+                                ((agCount === null || agCount === void 0 ? void 0 : agCount.PDC_FAIL) ? agCount === null || agCount === void 0 ? void 0 : agCount.PDC_FAIL : 0),
                         },
                         { _id: 2, count: agCount.PDC_FAIL },
                         { _id: 3, count: agCount.PDC_PASS },
