@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useEffect,
   useCallback,
-  FC
+  FC,
 } from "react";
 import { Button, Grid, Typography, Box, Checkbox } from "@mui/material";
 import StepCount from "../../components/StepCount";
@@ -23,6 +23,7 @@ import {
   getDuplicationFailedProfiles,
   getDuplicationFailedProfilesAggregate,
 } from "../../services/JobSeekerService";
+import moment from "moment";
 
 const DuplicationFailed: FC<any> = (props) => {
   const [selectedButtonId, setSelectedButtonId] = useState<Number>(1);
@@ -50,7 +51,9 @@ const DuplicationFailed: FC<any> = (props) => {
     apiCallDuplicationFailedData(filterValue, 0, 10);
   };
   const apiCallAggregateData = async () => {
-    const response: any = await getDuplicationFailedProfilesAggregate(props.contestId);
+    const response: any = await getDuplicationFailedProfilesAggregate(
+      props.contestId
+    );
 
     if (response.data.success) {
       const result = response.data.data;
@@ -68,6 +71,7 @@ const DuplicationFailed: FC<any> = (props) => {
     size: number
   ) => {
     // if (gridRef.current) {
+    //   console.log(gridRef.current.api.showLoadingOverlay());
     //   gridRef.current.api.showLoadingOverlay();
     // }
     const response: any = await getDuplicationFailedProfiles(
@@ -78,24 +82,24 @@ const DuplicationFailed: FC<any> = (props) => {
     );
     if (response?.data?.success) {
       const duplicationFailedRecords = response?.data?.data?.content;
-      console.log(duplicationFailedRecords);
 
       let result = duplicationFailedRecords.map((item, index) => {
+        const janmDin = item.dateOfBirth;
+        if (janmDin)
+          item.dateOfBirth = moment(janmDin).utc().format("DD-MM-YYYY");
+
         if (item.status === "PDC_PASS") {
           item.fdcStatus = "NA";
         } else if (item.status === "FDC_PASS") {
           item.status = "PDC_PASS";
           item.fdcStatus = "FDC_PASS";
+        } else {
+          item.status = "PDC_PASS";
+          item.fdcStatus = "FDC_FAIL";
         }
 
-        let Data = {
-          ...item,
-          ...item.fdcStatus[index],
-        };
-
-        return Data;
+        return item;
       });
-      console.log(result)
 
       setRowData(result);
       setTotalPages(response?.data?.data?.totalPages);
@@ -119,7 +123,7 @@ const DuplicationFailed: FC<any> = (props) => {
       enablePivot: true,
       enableValue: true,
       resizable: true,
-      cellStyle: { "borderRightColor": "#DFE5FF" },
+      cellStyle: { borderRightColor: "#DFE5FF" },
     };
   }, []);
   const autoGroupColumnDef = useMemo<ColDef>(() => {
@@ -218,7 +222,10 @@ const DuplicationFailed: FC<any> = (props) => {
           countsList={[
             {
               _id: 1,
-              count: (agCount?.PDC_PASS ? agCount?.PDC_PASS : 0) + (agCount?.FDC_FAIL ? agCount?.FDC_FAIL : 0) + (agCount?.PDC_FAIL ? agCount?.PDC_FAIL : 0),
+              count:
+                (agCount?.PDC_PASS ? agCount?.PDC_PASS : 0) +
+                (agCount?.FDC_FAIL ? agCount?.FDC_FAIL : 0) +
+                (agCount?.PDC_FAIL ? agCount?.PDC_FAIL : 0),
             },
             { _id: 2, count: agCount.PDC_FAIL },
             { _id: 3, count: agCount.PDC_PASS },
@@ -286,7 +293,7 @@ const DuplicationFailed: FC<any> = (props) => {
           pageChange={pageChange}
           pageSizeChange={pageSizeChange}
           currentPage={pageNo + 1}
-        // onCellValueChanged={onCellValueChanged}
+          // onCellValueChanged={onCellValueChanged}
         />
       </Grid>
     </Grid>
