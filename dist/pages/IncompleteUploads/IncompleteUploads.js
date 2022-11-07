@@ -134,7 +134,7 @@ var IncompleteUploads = function (props) {
         });
     }); };
     var handleAggregateData = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response, result1, result2, result3, result4, result5, result6, result7;
+        var response, result1, result2, result3, result4, result5, result6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, getIncompleteUplodsStepCount(id)];
@@ -149,7 +149,6 @@ var IncompleteUploads = function (props) {
                         result4 = response.data.data.filter(function (data) { return data.profileLastCompletedStep === "4"; });
                         result5 = response.data.data.filter(function (data) { return data.profileLastCompletedStep === "5"; });
                         result6 = response.data.data.filter(function (data) { return data.profileLastCompletedStep === "6"; });
-                        result7 = response.data.data.filter(function (data) { return data.profileLastCompletedStep === "7"; });
                         setInStepCount({
                             step1: (result1.length > 0 && result1[0].count) || 0,
                             step2: (result2.length > 0 && result2[0].count) || 0,
@@ -157,7 +156,6 @@ var IncompleteUploads = function (props) {
                             step4: (result4.length > 0 && result4[0].count) || 0,
                             step5: (result5.length > 0 && result5[0].count) || 0,
                             step6: (result6.length > 0 && result6[0].count) || 0,
-                            step7: (result7.length > 0 && result7[0].count) || 0,
                         });
                     }
                     else {
@@ -168,7 +166,6 @@ var IncompleteUploads = function (props) {
                             step4: 0,
                             step5: 0,
                             step6: 0,
-                            step7: 0,
                         });
                     }
                     return [2 /*return*/];
@@ -210,7 +207,7 @@ var IncompleteUploads = function (props) {
             enablePivot: true,
             enableValue: true,
             resizable: true,
-            cellStyle: { "borderRightColor": "#DFE5FF" },
+            cellStyle: { borderRightColor: "#DFE5FF" },
         };
     }, []);
     console.log(columnDefs);
@@ -291,12 +288,6 @@ var IncompleteUploads = function (props) {
                                     id: 6,
                                     value: 6,
                                 },
-                                {
-                                    label: "Step 7",
-                                    tooltip: "Review and Submit",
-                                    id: 7,
-                                    value: 7,
-                                },
                             ], countsList: [
                                 { _id: 1, count: inStepCount.step1 },
                                 { _id: 2, count: inStepCount.step2 },
@@ -304,7 +295,6 @@ var IncompleteUploads = function (props) {
                                 { _id: 4, count: inStepCount.step4 },
                                 { _id: 5, count: inStepCount.step5 },
                                 { _id: 6, count: inStepCount.step6 },
-                                { _id: 7, count: inStepCount.step7 },
                             ], setSelectedButton: setSelectedButton, selectedButton: selectedButtonId })] })), _jsx(Grid, __assign({ item: true, xs: 12 }, { children: _jsxs("div", __assign({ className: "forms-button-container" }, { children: [_jsxs("div", { children: [_jsxs(Button, __assign({ variant: "outlined", className: "save-draft-button", onClick: function () { return setColumnsListOpen(true); }, disabled: columnsListOpen }, { children: ["Columns ", _jsx(GridViewOutlinedIcon, { className: "generic-icon" })] })), _jsxs(Button, __assign({ variant: "outlined", className: "save-draft-button", onClick: function () { return toogleFloatingFilter(!floatingFilter); }, sx: { background: floatingFilter ? LIGHT_GREY : "inherit" } }, { children: ["Filters ", _jsx(FilterAltOutlinedIcon, { className: "generic-icon" })] }))] }), _jsx("div", { children: _jsxs(Box, __assign({ display: "inline-block", className: classes.action1 }, { children: [_jsx(Checkbox, { disabled: selectedRows.length > 0 ? false : true, checked: isMailCheckEnable, onChange: function () { return setIsMailCheckEnable(!isMailCheckEnable); } }), " ", selectedRows.length, " Selected", _jsx(Tooltip, __assign({ title: "Bookmark", placement: "top", arrow: true }, { children: _jsx(BookmarkBorderIcon, { className: classes.iconStyle }) })), _jsx(Tooltip, __assign({ title: "Mail All Jobseekers", placement: "top", arrow: true }, { children: _jsx(MailOutlineIcon, { className: classes.iconStyle, onClick: function () {
                                                     return isMailCheckEnable &&
                                                         window.open("https://mail.google.com/mail/?view=cm&fs=1&to=".concat(selectedEmails.toString()));

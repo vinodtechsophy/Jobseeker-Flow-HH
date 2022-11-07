@@ -40,6 +40,16 @@ var JobSeekerBase = function (props) {
             setActiveTab(activeTabState.activeTab);
         }
     }, [activeTabState]);
+    var handleTabChange = function (newTab) {
+        setActiveTab(newTab);
+        dispatch({
+            type: "STEP_CHANGE",
+            data: {
+                step: 0,
+                tab: newTab,
+            },
+        });
+    };
     var jobSeekerTabs = [
         {
             title: "Add Profile",
@@ -93,6 +103,6 @@ var JobSeekerBase = function (props) {
             },
         });
     };
-    return (_jsxs(Grid, __assign({ container: true, p: 2 }, { children: [_jsx(Notification, { open: open, type: type, message: dataMessage, setOpen: setOpen }), _jsx(TabWrapper, { tabIndex: activeTab, setTabIndex: setActiveTab, tabsList: jobSeekerTabs }), jobSeekerTabs.map(function (tab) { return (_jsx(TabPanel, __assign({ value: activeTab, index: tab.index, disablePadding: true }, { children: tab.component }), tab.index)); }), notifyDataState && (_jsx(Notification, { open: notifyDataState.enable, type: notifyDataState.type, message: notifyDataState.message, duration: notifyDataState.duration, setOpen: function () { return resetNotificationData(); } }))] })));
+    return (_jsxs(Grid, __assign({ container: true, p: 2 }, { children: [_jsx(Notification, { open: open, type: type, message: dataMessage, setOpen: setOpen }), _jsx(TabWrapper, { tabIndex: activeTab, setTabIndex: handleTabChange, tabsList: jobSeekerTabs }), jobSeekerTabs.map(function (tab) { return (_jsx(TabPanel, __assign({ value: activeTab, index: tab.index, disablePadding: true }, { children: tab.component }), tab.index)); }), notifyDataState && (_jsx(Notification, { open: notifyDataState.enable, type: notifyDataState.type, message: notifyDataState.message, duration: notifyDataState.duration, setOpen: function () { return resetNotificationData(); } }))] })));
 };
 export default JobSeekerBase;

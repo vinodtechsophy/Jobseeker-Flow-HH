@@ -58,6 +58,7 @@ import { ERROR_KEY, SUCCESS_KEY, FORM_SUBMISSION_SUCCESS, EXPEXTED_CTC_DET, WARN
 var JobSeekerProfileDetails = function (props) {
     var dispatch = useAppDispatch();
     var userDataState = useAppSelector(function (state) { return state.currentUser; });
+    // const activeTabState = useAppSelector((state) => state.tabsState);
     var _a = React.useState(false), freshGraduate = _a[0], setFreshGraduate = _a[1];
     var _b = React.useState(false), loader = _b[0], setLoader = _b[1];
     var _c = React.useState(""), workStatus = _c[0], setWorkStatus = _c[1];
@@ -67,6 +68,10 @@ var JobSeekerProfileDetails = function (props) {
     var _g = React.useState({ fixedCtcLakh: "", fixedCtcThousand: "" }), fixedCtc = _g[0], setFixedCtc = _g[1];
     var _h = React.useState({ variableCtcLakh: "", variableCtcThousand: "" }), variableCtc = _h[0], setVariableCtc = _h[1];
     var _j = React.useState({ expectedCtcLakh: "", expectedCtcThousand: "" }), expectedCtc = _j[0], setExpectedCtc = _j[1];
+    // useEffect(() => {
+    //   props.handleComplete(0);
+    //   props.handleComplete(1);
+    // }, [activeTabState.activeStep]);
     var handleTotalExperience = function (value, index) {
         if (index === 0)
             setTotalExperience({

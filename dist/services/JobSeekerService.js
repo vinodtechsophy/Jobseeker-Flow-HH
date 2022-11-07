@@ -201,7 +201,7 @@ export var consentStatusFilterContestLinkedJobsekeers = function (id, status, pa
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, axios
-                    .get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/job-seekers-profiles?contestId=").concat(id, "&filters=consentStatus:").concat(status, "&page=").concat(page, "&size=").concat(size), {
+                    .get("".concat(process.env.REACT_APP_MAIN_SERVER_URL, "hiringhood/v1/job-seekers-profiles?contestId=").concat(id, "&filters=consentStatus:").concat(status, ",status:JOB_SEEKER_APPLIED&page=").concat(page, "&size=").concat(size), {
                     headers: {
                         Authorization: "Bearer ".concat(sessionStorage.getItem("react-token")),
                     },
