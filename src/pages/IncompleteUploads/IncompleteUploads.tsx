@@ -138,9 +138,6 @@ const IncompleteUploads = (props) => {
       const result6 = response.data.data.filter(
         (data) => data.profileLastCompletedStep === "6"
       );
-      const result7 = response.data.data.filter(
-        (data) => data.profileLastCompletedStep === "7"
-      );
 
       setInStepCount({
         step1: (result1.length > 0 && result1[0].count) || 0,
@@ -149,7 +146,6 @@ const IncompleteUploads = (props) => {
         step4: (result4.length > 0 && result4[0].count) || 0,
         step5: (result5.length > 0 && result5[0].count) || 0,
         step6: (result6.length > 0 && result6[0].count) || 0,
-        step7: (result7.length > 0 && result7[0].count) || 0,
       });
     } else {
       setInStepCount({
@@ -159,7 +155,6 @@ const IncompleteUploads = (props) => {
         step4: 0,
         step5: 0,
         step6: 0,
-        step7: 0,
       });
     }
   };
@@ -199,7 +194,7 @@ const IncompleteUploads = (props) => {
       enablePivot: true,
       enableValue: true,
       resizable: true,
-      cellStyle: { "borderRightColor": "#DFE5FF" },
+      cellStyle: { borderRightColor: "#DFE5FF" },
     };
   }, []);
 
@@ -294,12 +289,6 @@ const IncompleteUploads = (props) => {
                 id: 6,
                 value: 6,
               },
-              {
-                label: "Step 7",
-                tooltip: "Review and Submit",
-                id: 7,
-                value: 7,
-              },
             ]}
             countsList={[
               { _id: 1, count: inStepCount.step1 },
@@ -308,7 +297,6 @@ const IncompleteUploads = (props) => {
               { _id: 4, count: inStepCount.step4 },
               { _id: 5, count: inStepCount.step5 },
               { _id: 6, count: inStepCount.step6 },
-              { _id: 7, count: inStepCount.step7 },
             ]}
             setSelectedButton={setSelectedButton}
             selectedButton={selectedButtonId}

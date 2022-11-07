@@ -32,6 +32,17 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
     }
   }, [activeTabState]);
 
+  const handleTabChange = (newTab) => {
+    setActiveTab(newTab);
+    dispatch({
+      type: "STEP_CHANGE",
+      data: {
+        step: 0,
+        tab: newTab,
+      },
+    });
+  };
+
   const jobSeekerTabs = [
     {
       title: "Add Profile",
@@ -104,7 +115,7 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
       />
       <TabWrapper
         tabIndex={activeTab}
-        setTabIndex={setActiveTab}
+        setTabIndex={handleTabChange}
         tabsList={jobSeekerTabs}
       />
       {jobSeekerTabs.map((tab) => (

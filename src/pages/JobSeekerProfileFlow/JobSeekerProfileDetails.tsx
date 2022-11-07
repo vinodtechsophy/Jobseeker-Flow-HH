@@ -46,7 +46,7 @@ import {
 const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
   const dispatch = useAppDispatch();
   const userDataState = useAppSelector((state) => state.currentUser);
-
+  // const activeTabState = useAppSelector((state) => state.tabsState);
   const [freshGraduate, setFreshGraduate] = React.useState(false);
   const [loader, setLoader] = React.useState(false);
   const [workStatus, setWorkStatus] = React.useState("");
@@ -71,6 +71,11 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
     expectedCtcLakh: string;
     expectedCtcThousand: string;
   }>({ expectedCtcLakh: "", expectedCtcThousand: "" });
+
+  // useEffect(() => {
+  //   props.handleComplete(0);
+  //   props.handleComplete(1);
+  // }, [activeTabState.activeStep]);
 
   const handleTotalExperience = (value: string, index: number) => {
     if (index === 0)

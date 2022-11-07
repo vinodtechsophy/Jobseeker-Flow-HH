@@ -198,7 +198,7 @@ export const consentStatusFilterContestLinkedJobsekeers = async (
 ) => {
   return await axios
     .get(
-      `${process.env.REACT_APP_MAIN_SERVER_URL}hiringhood/v1/job-seekers-profiles?contestId=${id}&filters=consentStatus:${status}&page=${page}&size=${size}`,
+      `${process.env.REACT_APP_MAIN_SERVER_URL}hiringhood/v1/job-seekers-profiles?contestId=${id}&filters=consentStatus:${status},status:JOB_SEEKER_APPLIED&page=${page}&size=${size}`,
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,
