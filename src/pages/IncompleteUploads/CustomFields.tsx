@@ -34,17 +34,32 @@ const useStyles = makeStyles(() => ({
 export const Icons = (params: any) => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
+  const userDataState = useAppSelector((state) => state.currentUser);
+
   const handleClick = () => {
     console.log("Hello");
   };
 
   console.log(params.data.profileLastCompletedStep);
   const handleStepOpen = () => {
+    const jobSeekerId = params.data._id;
+    const profileId = params.data.profileId;
     dispatch({
       type: "STEP_CHANGE",
       data: {
         step: params.data.profileLastCompletedStep - 1,
         tab: 0,
+      },
+    });
+    dispatch({
+      type: "USER_ADD",
+      data: {
+        userData: {
+          ...userDataState.userData,
+          profileId,
+          jobSeekerId,
+        },
+        userId: userDataState?.userId,
       },
     });
   };

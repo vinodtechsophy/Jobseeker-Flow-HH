@@ -2,7 +2,7 @@ import React, { ReactElement, FC, useEffect, useState } from "react";
 import { Step, Stack, Stepper, StepLabel } from "@mui/material";
 import "../../App.css";
 import { JobSeekerAddStepper, ColorlibConnector } from "../StepIcons";
-import { useAppSelector } from "../../services/StoreHooks";
+import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
 import { FULL_WIDTH_PERCENT } from "../../InternalStyles/CommonStyleVariables";
 import "./JobSeekerProfileFlow.css";
 import JobSeekerProfileDetails from "./JobSeekerProfileDetails";
@@ -15,6 +15,8 @@ import JobSeekerAddProfile from "../../pages/JobSeekerAddProfile/JobSeekerAddPro
 
 const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
   const changeStep = useAppSelector((state) => state.tabsState);
+  const dispatch = useAppDispatch();
+
   const [activeStep, setActiveStep] = React.useState(
     changeStep.activeStep || 0
   );
@@ -26,6 +28,15 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
 
   const userDataState = useAppSelector((state) => state.currentUser);
   console.log("Active Step " + JSON.stringify(changeStep));
+  useEffect(() => {
+    dispatch({
+      type: "STEP_CHANGE",
+      data: {
+        step: 0,
+        tab: 0,
+      },
+    });
+  }, []);
 
   useEffect(() => {}, [gotData]);
 

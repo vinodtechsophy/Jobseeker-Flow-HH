@@ -26,6 +26,19 @@ const JobSeekerBase: FC<any> = (props): ReactElement => {
   const [open, setOpen] = React.useState(false);
   const [type, setType] = React.useState("");
 
+  const stepAndTabForAddProile = () => {
+    dispatch({
+      type: "STEP_CHANGE",
+      data: {
+        step: 0,
+        tab: 0,
+      },
+    });
+  };
+  useEffect(() => {
+    stepAndTabForAddProile();
+  }, []);
+
   useEffect(() => {
     if (activeTabState.activeTab !== activeTab) {
       setActiveTab(activeTabState.activeTab);
