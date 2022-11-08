@@ -42,16 +42,26 @@ var useStyles = makeStyles(function () { return ({
 export var Icons = function (params) {
     var classes = useStyles();
     var dispatch = useAppDispatch();
+    var userDataState = useAppSelector(function (state) { return state.currentUser; });
     var handleClick = function () {
         console.log("Hello");
     };
     console.log(params.data.profileLastCompletedStep);
     var handleStepOpen = function () {
+        var jobSeekerId = params.data._id;
+        var profileId = params.data.profileId;
         dispatch({
             type: "STEP_CHANGE",
             data: {
                 step: params.data.profileLastCompletedStep - 1,
                 tab: 0,
+            },
+        });
+        dispatch({
+            type: "USER_ADD",
+            data: {
+                userData: __assign(__assign({}, userDataState.userData), { profileId: profileId, jobSeekerId: jobSeekerId }),
+                userId: userDataState === null || userDataState === void 0 ? void 0 : userDataState.userId,
             },
         });
     };

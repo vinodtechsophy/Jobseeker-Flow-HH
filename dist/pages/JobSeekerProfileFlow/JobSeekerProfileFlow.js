@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import { Step, Stack, Stepper, StepLabel } from "@mui/material";
 import "../../App.css";
 import { JobSeekerAddStepper, ColorlibConnector } from "../StepIcons";
-import { useAppSelector } from "../../services/StoreHooks";
+import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
 import { FULL_WIDTH_PERCENT } from "../../InternalStyles/CommonStyleVariables";
 import "./JobSeekerProfileFlow.css";
 import JobSeekerProfileDetails from "./JobSeekerProfileDetails";
@@ -26,12 +26,22 @@ import JobSeekerProfileUpload from "./JobSeekerProfileUpload";
 import JobSeekerAddProfile from "../../pages/JobSeekerAddProfile/JobSeekerAddProfile";
 var JobSeekerProfileFlow = function (props) {
     var changeStep = useAppSelector(function (state) { return state.tabsState; });
+    var dispatch = useAppDispatch();
     var _a = React.useState(changeStep.activeStep || 0), activeStep = _a[0], setActiveStep = _a[1];
     var _b = React.useState({}), completed = _b[0], setCompleted = _b[1];
     var _c = React.useState(false), gotData = _c[0], setGotData = _c[1];
     var _d = useState(true), progressBar = _d[0], setProgressBar = _d[1];
     var userDataState = useAppSelector(function (state) { return state.currentUser; });
     console.log("Active Step " + JSON.stringify(changeStep));
+    useEffect(function () {
+        dispatch({
+            type: "STEP_CHANGE",
+            data: {
+                step: 0,
+                tab: 0,
+            },
+        });
+    }, []);
     useEffect(function () { }, [gotData]);
     var steps = [
         "Duplication Check with hiringhood",

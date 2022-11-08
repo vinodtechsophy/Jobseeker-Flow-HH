@@ -35,6 +35,18 @@ var JobSeekerBase = function (props) {
     var _b = React.useState(""), dataMessage = _b[0], setDataMessage = _b[1];
     var _c = React.useState(false), open = _c[0], setOpen = _c[1];
     var _d = React.useState(""), type = _d[0], setType = _d[1];
+    var stepAndTabForAddProile = function () {
+        dispatch({
+            type: "STEP_CHANGE",
+            data: {
+                step: 0,
+                tab: 0,
+            },
+        });
+    };
+    useEffect(function () {
+        stepAndTabForAddProile();
+    }, []);
     useEffect(function () {
         if (activeTabState.activeTab !== activeTab) {
             setActiveTab(activeTabState.activeTab);
