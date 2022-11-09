@@ -113,10 +113,12 @@ var DuplicationFailed = function (props) {
                         duplicationFailedRecords = (_c = (_b = response === null || response === void 0 ? void 0 : response.data) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.content;
                         result = duplicationFailedRecords.map(function (item, index) {
                             var janmDin = item.dateOfBirth;
-                            if (janmDin)
+                            if (janmDin == "N/A")
+                                item.dateOfBirth = "N/A";
+                            else
                                 item.dateOfBirth = moment(janmDin).utc().format("DD-MM-YYYY");
                             if (item.status === "PDC_PASS") {
-                                item.fdcStatus = "NA";
+                                item.fdcStatus = "N/A";
                             }
                             else if (item.status === "FDC_PASS") {
                                 item.status = "PDC_PASS";
