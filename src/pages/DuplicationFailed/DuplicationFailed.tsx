@@ -85,11 +85,11 @@ const DuplicationFailed: FC<any> = (props) => {
 
       let result = duplicationFailedRecords.map((item, index) => {
         const janmDin = item.dateOfBirth;
-        if (janmDin)
-          item.dateOfBirth = moment(janmDin).utc().format("DD-MM-YYYY");
+        if (janmDin == "N/A") item.dateOfBirth = "N/A";
+        else item.dateOfBirth = moment(janmDin).utc().format("DD-MM-YYYY");
 
         if (item.status === "PDC_PASS") {
-          item.fdcStatus = "NA";
+          item.fdcStatus = "N/A";
         } else if (item.status === "FDC_PASS") {
           item.status = "PDC_PASS";
           item.fdcStatus = "FDC_PASS";
