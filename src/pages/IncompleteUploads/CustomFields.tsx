@@ -41,27 +41,29 @@ export const Icons = (params: any) => {
   };
 
   console.log(params.data.profileLastCompletedStep);
-  const handleStepOpen = () => {
+  const handleStepOpen = async () => {
     const jobSeekerId = params.data._id;
     const profileId = params.data.profileId;
-    dispatch({
-      type: "STEP_CHANGE",
-      data: {
-        step: params.data.profileLastCompletedStep - 1,
-        tab: 0,
-      },
-    });
-    dispatch({
-      type: "USER_ADD",
-      data: {
-        userData: {
-          ...userDataState.userData,
-          profileId,
-          jobSeekerId,
+    if (jobSeekerId && profileId) {
+      await dispatch({
+        type: "USER_ADD",
+        data: {
+          userData: {
+            ...userDataState.userData,
+            profileId,
+            jobSeekerId,
+          },
+          userId: userDataState?.userId,
         },
-        userId: userDataState?.userId,
-      },
-    });
+      });
+      dispatch({
+        type: "STEP_CHANGE",
+        data: {
+          step: params.data.profileLastCompletedStep - 1,
+          tab: 0,
+        },
+      });
+    }
   };
 
   const state = useAppSelector((state) => state.tabsState);

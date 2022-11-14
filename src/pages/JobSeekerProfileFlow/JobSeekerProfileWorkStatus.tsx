@@ -296,7 +296,7 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
       callPrefillData();
       fetchCityDetails();
     }
-  }, []);
+  }, [userDataState.userData.profileId, props.profileDataId]);
 
   const fetchCityDetails = async () => {
     const cityRawData = await getCityList();
