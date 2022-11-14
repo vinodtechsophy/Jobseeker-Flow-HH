@@ -286,7 +286,7 @@ var JobSeekerProfileWorkStatus = function (props) {
             callPrefillData();
             fetchCityDetails();
         }
-    }, []);
+    }, [userDataState.userData.profileId, props.profileDataId]);
     var fetchCityDetails = function () { return __awaiter(void 0, void 0, void 0, function () {
         var cityRawData;
         return __generator(this, function (_a) {
