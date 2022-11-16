@@ -158,7 +158,8 @@ const JobSeekerProfileReview: FC<any> = (props): ReactElement => {
       };
       const stepUpdateResponse = await updateJobSeekerProfile(bodyPayload);
       if (stepUpdateResponse?.data?.success) {
-        props.setProgressBar(false);
+        // props.setProgressBar(false);
+        props.handleNext();
         setSubmitted(true);
         setDialogAction({
           ...dialogAction,
@@ -178,7 +179,11 @@ const JobSeekerProfileReview: FC<any> = (props): ReactElement => {
     <>
       {submitted ? (
         <>
-          <JobSeekerCompleteProfile contestId={props.contestId} />
+          <JobSeekerCompleteProfile
+            contestId={props.contestId}
+            setActiveStep={props.setActiveStep}
+            handleNotComplete={props.handleNotComplete}
+          />
         </>
       ) : (
         <>
@@ -196,64 +201,66 @@ const JobSeekerProfileReview: FC<any> = (props): ReactElement => {
                 <div className="stepper-container">
                   {JobSeekerReviewArray.map((reviewData, index) => (
                     <>
-                      {((userDataState.userData.workStatus === 'Fresh Graduate' || userDataState.userData.workStatus === "Not-Working") &&
-                        index !== 4) || (userDataState.userData.workStatus === "Working") ? (
-                          <div
-                            className="review-card"
-                            key={index}
-                            style={
-                              currentIndex === index
-                                ? {
-                                    height: "auto",
-                                    flexDirection: "column",
-                                  }
-                                : {
-                                    height: "68px",
-                                    flexDirection: "row",
-                                  }
-                            }
-                          >
-                            <span className="review-title-text">
-                              {reviewData.label}
-                            </span>
-                            <div>
-                              {reviewData.navigate ? (
-                                <Button
-                                  variant="text"
-                                  className="review-buttons-color"
-                                  onClick={() => props.setActiveStep(index)}
-                                >
-                                  <img
-                                    src="assets/images/Edit.png"
-                                    className="review-icons"
-                                  />
-                                  Edit
-                                </Button>
-                              ) : null}
-                              <IconButton
-                                aria-label="plus"
+                      {((userDataState.userData.workStatus ===
+                        "Fresh Graduate" ||
+                        userDataState.userData.workStatus === "Not-Working") &&
+                        index !== 4) ||
+                      userDataState.userData.workStatus === "Working" ? (
+                        <div
+                          className="review-card"
+                          key={index}
+                          style={
+                            currentIndex === index
+                              ? {
+                                  height: "auto",
+                                  flexDirection: "column",
+                                }
+                              : {
+                                  height: "68px",
+                                  flexDirection: "row",
+                                }
+                          }
+                        >
+                          <span className="review-title-text">
+                            {reviewData.label}
+                          </span>
+                          <div>
+                            {reviewData.navigate ? (
+                              <Button
+                                variant="text"
                                 className="review-buttons-color"
-                                onClick={() => {
-                                  if (currentIndex !== index)
-                                    setCurrentIndex(index);
-                                  else setCurrentIndex(-1);
-                                }}
+                                onClick={() => props.setActiveStep(index)}
                               >
-                                {currentIndex !== index ? (
-                                  <AddIcon />
-                                ) : (
-                                  <RemoveIcon />
-                                )}
-                              </IconButton>
-                            </div>
-                            {currentIndex === index ? (
-                              <div style={{ width: "100%" }}>
-                                {renderCurrentSelection(index + 1)}
-                              </div>
+                                <img
+                                  src="assets/images/Edit.png"
+                                  className="review-icons"
+                                />
+                                Edit
+                              </Button>
                             ) : null}
+                            <IconButton
+                              aria-label="plus"
+                              className="review-buttons-color"
+                              onClick={() => {
+                                if (currentIndex !== index)
+                                  setCurrentIndex(index);
+                                else setCurrentIndex(-1);
+                              }}
+                            >
+                              {currentIndex !== index ? (
+                                <AddIcon />
+                              ) : (
+                                <RemoveIcon />
+                              )}
+                            </IconButton>
                           </div>
-                        ) : null
-                        }
+                          {currentIndex === index ? (
+                            <div style={{ width: "100%" }}>
+                              {renderCurrentSelection(index + 1)}
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
                     </>
                   ))}
                 </div>

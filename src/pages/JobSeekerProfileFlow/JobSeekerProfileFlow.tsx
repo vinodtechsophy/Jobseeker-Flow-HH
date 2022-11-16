@@ -39,6 +39,10 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
   }, []);
 
   useEffect(() => {}, [gotData]);
+  useEffect(() => {
+    if (activeStep <= 6) setProgressBar(true);
+    else setProgressBar(false);
+  }, [activeStep]);
 
   const steps = [
     "Duplication Check with hiringhood",
@@ -69,6 +73,13 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
   const handleComplete = (position?: number) => {
     const newCompleted = completed;
     newCompleted[position || activeStep] = true;
+    setCompleted(newCompleted);
+  };
+  const handleNotComplete = (position: number) => {
+    const newCompleted = completed;
+    for (let i = position; i < 7; i++) {
+      newCompleted[i] = false;
+    }
     setCompleted(newCompleted);
   };
 
@@ -167,6 +178,8 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
           contestId={props.contestId}
           setOpen={props.setOpen}
           setType={props.setType}
+          handleNext={handleNext}
+          handleNotComplete={handleNotComplete}
           setActiveStep={setActiveStep}
           setDataMessage={props.setDataMessage}
           setProgressBar={setProgressBar}

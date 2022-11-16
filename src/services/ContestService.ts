@@ -6,7 +6,12 @@ import {
   CONTESTSETTINGS_EDIT,
   GET_CONTEST_SETTINGS,
   FILTER_CONTEST_DETAILS_RELATION,
+  CONTEST_JOB_DESCRIPTION,
   CONTEST_ABOUT_EMPLOYER,
+  CONTEST_PARTNERS,
+  CONTEST_REWARDS,
+  CONTEST_FAQ,
+  CONTEST_TC,
 } from "../constants";
 
 let token = sessionStorage.getItem("react-token");
@@ -15,6 +20,21 @@ export const getContestDetails = async (filterId?: string) => {
   return axios
     .get(
       `${process.env.REACT_APP_MAIN_SERVER_URL}${GET_CONTEST_DETAILS}${filterId}&formId=${CONTEST_DETAILS}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,
+        },
+      }
+    )
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+export const getCompleteContestDetails = async (filterId?: string) => {
+  return axios
+    .get(
+      `${process.env.REACT_APP_MAIN_SERVER_URL}${GET_CONTEST_DETAILS}${filterId}&formId=${CONTEST_DETAILS}&relations=${CONTEST_DETAILS}:parentDataId,${CONTEST_JOB_DESCRIPTION}:parentDataId,${CONTEST_ABOUT_EMPLOYER}:parentDataId,${CONTEST_PARTNERS}:parentDataId,${CONTEST_REWARDS}:parentDataId,${CONTEST_FAQ}:parentDataId,${CONTEST_TC}:parentDataId`,
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("react-token")}`,

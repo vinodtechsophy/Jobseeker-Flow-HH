@@ -115,7 +115,11 @@ const JobSeekerCompleteProfile = (props) => {
             {JOB_SEEKER_COMLETE_PROFILE_TEXT.notification2}
           </Typography>
           <div style={{ padding: "3vw 0 3vw 0" }}>
-            <JobSeekerProfileCard contestId={props.contestId} />
+            <JobSeekerProfileCard
+              contestId={props.contestId}
+              setActiveStep={props.setActiveStep}
+              handleNotComplete={props.handleNotComplete}
+            />
           </div>
           <div>
             <TabWrapper

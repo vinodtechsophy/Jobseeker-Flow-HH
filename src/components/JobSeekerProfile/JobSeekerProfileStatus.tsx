@@ -40,6 +40,7 @@ interface ContestDetails {
   employmentType: string;
   jobTitle: string;
   company: string;
+  employerName: string;
   experience: string;
   tools: string;
   noticePeriod: string;
@@ -81,6 +82,8 @@ const renderDetails = (image: string, text: any, tooltip: string) => {
 
 interface Props {
   contestDetails: ContestDetails;
+  setActiveStep: any;
+  handleNotComplete: any;
 }
 
 const JobSeekerProfileStatus: React.FC<Props> = (props) => {
@@ -190,7 +193,7 @@ const JobSeekerProfileStatus: React.FC<Props> = (props) => {
                 <div className="job-details-container-container-container">
                   {renderDetails(
                     companyImage,
-                    contestDetails.company,
+                    contestDetails.employerName,
                     "company"
                   )}
                 </div>
@@ -257,6 +260,10 @@ const JobSeekerProfileStatus: React.FC<Props> = (props) => {
                       width: "100%",
                     }}
                     variant="contained"
+                    onClick={() => {
+                      props.setActiveStep(0);
+                      props.handleNotComplete(0);
+                    }}
                   >
                     Add More Profiles
                   </Button>

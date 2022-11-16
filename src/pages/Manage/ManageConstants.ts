@@ -931,7 +931,7 @@ export const subStages = {
 
       {
         title: "JS Accepted Other Offer & Not Available/Interested",
-        value: "jsAcceptedOtherOffer&NotAvailable/Interested",
+        value: "jsAcceptedOtherOfferNotAvailableInterested",
       },
     ],
 
@@ -984,7 +984,7 @@ export const subStages = {
       },
     ],
 
-    " jsAcceptedOtherOffer&NotAvailable/Interested": [
+    jsAcceptedOtherOfferNotAvailableInterested: [
       {
         title: "N/A",
         value: "N/A",
@@ -1048,7 +1048,7 @@ export const subStages = {
       },
       {
         title: "Js Accepted Other Offer & Not Avaliable/Interested",
-        value: "jsAcceptedOtherOffer&NotAvaliable/Interested",
+        value: "jsAcceptedOtherOfferNotAvaliableInterested",
       },
     ],
 
@@ -1112,7 +1112,7 @@ export const subStages = {
         value: "N/A",
       },
     ],
-    jsAcceptedOtherOffer: [
+    jsAcceptedOtherOfferNotAvaliableInterested: [
       {
         title: "N/A",
         value: "N/A",

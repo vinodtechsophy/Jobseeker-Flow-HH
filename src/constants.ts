@@ -46,8 +46,14 @@ export const SPECIAL_CHAR_ERR_MSG = "cannot have special characters or numbers";
 export const ALPHA_ERR_MSG = "Cannot have special charaters";
 export const URL_ERROR_MSG = "Please Enter proper URL";
 export const CONTEST_DETAILS = "991273137863147520";
-export const JD_PATCH_FORM = "999548019411533824";
+export const CONTEST_JOB_DESCRIPTION = "987206209585152000";
 export const CONTEST_ABOUT_EMPLOYER = "991289466351534080";
+export const CONTEST_PARTNERS = "991216836487430144";
+export const CONTEST_REWARDS = "991228257841463296";
+export const CONTEST_FAQ = "991292833987575808";
+export const CONTEST_TC = "991921928840691712";
+
+export const JD_PATCH_FORM = "999548019411533824";
 export const JOB_SEEKER_RESUME = "1018802975069569024";
 export const OFFER_LETTER = "1022430257759780864";
 export const FILTER_CONTEST_DETAILS_RELATION =

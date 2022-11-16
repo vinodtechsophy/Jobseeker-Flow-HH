@@ -25,10 +25,18 @@ import {
 } from "../../services/JobSeekerService";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import moment from "moment";
+import { makeStyles } from "@mui/styles";
+import { ClassNames } from "@emotion/react";
+const useStyles = makeStyles(() => ({
+  mailIcon: { color: "#4D6CD9", margin: "10px" },
+  actions1: { fontSize: "15px !important" },
+  bookmarkIcon: { color: "#4D6CD9" },
+}));
 
 const AllJs = (props) => {
   const gridRef = useRef<AgGridReact<any>>();
   const { contestId } = props;
+  const classes = useStyles();
 
   const [columnDefs, setColumnDefs] = useState(LISTING_GENERIC_HEADERS);
   const [pageSize, setPageSize] = useState(10);
@@ -44,6 +52,7 @@ const AllJs = (props) => {
   const [floatingFilter, setFloatingFilter] = React.useState(true);
   const [aggregateCount, setAggregateCount] = useState<any[]>([]);
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
+  const [isMailCheckEnable, setIsMailCheckEnable] = useState(false);
 
   useEffect(() => {
     getTableRowData(contestId, selectedButtonValue, pageNo, pageSize);
@@ -346,8 +355,18 @@ const AllJs = (props) => {
           </div>
           <div>
             <Box display={"inline-block"}>
-              <Checkbox /> 10 Selected
-              <MailOutlineIcon sx={{ color: "#4D6CD9" }} />
+              <Box display={"inline-block"} className={classes.actions1}>
+                <Checkbox
+                  disabled={selectedRows.length > 0 ? false : true}
+                  checked={isMailCheckEnable}
+                  onChange={() => setIsMailCheckEnable(!isMailCheckEnable)}
+                />{" "}
+                {selectedRows.length} Selected
+              </Box>
+              <MailOutlineIcon
+                sx={{ color: "#4D6CD9" }}
+                className={classes.mailIcon}
+              />
               <img src={BookmarkIcon} />
             </Box>
           </div>

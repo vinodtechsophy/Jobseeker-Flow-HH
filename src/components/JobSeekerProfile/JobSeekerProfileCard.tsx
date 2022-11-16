@@ -1,17 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React, { ReactElement, FC, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import JobSeekerProfileStatus from "./JobSeekerProfileStatus";
-import { CONTEST_DETAILS } from "../../constants";
+import {
+  CONTEST_DETAILS,
+  CONTEST_JOB_DESCRIPTION,
+  CONTEST_ABOUT_EMPLOYER,
+  CONTEST_PARTNERS,
+  CONTEST_REWARDS,
+  CONTEST_FAQ,
+  CONTEST_TC,
+} from "../../constants";
 
-import { getContestDetails } from "../../services/ContestService";
-const JobSeekerProfileCard = (props) => {
+import {
+  getContestDetails,
+  getCompleteContestDetails,
+} from "../../services/ContestService";
+const JobSeekerProfileCard: FC<any> = (props): ReactElement => {
   const [userId, setUserId] = React.useState("");
   const [contestData, setContestData] = React.useState<any>({});
   const [tagImage, setTagImage] = React.useState<any>("actively-hiring");
   const [badgeImage, setBadgeImage] = React.useState<any>("most-wanted");
+  const relations = [
+    CONTEST_DETAILS,
+    CONTEST_JOB_DESCRIPTION,
+    CONTEST_ABOUT_EMPLOYER,
+    CONTEST_PARTNERS,
+    CONTEST_REWARDS,
+    CONTEST_FAQ,
+    CONTEST_TC,
+  ];
   const searchContestDeatils = async (contestId: string) => {
-    const response = await getContestDetails(contestId);
-    setContestData(response?.data?.data[0].formData);
+    const response = await getCompleteContestDetails(contestId);
+    if (response?.data?.success) {
+      let rawData = response?.data?.data?.[0];
+      let joinedFormData = {};
+      const parentFormData = rawData.formData;
+      parentFormData.id = rawData.id;
+
+      relations.forEach((relation) => {
+        const relationFormData = rawData[relation]?.[0]?.formData;
+        if (relationFormData) {
+          delete relationFormData.parentDataId;
+          joinedFormData = Object.assign({
+            ...joinedFormData,
+            ...relationFormData,
+          });
+        }
+      });
+
+      const formattedData = { ...joinedFormData, ...parentFormData };
+      setContestData(formattedData);
+    } else {
+      console.log("error");
+    }
   };
   useEffect(() => {
     searchContestDeatils(props.contestId);
@@ -28,6 +69,7 @@ const JobSeekerProfileCard = (props) => {
     jobTitle: contestData?.position || "shsjsjs",
     bounty: `₹ ${contestData?.bounty}` || "30000",
     company: contestData?.company || "RBI",
+    employerName: contestData?.employerName || "Freelancer",
     experience: `${contestData?.experience || 2} to ${
       contestData?.experience1 || 4
     } yrs`,
@@ -68,6 +110,7 @@ const JobSeekerProfileCard = (props) => {
       jobTitle: contestData?.position || "shsjsjs",
       bounty: `₹ ${contestData?.bounty}` || "30000",
       company: contestData?.company || "RBI",
+      employerName: contestData?.employerName,
       experience: `${contestData?.experienceFrom || 0} to ${
         contestData?.experienceTo || 0
       } yrs`,
@@ -105,7 +148,11 @@ const JobSeekerProfileCard = (props) => {
   return (
     <>
       <div>
-        <JobSeekerProfileStatus contestDetails={contestDetails} />
+        <JobSeekerProfileStatus
+          contestDetails={contestDetails}
+          setActiveStep={props.setActiveStep}
+          handleNotComplete={props.handleNotComplete}
+        />
       </div>
     </>
   );
