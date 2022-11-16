@@ -171,7 +171,8 @@ var JobSeekerProfileReview = function (props) {
                 case 2:
                     stepUpdateResponse = _c.sent();
                     if ((_b = stepUpdateResponse === null || stepUpdateResponse === void 0 ? void 0 : stepUpdateResponse.data) === null || _b === void 0 ? void 0 : _b.success) {
-                        props.setProgressBar(false);
+                        // props.setProgressBar(false);
+                        props.handleNext();
                         setSubmitted(true);
                         setDialogAction(__assign(__assign({}, dialogAction), { isOpen: false }));
                     }
@@ -187,15 +188,18 @@ var JobSeekerProfileReview = function (props) {
             }
         });
     }); };
-    return (_jsx(_Fragment, { children: submitted ? (_jsx(_Fragment, { children: _jsx(JobSeekerCompleteProfile, { contestId: props.contestId }) })) : (_jsx(_Fragment, { children: _jsx("div", __assign({ className: "form-internal-body" }, { children: checkout ? (
+    return (_jsx(_Fragment, { children: submitted ? (_jsx(_Fragment, { children: _jsx(JobSeekerCompleteProfile, { contestId: props.contestId, setActiveStep: props.setActiveStep, handleNotComplete: props.handleNotComplete }) })) : (_jsx(_Fragment, { children: _jsx("div", __assign({ className: "form-internal-body" }, { children: checkout ? (
                 // <SignupSuccess
                 //     setCheckout={setCheckout}
                 //     setActiveStep={props.setActiveStep}
                 //     setCompleted={props.setCompleted}
                 //     displayMessage={`Your Contest has been Published Successfully`}
                 // />
-                _jsx(_Fragment, {})) : (_jsxs(_Fragment, { children: [_jsx("div", __assign({ className: "stepper-container" }, { children: JobSeekerReviewArray.map(function (reviewData, index) { return (_jsx(_Fragment, { children: ((userDataState.userData.workStatus === 'Fresh Graduate' || userDataState.userData.workStatus === "Not-Working") &&
-                                    index !== 4) || (userDataState.userData.workStatus === "Working") ? (_jsxs("div", __assign({ className: "review-card", style: currentIndex === index
+                _jsx(_Fragment, {})) : (_jsxs(_Fragment, { children: [_jsx("div", __assign({ className: "stepper-container" }, { children: JobSeekerReviewArray.map(function (reviewData, index) { return (_jsx(_Fragment, { children: ((userDataState.userData.workStatus ===
+                                    "Fresh Graduate" ||
+                                    userDataState.userData.workStatus === "Not-Working") &&
+                                    index !== 4) ||
+                                    userDataState.userData.workStatus === "Working" ? (_jsxs("div", __assign({ className: "review-card", style: currentIndex === index
                                         ? {
                                             height: "auto",
                                             flexDirection: "column",

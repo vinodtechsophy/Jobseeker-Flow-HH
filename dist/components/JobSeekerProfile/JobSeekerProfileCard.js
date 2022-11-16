@@ -1,3 +1,14 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,21 +49,49 @@ import { jsx as _jsx, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import JobSeekerProfileStatus from "./JobSeekerProfileStatus";
-import { getContestDetails } from "../../services/ContestService";
+import { CONTEST_DETAILS, CONTEST_JOB_DESCRIPTION, CONTEST_ABOUT_EMPLOYER, CONTEST_PARTNERS, CONTEST_REWARDS, CONTEST_FAQ, CONTEST_TC, } from "../../constants";
+import { getCompleteContestDetails, } from "../../services/ContestService";
 var JobSeekerProfileCard = function (props) {
     var _a = React.useState(""), userId = _a[0], setUserId = _a[1];
     var _b = React.useState({}), contestData = _b[0], setContestData = _b[1];
     var _c = React.useState("actively-hiring"), tagImage = _c[0], setTagImage = _c[1];
     var _d = React.useState("most-wanted"), badgeImage = _d[0], setBadgeImage = _d[1];
+    var relations = [
+        CONTEST_DETAILS,
+        CONTEST_JOB_DESCRIPTION,
+        CONTEST_ABOUT_EMPLOYER,
+        CONTEST_PARTNERS,
+        CONTEST_REWARDS,
+        CONTEST_FAQ,
+        CONTEST_TC,
+    ];
     var searchContestDeatils = function (contestId) { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        var _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, getContestDetails(contestId)];
+        var response, rawData_1, joinedFormData_1, parentFormData, formattedData;
+        var _a, _b, _c;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
+                case 0: return [4 /*yield*/, getCompleteContestDetails(contestId)];
                 case 1:
-                    response = _b.sent();
-                    setContestData((_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.data[0].formData);
+                    response = _d.sent();
+                    if ((_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.success) {
+                        rawData_1 = (_c = (_b = response === null || response === void 0 ? void 0 : response.data) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c[0];
+                        joinedFormData_1 = {};
+                        parentFormData = rawData_1.formData;
+                        parentFormData.id = rawData_1.id;
+                        relations.forEach(function (relation) {
+                            var _a, _b;
+                            var relationFormData = (_b = (_a = rawData_1[relation]) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.formData;
+                            if (relationFormData) {
+                                delete relationFormData.parentDataId;
+                                joinedFormData_1 = Object.assign(__assign(__assign({}, joinedFormData_1), relationFormData));
+                            }
+                        });
+                        formattedData = __assign(__assign({}, joinedFormData_1), parentFormData);
+                        setContestData(formattedData);
+                    }
+                    else {
+                        console.log("error");
+                    }
                     return [2 /*return*/];
             }
         });
@@ -70,6 +109,7 @@ var JobSeekerProfileCard = function (props) {
         jobTitle: (contestData === null || contestData === void 0 ? void 0 : contestData.position) || "shsjsjs",
         bounty: "\u20B9 ".concat(contestData === null || contestData === void 0 ? void 0 : contestData.bounty) || "30000",
         company: (contestData === null || contestData === void 0 ? void 0 : contestData.company) || "RBI",
+        employerName: (contestData === null || contestData === void 0 ? void 0 : contestData.employerName) || "Freelancer",
         experience: "".concat((contestData === null || contestData === void 0 ? void 0 : contestData.experience) || 2, " to ").concat((contestData === null || contestData === void 0 ? void 0 : contestData.experience1) || 4, " yrs"),
         tools: (contestData === null || contestData === void 0 ? void 0 : contestData.technicalSkills) || "java",
         noticePeriod: (contestData === null || contestData === void 0 ? void 0 : contestData.requiredNoticePeriod) || "5",
@@ -107,6 +147,7 @@ var JobSeekerProfileCard = function (props) {
             jobTitle: (contestData === null || contestData === void 0 ? void 0 : contestData.position) || "shsjsjs",
             bounty: "\u20B9 ".concat(contestData === null || contestData === void 0 ? void 0 : contestData.bounty) || "30000",
             company: (contestData === null || contestData === void 0 ? void 0 : contestData.company) || "RBI",
+            employerName: contestData === null || contestData === void 0 ? void 0 : contestData.employerName,
             experience: "".concat((contestData === null || contestData === void 0 ? void 0 : contestData.experienceFrom) || 0, " to ").concat((contestData === null || contestData === void 0 ? void 0 : contestData.experienceTo) || 0, " yrs"),
             tools: (contestData === null || contestData === void 0 ? void 0 : contestData.technicalSkills) || "java",
             noticePeriod: (contestData === null || contestData === void 0 ? void 0 : contestData.requiredNoticePeriod) || "5",
@@ -138,6 +179,6 @@ var JobSeekerProfileCard = function (props) {
             ],
         });
     }, [contestData]);
-    return (_jsx(_Fragment, { children: _jsx("div", { children: _jsx(JobSeekerProfileStatus, { contestDetails: contestDetails }) }) }));
+    return (_jsx(_Fragment, { children: _jsx("div", { children: _jsx(JobSeekerProfileStatus, { contestDetails: contestDetails, setActiveStep: props.setActiveStep, handleNotComplete: props.handleNotComplete }) }) }));
 };
 export default JobSeekerProfileCard;
