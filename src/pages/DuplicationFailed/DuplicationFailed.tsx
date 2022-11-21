@@ -93,7 +93,10 @@ const DuplicationFailed: FC<any> = (props) => {
         } else if (item.status === "FDC_PASS") {
           item.status = "PDC_PASS";
           item.fdcStatus = "FDC_PASS";
-        } else {
+        } else if (item.status === 'PDC_FAIL' || item.status === 'PDC_WARNING') {
+          item.status = "PDC_FAIL";
+          item.fdcStatus = "N/A";
+        } else if (item.status === 'FDC_FAIL') {
           item.status = "PDC_PASS";
           item.fdcStatus = "FDC_FAIL";
         }
@@ -293,7 +296,7 @@ const DuplicationFailed: FC<any> = (props) => {
           pageChange={pageChange}
           pageSizeChange={pageSizeChange}
           currentPage={pageNo + 1}
-          // onCellValueChanged={onCellValueChanged}
+        // onCellValueChanged={onCellValueChanged}
         />
       </Grid>
     </Grid>

@@ -129,7 +129,7 @@ export const LISTING_GENERIC_HEADERS = [
   },
   {
     headerName: "Recruiter Uploading",
-    field: "recruiterUploading",
+    field: "referredBy",
     hide: false,
     minWidth: 230,
     filter: "agTextColumnFilter",
