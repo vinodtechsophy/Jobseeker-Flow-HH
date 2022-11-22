@@ -102,11 +102,13 @@ var JobSeekerProfileWorkStatus = function (props) {
     };
     var validExp = {};
     var submitWorkStatus = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var profileWorkStatusMap, profileDetailsResponse, error_1;
+        var date, profileWorkStatusMap, profileDetailsResponse, error_1;
         var _a;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
+                    date = new Date();
+                    date.setHours(0, 0, 0, 0);
                     setLoader(true);
                     if (experiencedRef === null || experiencedRef === void 0 ? void 0 : experiencedRef.current)
                         validExp = experiencedRef === null || experiencedRef === void 0 ? void 0 : experiencedRef.current.childMethod();
@@ -114,10 +116,25 @@ var JobSeekerProfileWorkStatus = function (props) {
                         validExp = freshGraduateRef === null || freshGraduateRef === void 0 ? void 0 : freshGraduateRef.current.childMethod();
                     console.log(validExp);
                     profileWorkStatusMap = buildDetailsPayload(validExp);
-                    if (!!validateWorkStatusMap(profileWorkStatusMap)) return [3 /*break*/, 1];
+                    console.log(profileWorkStatusMap);
+                    if (!validateWorkStatusMap(profileWorkStatusMap)) {
+                        props.setOpen(true);
+                        props.setType(WARNING_KEY);
+                        props.setDataMessage("Please enter all work status details");
+                        setLoader(false);
+                        return [2 /*return*/];
+                    }
+                    if (new Date(profileWorkStatusMap.joiningDate).getTime() >= date.getTime()) {
+                        props.setOpen(true);
+                        props.setType(WARNING_KEY);
+                        props.setDataMessage("Joining date cannot be future date");
+                        setLoader(false);
+                        return [2 /*return*/];
+                    }
+                    if (!(new Date(profileWorkStatusMap.collegeStartDate).getTime() >= new Date(profileWorkStatusMap.collegeEndDate).getTime())) return [3 /*break*/, 1];
                     props.setOpen(true);
                     props.setType(WARNING_KEY);
-                    props.setDataMessage("Please enter all work status details");
+                    props.setDataMessage("College start date should not be greater than college end date");
                     setLoader(false);
                     return [2 /*return*/];
                 case 1:

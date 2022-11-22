@@ -301,7 +301,10 @@ var IncompleteUploads = function (props) {
                                                 } }) })), _jsx(Tooltip, __assign({ title: "Mail All Recruiters", placement: "top", arrow: true }, { children: _jsx(MailOutlineIcon, { className: classes.iconStyle, onClick: function () {
                                                     return isMailCheckEnable &&
                                                         window.open("https://mail.google.com/mail/?view=cm&fs=1&to=email@domain.example,test@gamil.com");
-                                                } }) }))] })) })] })) })), _jsx(ColumnSelection, { AllColumns: columnDefs.map(function (cl) {
+                                                } }) }))] })) })] })) })), _jsx(ColumnSelection, { AllColumns: columnDefs.filter(function (col) {
+                        return col.headerName !== "All";
+                    })
+                        .map(function (cl) {
                         return Object.assign({ headerName: cl.headerName, hide: !cl.hide });
                     }), setColumnsDisplay: setColumnsDisplay, onClose: setColumnsListOpen, open: columnsListOpen }), _jsx(Grid, __assign({ item: true, xs: 12 }, { children: _jsx(AgGridWithPagination, { gridRef: gridRef, rowData: rowData, columnDefs: columnDefs, defaultColDef: defaultColDef, autoGroupColumnDef: autoGroupColumnDef, suppressRowClickSelection: true, groupSelectsChildren: true, rowSelection: "multiple", rowGroupPanelShow: "always", pivotPanelShow: "always", enableRangeSelection: true, pagination: false, pageSize: pageSize, onSelectionChanged: onSelectionChanged, pageSizeArray: PAGE_SIZE_ARRAY, totalPages: totalPages, pageChange: pageChange, pageSizeChange: pageSizeChange }) }))] })) }));
 };
