@@ -14,7 +14,7 @@ const StepCount: FC<any> = (props): ReactElement => {
       <ButtonGroup fullWidth sx={{ gap: "1%", px: "1vw", my: 2 }}>
         {props.StepCountList.map((button: any) => (
           <Tooltip
-            title={props.StepCountList.length < 6 ? "" : button.tooltip}
+            title={button.tooltip}
             key={button.id}
             placement="top"
             arrow

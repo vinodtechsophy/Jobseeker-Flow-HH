@@ -39,6 +39,7 @@ const DuplicationFailed: FC<any> = (props) => {
   const [floatingFilter, setFloatingFilter] = React.useState(true);
   const [pageNo, setPageNo] = React.useState(0);
   const [agCount, setAgCount] = useState<any>({});
+  const [isMailCheckEnable, setIsMailCheckEnable] = useState(false);
 
   useEffect(() => {
     apiCallAggregateData();
@@ -260,17 +261,23 @@ const DuplicationFailed: FC<any> = (props) => {
           </div>
           <div>
             <Box display={"inline-block"}>
-              <Checkbox /> 10 Selected
-              {/* <DeleteOutlineIcon color="primary" /> */}
+            <Checkbox
+                  disabled={selectedRows.length > 0 ? false : true}
+                  checked={isMailCheckEnable}
+                  onChange={() => setIsMailCheckEnable(!isMailCheckEnable)}
+                />{" "}
+                {selectedRows.length} Selected
               <img src={BookmarkIcon} />
             </Box>
           </div>
         </div>
       </Grid>
       <ColumnSelection
-        AllColumns={columnDefs.map((cl) =>
-          Object.assign({ headerName: cl.headerName, hide: !cl.hide })
-        )}
+        AllColumns={columnDefs.filter((col) =>
+          col.headerName !== "All")
+          .map((cl) =>
+            Object.assign({ headerName: cl.headerName, hide: !cl.hide })
+          )}
         setColumnsDisplay={setColumnsDisplay}
         onClose={setColumnsListOpen}
         open={columnsListOpen}

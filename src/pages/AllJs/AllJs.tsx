@@ -170,9 +170,8 @@ const AllJs = (props) => {
         const lakh = Data.profileDetailsMap?.expectedCtc?.expectedCtcLakh;
         const thousand =
           Data.profileDetailsMap?.expectedCtc?.expectedCtcThousand;
-        Data.expectedCtc = `${lakh ? lakh : 0} lakh ${
-          thousand ? thousand : 0
-        } thousand`;
+        Data.expectedCtc = `${lakh ? lakh : 0} lakh ${thousand ? thousand : 0
+          } thousand`;
         Data.currentLocation = Data.profileWorkStatusMap?.currentLocation;
         Data.currentlyWorking = Data.profileDetailsMap?.currentlyWorking;
         Data.noticePeriod = Data.profileNoticePeriodMap?.noticePeriod;
@@ -373,9 +372,11 @@ const AllJs = (props) => {
         </div>
       </Grid>
       <ColumnSelection
-        AllColumns={columnDefs.map((cl) =>
-          Object.assign({ headerName: cl.headerName, hide: !cl.hide })
-        )}
+        AllColumns={columnDefs.filter((col) =>
+          col.headerName !== "All")
+          .map((cl) =>
+            Object.assign({ headerName: cl.headerName, hide: !cl.hide })
+          )}
         setColumnsDisplay={setColumnsDisplay}
         onClose={setColumnsListOpen}
         open={columnsListOpen}
@@ -400,7 +401,7 @@ const AllJs = (props) => {
           totalPages={totalPages}
           pageChange={pageChange}
           pageSizeChange={pageSizeChange}
-          // onCellValueChanged={onCellValueChanged}
+        // onCellValueChanged={onCellValueChanged}
         />
       </Grid>
     </Grid>

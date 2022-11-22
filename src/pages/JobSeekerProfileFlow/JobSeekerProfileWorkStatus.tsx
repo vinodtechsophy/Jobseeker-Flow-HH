@@ -110,6 +110,8 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
   let validExp = {};
 
   const submitWorkStatus = async () => {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
     setLoader(true);
 
     if (experiencedRef?.current)
@@ -119,13 +121,33 @@ const JobSeekerProfileWorkStatus: FC<any> = (props): ReactElement => {
       validExp = freshGraduateRef?.current.childMethod();
     console.log(validExp);
     const profileWorkStatusMap = buildDetailsPayload(validExp);
+    console.log(profileWorkStatusMap);
     if (!validateWorkStatusMap(profileWorkStatusMap)) {
       props.setOpen(true);
       props.setType(WARNING_KEY);
       props.setDataMessage("Please enter all work status details");
       setLoader(false);
       return;
-    } else {
+    }
+    if (
+      new Date(profileWorkStatusMap.joiningDate).getTime() >= date.getTime()
+    ) {
+      props.setOpen(true);
+      props.setType(WARNING_KEY);
+      props.setDataMessage("Joining date cannot be future date");
+      setLoader(false);
+      return;
+    }
+    if (
+      new Date(profileWorkStatusMap.collegeStartDate).getTime() >= new Date(profileWorkStatusMap.collegeEndDate).getTime()
+    ) {
+      props.setOpen(true);
+      props.setType(WARNING_KEY);
+      props.setDataMessage("College start date should not be greater than college end date");
+      setLoader(false);
+      return;
+    } 
+     else {
       if (profileWorkStatusMap.jobDurationType === JOB_TYPE_OPTIONS[0]) {
         delete profileWorkStatusMap.payrollEmployer;
         delete profileWorkStatusMap.endClient;

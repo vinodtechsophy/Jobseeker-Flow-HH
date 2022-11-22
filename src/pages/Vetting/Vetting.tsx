@@ -374,9 +374,11 @@ const Vetting = (props) => {
         </div>
       </Grid>
       <ColumnSelection
-        AllColumns={columnDefs.map((cl) =>
-          Object.assign({ headerName: cl.headerName, hide: !cl.hide })
-        )}
+        AllColumns={columnDefs.filter((col) =>
+          col.headerName !== "All")
+          .map((cl) =>
+            Object.assign({ headerName: cl.headerName, hide: !cl.hide })
+          )}
         setColumnsDisplay={setColumnsDisplay}
         onClose={setColumnsListOpen}
         open={columnsListOpen}
@@ -401,7 +403,7 @@ const Vetting = (props) => {
           totalPages={totalPages}
           pageChange={pageChange}
           pageSizeChange={pageSizeChange}
-          // onCellValueChanged={onCellValueChanged}
+        // onCellValueChanged={onCellValueChanged}
         />
       </Grid>
     </Grid>
