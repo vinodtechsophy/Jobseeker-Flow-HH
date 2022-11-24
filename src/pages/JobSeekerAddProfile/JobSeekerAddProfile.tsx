@@ -47,6 +47,78 @@ const JobSeekerAddProfile: FC<any> = (props: any): ReactElement => {
   const [emaiId, setEmaiId] = useState("No data");
   const [mobileNumber, setMobileNumber] = useState("No data");
   const [panNumber, setPanNumber] = useState("No Data");
+  const [rowData, setRowData] = useState([
+    {
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      interviewed: "no",
+      pdcStatus: null,
+      profileLogId: "",
+      dob: "",
+      lastFiveDigitOfPan: "",
+      fdcStatus: null,
+      uploadProfile: "",
+      contestId: props.contestId,
+    },
+    {
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      interviewed: "no",
+      pdcStatus: null,
+      profileLogId: "",
+      dob: "",
+      lastFiveDigitOfPan: "",
+      fdcStatus: null,
+      uploadProfile: "",
+      contestId: props.contestId,
+    },
+    {
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      interviewed: "no",
+      pdcStatus: null,
+      profileLogId: "",
+      dob: "",
+      lastFiveDigitOfPan: "",
+      fdcStatus: null,
+      uploadProfile: "",
+      contestId: props.contestId,
+    },
+    {
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      interviewed: "no",
+      pdcStatus: null,
+      profileLogId: "",
+      dob: "",
+      lastFiveDigitOfPan: "",
+      fdcStatus: null,
+      uploadProfile: "",
+      contestId: props.contestId,
+    },
+    {
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      interviewed: "no",
+      pdcStatus: null,
+      profileLogId: "",
+      dob: "",
+      lastFiveDigitOfPan: "",
+      fdcStatus: null,
+      uploadProfile: "",
+      contestId: props.contestId,
+    },
+  ]);
 
   const fulfillUpload = (data: any) => {
     callResumeUpload(data?.profileLogId);
@@ -98,78 +170,78 @@ const JobSeekerAddProfile: FC<any> = (props: any): ReactElement => {
       },
     });
   };
-  let r1 = {
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
-    interviewed: "no",
-    pdcStatus: null,
-    profileLogId: "",
-    dob: "",
-    lastFiveDigitOfPan: "",
-    fdcStatus: null,
-    uploadProfile: "",
-    contestId: props.contestId,
-  };
-  let r2 = {
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
-    interviewed: "no",
-    pdcStatus: null,
-    profileLogId: "",
-    dob: "",
-    lastFiveDigitOfPan: "",
-    fdcStatus: null,
-    uploadProfile: "",
-    contestId: props.contestId,
-  };
-  let r3 = {
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
-    interviewed: "no",
-    pdcStatus: null,
-    profileLogId: "",
-    dob: "",
-    lastFiveDigitOfPan: "",
-    fdcStatus: null,
-    uploadProfile: "",
-    contestId: props.contestId,
-  };
-  let r4 = {
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
-    interviewed: "no",
-    pdcStatus: null,
-    profileLogId: "",
-    dob: "",
-    lastFiveDigitOfPan: "",
-    fdcStatus: null,
-    uploadProfile: "",
-    contestId: props.contestId,
-  };
-  let r5 = {
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
-    interviewed: "no",
-    pdcStatus: null,
-    profileLogId: "",
-    dob: "",
-    lastFiveDigitOfPan: "",
-    fdcStatus: null,
-    uploadProfile: "",
-    contestId: props.contestId,
-  };
+  // let r1 = {
+  //   firstName: "",
+  //   lastName: "",
+  //   phoneNumber: "",
+  //   email: "",
+  //   interviewed: "no",
+  //   pdcStatus: null,
+  //   profileLogId: "",
+  //   dob: "",
+  //   lastFiveDigitOfPan: "",
+  //   fdcStatus: null,
+  //   uploadProfile: "",
+  //   contestId: props.contestId,
+  // };
+  // let r2 = {
+  //   firstName: "",
+  //   lastName: "",
+  //   phoneNumber: "",
+  //   email: "",
+  //   interviewed: "no",
+  //   pdcStatus: null,
+  //   profileLogId: "",
+  //   dob: "",
+  //   lastFiveDigitOfPan: "",
+  //   fdcStatus: null,
+  //   uploadProfile: "",
+  //   contestId: props.contestId,
+  // };
+  // let r3 = {
+  //   firstName: "",
+  //   lastName: "",
+  //   phoneNumber: "",
+  //   email: "",
+  //   interviewed: "no",
+  //   pdcStatus: null,
+  //   profileLogId: "",
+  //   dob: "",
+  //   lastFiveDigitOfPan: "",
+  //   fdcStatus: null,
+  //   uploadProfile: "",
+  //   contestId: props.contestId,
+  // };
+  // let r4 = {
+  //   firstName: "",
+  //   lastName: "",
+  //   phoneNumber: "",
+  //   email: "",
+  //   interviewed: "no",
+  //   pdcStatus: null,
+  //   profileLogId: "",
+  //   dob: "",
+  //   lastFiveDigitOfPan: "",
+  //   fdcStatus: null,
+  //   uploadProfile: "",
+  //   contestId: props.contestId,
+  // };
+  // let r5 = {
+  //   firstName: "",
+  //   lastName: "",
+  //   phoneNumber: "",
+  //   email: "",
+  //   interviewed: "no",
+  //   pdcStatus: null,
+  //   profileLogId: "",
+  //   dob: "",
+  //   lastFiveDigitOfPan: "",
+  //   fdcStatus: null,
+  //   uploadProfile: "",
+  //   contestId: props.contestId,
+  // };
   // let row = [r1, r2, r3, r4, r5];
-  let row = [{ ...r1 }, { ...r2 }, { ...r3 }, { ...r4 }, { ...r5 }];
+  // let row = [{ ...r1 }, { ...r2 }, { ...r3 }, { ...r4 }, { ...r5 }];
   const defaultColDef = useMemo(() => {
     return {
       flex: 1,
@@ -217,9 +289,46 @@ const JobSeekerAddProfile: FC<any> = (props: any): ReactElement => {
   }, []);
   const clearTable = () => {
     // console.log(gridRef.current);
-    row = [{ ...r1 }, { ...r2 }, { ...r3 }, { ...r4 }, { ...r5 }];
-    gridRef.current?.api.setRowData(row);
-    // console.log(gridRef.current);
+    const rowVariable = {
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      interviewed: "no",
+      pdcStatus: null,
+      profileLogId: "",
+      dob: "",
+      lastFiveDigitOfPan: "",
+      fdcStatus: null,
+      uploadProfile: "",
+      contestId: props.contestId,
+    };
+    setRowData([
+      { ...rowVariable },
+      { ...rowVariable },
+      { ...rowVariable },
+      { ...rowVariable },
+      { ...rowVariable },
+    ]);
+  };
+
+  const addRow = () => {
+    const rowVariable = {
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      interviewed: "no",
+      pdcStatus: null,
+      profileLogId: "",
+      dob: "",
+      lastFiveDigitOfPan: "",
+      fdcStatus: null,
+      uploadProfile: "",
+      contestId: props.contestId,
+    };
+    const newRow = Object.create(rowVariable);
+    setRowData([...rowData, newRow]);
   };
   const labelValuePairForShowData = (key, value) => {
     return (
@@ -431,7 +540,7 @@ const JobSeekerAddProfile: FC<any> = (props: any): ReactElement => {
             <div style={{ marginLeft: "2vw" }}>
               <GridItem
                 gridRef={gridRef}
-                rowData={row}
+                rowData={rowData}
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
                 suppressRowClickSelection={true}
@@ -445,6 +554,23 @@ const JobSeekerAddProfile: FC<any> = (props: any): ReactElement => {
                 onCellValueChanged={onCellValueChanged}
                 fulfillUpload={fulfillUpload}
               />
+            </div>
+            <div style={{ marginLeft: "1vw", marginTop: "1vw" }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <div className="forms-button-container">
+                    <div>
+                      <Button
+                        variant="outlined"
+                        className="save-draft-button"
+                        onClick={() => addRow()}
+                      >
+                        Add Rows
+                      </Button>
+                    </div>
+                  </div>
+                </Grid>
+              </Grid>
             </div>
           </div>
         </div>

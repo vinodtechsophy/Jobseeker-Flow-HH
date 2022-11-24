@@ -262,8 +262,7 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
             profileDetailsMap.workStatus == WorkStatusArray[1]) &&
           (!profileDetailsMap.fixedCtc.fixedCtcLakh ||
             parseInt(profileDetailsMap.fixedCtc.fixedCtcLakh) == 0 ||
-            !profileDetailsMap.variableCtc.variableCtcLakh ||
-            parseInt(profileDetailsMap.variableCtc.variableCtcLakh) == 0)
+            !profileDetailsMap.variableCtc.variableCtcLakh)
         ) {
           props.setType(WARNING_KEY);
           props.setDataMessage("Please fill Current CTC details");

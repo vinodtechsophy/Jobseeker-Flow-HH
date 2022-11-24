@@ -103,7 +103,7 @@ export var Icons = function (params) {
                     dispatch({
                         type: "STEP_CHANGE",
                         data: {
-                            step: params.data.profileLastCompletedStep - 1,
+                            step: params.data.profileLastCompletedStep,
                             tab: 0,
                         },
                     });

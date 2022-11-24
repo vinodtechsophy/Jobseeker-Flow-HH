@@ -452,7 +452,7 @@ export var CustomDOBInputBox = function (params) {
     //   ? new Date(new Date().setFullYear(new Date().getFullYear() - 18))
     //   : params.getValue()
     ), date = _a[0], setDate = _a[1];
-    var _b = useState(false), isDisable = _b[0], setIsDisable = _b[1];
+    var _b = useState(true), isDisable = _b[0], setIsDisable = _b[1];
     var id = "cell-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
     var elementName = "".concat(params.colDef.field, "-").concat(params.rowIndex, "-").concat(params.column.instanceId);
     var containerId = "container-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
@@ -467,7 +467,10 @@ export var CustomDOBInputBox = function (params) {
         }
     };
     useEffect(function () {
-        setIsDisable(!params.data.pdcStatus);
+        if (params.data.pdcStatus)
+            setIsDisable(false);
+        else
+            setIsDisable(true);
     }, [params.data.pdcStatus]);
     return (_jsx(LocalizationProvider, __assign({ dateAdapter: AdapterDayjs }, { children: _jsx(DatePicker, { label: "Custom input", views: ["year", "month", "day"], disabled: isDisable, value: date, inputFormat: "DD/MM/YYYY", onChange: function (newValue) {
                 handleChange(newValue);
@@ -485,7 +488,7 @@ export var PanInputBox = function (params) {
     var elementName = "".concat(params.colDef.field, "-").concat(params.rowIndex, "-").concat(params.column.instanceId);
     var containerId = "container-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
     var _a = useState(params.getValue()), panNumber = _a[0], setPanNumber = _a[1];
-    var _b = useState(false), isDisable = _b[0], setIsDisable = _b[1];
+    var _b = useState(true), isDisable = _b[0], setIsDisable = _b[1];
     var handleChange = function (event) {
         if (event.target.value.trim().length <= 5) {
             setPanNumber(event.target.value);
@@ -493,7 +496,10 @@ export var PanInputBox = function (params) {
         }
     };
     useEffect(function () {
-        setIsDisable(!params.data.pdcStatus);
+        if (params.data.pdcStatus)
+            setIsDisable(false);
+        else
+            setIsDisable(true);
     }, [params.data.pdcStatus]);
     useEffect(function () {
         if (params.getValue().trim() == "")
@@ -521,9 +527,12 @@ export var FDCStatusCheckButton = function (params) {
         title: "",
         body: "",
     }), result = _a[0], setResult = _a[1];
-    var _b = useState(false), isDisable = _b[0], setIsDisable = _b[1];
+    var _b = useState(true), isDisable = _b[0], setIsDisable = _b[1];
     useEffect(function () {
-        setIsDisable(!params.data.pdcStatus);
+        if (params.data.pdcStatus)
+            setIsDisable(false);
+        else
+            setIsDisable(true);
     }, [params.data.pdcStatus]);
     var classes = useStyles();
     var _c = React.useState(false), open = _c[0], setOpen = _c[1];
@@ -731,9 +740,12 @@ export var FDCStatusCheckButton = function (params) {
 };
 export var CustomUploadButton = function (params) {
     var classes = useStyles();
-    var _a = useState(false), isDisable = _a[0], setIsDisable = _a[1];
+    var _a = useState(true), isDisable = _a[0], setIsDisable = _a[1];
     useEffect(function () {
-        setIsDisable(!params.data.fdcStatus);
+        if (params.data.fdcStatus)
+            setIsDisable(false);
+        else
+            setIsDisable(true);
     }, [params.data.fdcStatus]);
     var navigateUpload = function () { };
     var id = "cell-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
@@ -755,11 +767,12 @@ export var ClearRowButton = function (params) {
         params.node.setDataValue("phoneNumber", "");
         params.node.setDataValue("email", "");
         params.node.setDataValue("interviewed", "no");
-        params.node.setDataValue("pdcStatus", "0");
+        params.node.setDataValue("pdcStatus", false);
         params.node.setDataValue("lastFiveDigitOfPan", "");
         params.node.setDataValue("dob", "");
-        params.node.setDataValue("fdcStatus", "0");
+        params.node.setDataValue("fdcStatus", false);
         params.node.setDataValue("uploadProfile", "");
+        console.log("first");
     };
     var id = "clear-row-".concat(params.rowIndex, "-").concat(params.column.instanceId);
     // const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;

@@ -575,7 +575,7 @@ export const CustomDOBInputBox = (params: any) => {
     //   ? new Date(new Date().setFullYear(new Date().getFullYear() - 18))
     //   : params.getValue()
   );
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
   const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
   const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
   const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
@@ -590,7 +590,8 @@ export const CustomDOBInputBox = (params: any) => {
     }
   };
   useEffect(() => {
-    setIsDisable(!params.data.pdcStatus);
+    if (params.data.pdcStatus) setIsDisable(false);
+    else setIsDisable(true);
   }, [params.data.pdcStatus]);
 
   return (
@@ -631,7 +632,7 @@ export const PanInputBox = (params: any) => {
   const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
   const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
   const [panNumber, setPanNumber] = useState(params.getValue());
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
 
   const handleChange = (event: any) => {
     if (event.target.value.trim().length <= 5) {
@@ -640,7 +641,8 @@ export const PanInputBox = (params: any) => {
     }
   };
   useEffect(() => {
-    setIsDisable(!params.data.pdcStatus);
+    if (params.data.pdcStatus) setIsDisable(false);
+    else setIsDisable(true);
   }, [params.data.pdcStatus]);
   useEffect(() => {
     if (params.getValue().trim() == "") setPanNumber(params.getValue());
@@ -680,10 +682,11 @@ export const FDCStatusCheckButton = (params: any) => {
     title: "",
     body: "",
   });
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
 
   useEffect(() => {
-    setIsDisable(!params.data.pdcStatus);
+    if (params.data.pdcStatus) setIsDisable(false);
+    else setIsDisable(true);
   }, [params.data.pdcStatus]);
 
   const classes = useStyles();
@@ -963,10 +966,11 @@ export const FDCStatusCheckButton = (params: any) => {
 
 export const CustomUploadButton = (params: any) => {
   const classes = useStyles();
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
 
   useEffect(() => {
-    setIsDisable(!params.data.fdcStatus);
+    if (params.data.fdcStatus) setIsDisable(false);
+    else setIsDisable(true);
   }, [params.data.fdcStatus]);
   const navigateUpload = () => {};
   const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
@@ -1008,11 +1012,12 @@ export const ClearRowButton = (params: any) => {
     params.node.setDataValue("phoneNumber", "");
     params.node.setDataValue("email", "");
     params.node.setDataValue("interviewed", "no");
-    params.node.setDataValue("pdcStatus", "0");
+    params.node.setDataValue("pdcStatus", false);
     params.node.setDataValue("lastFiveDigitOfPan", "");
     params.node.setDataValue("dob", "");
-    params.node.setDataValue("fdcStatus", "0");
+    params.node.setDataValue("fdcStatus", false);
     params.node.setDataValue("uploadProfile", "");
+    console.log("first");
   };
   const id = `clear-row-${params.rowIndex}-${params.column.instanceId}`;
   // const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;

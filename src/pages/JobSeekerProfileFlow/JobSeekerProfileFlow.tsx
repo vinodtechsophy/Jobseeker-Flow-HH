@@ -12,14 +12,16 @@ import JobSeekerProfileReview from "./JobSeekerProfileReview";
 import JobSeekerProfileJD from "./JobSeekerProfileJD";
 import JobSeekerProfileUpload from "./JobSeekerProfileUpload";
 import JobSeekerAddProfile from "../../pages/JobSeekerAddProfile/JobSeekerAddProfile";
+import { WorkStatusType } from "../../constants";
 
 const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
   const changeStep = useAppSelector((state) => state.tabsState);
   const dispatch = useAppDispatch();
 
   const [activeStep, setActiveStep] = React.useState(
-    changeStep.activeStep || 0
+    changeStep.activeStep - 1 < 0 ? 0 : changeStep.activeStep - 1 || 0
   );
+
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
   }>({});
@@ -27,6 +29,9 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
   const [progressBar, setProgressBar] = useState(true);
 
   const userDataState = useAppSelector((state) => state.currentUser);
+  const [jobStatus, setJobStatus] = React.useState(
+    userDataState.userData.workStatus
+  );
   console.log("Active Step " + JSON.stringify(changeStep));
   useEffect(() => {
     dispatch({
@@ -43,6 +48,9 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
     if (activeStep <= 6) setProgressBar(true);
     else setProgressBar(false);
   }, [activeStep]);
+  useEffect(() => {
+    handleCompletedStep(changeStep.activeStep);
+  }, [changeStep.activeStep]);
 
   const steps = [
     "Duplication Check with hiringhood",
@@ -59,9 +67,6 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
   };
 
   const handleNext = () => {
-    // if(isLastStep()) {
-    //   props.setComplete(true);
-    // }
     const newActiveStep = activeStep + 1;
     setActiveStep(newActiveStep);
   };
@@ -70,9 +75,49 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const checkWorkStatus = () => {
+    if (
+      userDataState.userData.workStatus === WorkStatusType.FRESHER ||
+      userDataState.userData.workStatus === WorkStatusType.JOBLESS
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const handleCompletedStep = (position?: number) => {
+    const newCompleted = Object.create(completed);
+    if (typeof position != "undefined") {
+      for (let i = 0; i < position; i++) {
+        if (i == 4 && checkWorkStatus()) continue;
+        newCompleted[i] = true;
+      }
+    } else {
+      for (let i = 1; i < activeStep; i++) {
+        if (i == 4 && checkWorkStatus()) continue;
+        newCompleted[i] = true;
+      }
+    }
+    console.log(newCompleted);
+    setCompleted(newCompleted);
+  };
   const handleComplete = (position?: number) => {
-    const newCompleted = completed;
-    newCompleted[position || activeStep] = true;
+    const newCompleted = Object.create(completed);
+    if (typeof position != "undefined") {
+      for (let i = 0; i <= position; i++) {
+        if (i == 4 && checkWorkStatus()) continue;
+        console.log(checkWorkStatus());
+        console.log(i);
+        newCompleted[i] = true;
+      }
+    } else {
+      for (let i = 0; i <= activeStep; i++) {
+        if (i == 4 && checkWorkStatus()) continue;
+        newCompleted[i] = true;
+      }
+    }
+    console.log(newCompleted);
     setCompleted(newCompleted);
   };
   const handleNotComplete = (position: number) => {

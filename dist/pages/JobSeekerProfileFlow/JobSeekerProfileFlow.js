@@ -24,14 +24,16 @@ import JobSeekerProfileReview from "./JobSeekerProfileReview";
 import JobSeekerProfileJD from "./JobSeekerProfileJD";
 import JobSeekerProfileUpload from "./JobSeekerProfileUpload";
 import JobSeekerAddProfile from "../../pages/JobSeekerAddProfile/JobSeekerAddProfile";
+import { WorkStatusType } from "../../constants";
 var JobSeekerProfileFlow = function (props) {
     var changeStep = useAppSelector(function (state) { return state.tabsState; });
     var dispatch = useAppDispatch();
-    var _a = React.useState(changeStep.activeStep || 0), activeStep = _a[0], setActiveStep = _a[1];
+    var _a = React.useState(changeStep.activeStep - 1 < 0 ? 0 : changeStep.activeStep - 1 || 0), activeStep = _a[0], setActiveStep = _a[1];
     var _b = React.useState({}), completed = _b[0], setCompleted = _b[1];
     var _c = React.useState(false), gotData = _c[0], setGotData = _c[1];
     var _d = useState(true), progressBar = _d[0], setProgressBar = _d[1];
     var userDataState = useAppSelector(function (state) { return state.currentUser; });
+    var _e = React.useState(userDataState.userData.workStatus), jobStatus = _e[0], setJobStatus = _e[1];
     console.log("Active Step " + JSON.stringify(changeStep));
     useEffect(function () {
         dispatch({
@@ -49,6 +51,9 @@ var JobSeekerProfileFlow = function (props) {
         else
             setProgressBar(false);
     }, [activeStep]);
+    useEffect(function () {
+        handleCompletedStep(changeStep.activeStep);
+    }, [changeStep.activeStep]);
     var steps = [
         "Duplication Check with hiringhood",
         "Upload Resume",
@@ -62,18 +67,59 @@ var JobSeekerProfileFlow = function (props) {
         return activeStep === steps.length - 1;
     };
     var handleNext = function () {
-        // if(isLastStep()) {
-        //   props.setComplete(true);
-        // }
         var newActiveStep = activeStep + 1;
         setActiveStep(newActiveStep);
     };
     var handleBack = function () {
         setActiveStep(function (prevActiveStep) { return prevActiveStep - 1; });
     };
+    var checkWorkStatus = function () {
+        if (userDataState.userData.workStatus === WorkStatusType.FRESHER ||
+            userDataState.userData.workStatus === WorkStatusType.JOBLESS) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+    var handleCompletedStep = function (position) {
+        var newCompleted = Object.create(completed);
+        if (typeof position != "undefined") {
+            for (var i = 0; i < position; i++) {
+                if (i == 4 && checkWorkStatus())
+                    continue;
+                newCompleted[i] = true;
+            }
+        }
+        else {
+            for (var i = 1; i < activeStep; i++) {
+                if (i == 4 && checkWorkStatus())
+                    continue;
+                newCompleted[i] = true;
+            }
+        }
+        console.log(newCompleted);
+        setCompleted(newCompleted);
+    };
     var handleComplete = function (position) {
-        var newCompleted = completed;
-        newCompleted[position || activeStep] = true;
+        var newCompleted = Object.create(completed);
+        if (typeof position != "undefined") {
+            for (var i = 0; i <= position; i++) {
+                if (i == 4 && checkWorkStatus())
+                    continue;
+                console.log(checkWorkStatus());
+                console.log(i);
+                newCompleted[i] = true;
+            }
+        }
+        else {
+            for (var i = 0; i <= activeStep; i++) {
+                if (i == 4 && checkWorkStatus())
+                    continue;
+                newCompleted[i] = true;
+            }
+        }
+        console.log(newCompleted);
         setCompleted(newCompleted);
     };
     var handleNotComplete = function (position) {

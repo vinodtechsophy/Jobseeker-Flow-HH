@@ -220,8 +220,7 @@ var JobSeekerProfileDetails = function (props) {
                         profileDetailsMap.workStatus == WorkStatusArray[1]) &&
                         (!profileDetailsMap.fixedCtc.fixedCtcLakh ||
                             parseInt(profileDetailsMap.fixedCtc.fixedCtcLakh) == 0 ||
-                            !profileDetailsMap.variableCtc.variableCtcLakh ||
-                            parseInt(profileDetailsMap.variableCtc.variableCtcLakh) == 0))) return [3 /*break*/, 3];
+                            !profileDetailsMap.variableCtc.variableCtcLakh))) return [3 /*break*/, 3];
                     props.setType(WARNING_KEY);
                     props.setDataMessage("Please fill Current CTC details");
                     props.setOpen(true);

@@ -2,14 +2,27 @@ import React, { ReactElement, FC, useEffect } from "react";
 import { TextField } from "@mui/material";
 import "../../App.css";
 import { InlineInputModal } from "../../pages/JobSeekerProfileFlow/JobSeekerProfileFlowConstants";
+import { useAppDispatch } from "../../services/StoreHooks";
 
 const InlineInputs: FC<any> = (props): ReactElement => {
   const [inputValues, setInputValues] = React.useState<any[]>([]);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (JSON.stringify(props.value).length > 5)
       setInputValues((arr) => Object.values(props.value));
   }, []);
+  const dispatchNotificationData = (notifyData) => {
+    dispatch({
+      type: "SEND_ALERT",
+      data: {
+        enable: notifyData.enable,
+        type: notifyData.type,
+        message: notifyData.message,
+        duration: notifyData.duration,
+      },
+    });
+  };
 
   return (
     <div id="root-component-container">
@@ -57,10 +70,30 @@ const InlineInputs: FC<any> = (props): ReactElement => {
                     }
                   }}
                   onChange={(e) => {
-                    props.setValues(e.target.value.toString(), index);
-                    const tempInputs = [...inputValues];
-                    tempInputs[index] = e.target.value;
-                    setInputValues((arr) => tempInputs);
+                    if (input.type === "number") {
+                      if (Number(e.target.value) <= Number(input.max)) {
+                        props.setValues(e.target.value.toString(), index);
+                        const tempInputs = [...inputValues];
+                        tempInputs[index] = e.target.value;
+                        setInputValues((arr) => tempInputs);
+                      } else {
+                        props.setValues("", index);
+                        const tempInputs = [...inputValues];
+                        tempInputs[index] = "";
+                        setInputValues((arr) => tempInputs);
+                        dispatchNotificationData({
+                          enable: true,
+                          type: "warning",
+                          message: "Invalid data, plz try again.",
+                          duration: 2000,
+                        });
+                      }
+                    } else {
+                      props.setValues(e.target.value.toString(), index);
+                      const tempInputs = [...inputValues];
+                      tempInputs[index] = e.target.value;
+                      setInputValues((arr) => tempInputs);
+                    }
                   }}
                   InputProps={{
                     inputProps:
