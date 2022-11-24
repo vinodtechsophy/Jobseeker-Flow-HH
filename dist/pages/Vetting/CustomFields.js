@@ -115,6 +115,8 @@ var useStyles = makeStyles(function () { return ({
 }); });
 export var ResumeUploaded = function (params) {
     var classes = useStyles();
+    var id = "cell-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var containerId = "container-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
     var handleViewResume = function () { return __awaiter(void 0, void 0, void 0, function () {
         var resumeId;
         return __generator(this, function (_a) {
@@ -128,7 +130,7 @@ export var ResumeUploaded = function (params) {
             }
         });
     }); };
-    return (_jsx("div", __assign({ className: classes.commonAlignment }, { children: _jsx(Typography, __assign({ onClick: handleViewResume, className: classes.uploadText }, { children: "View Resume Uploaded" })) })));
+    return (_jsx("div", __assign({ id: containerId, className: classes.commonAlignment }, { children: _jsx(Typography, __assign({ id: id, onClick: handleViewResume, className: classes.uploadText }, { children: "View Resume Uploaded" })) })));
 };
 export var Icons = function (params) {
     var _a = useState(false), toggleDrawer = _a[0], setToggleDrawer = _a[1];
@@ -137,7 +139,15 @@ export var Icons = function (params) {
     var handleChat = function () {
         setToggleDrawer(true);
     };
-    return (_jsxs("div", __assign({ className: classes.commonAlignment }, { children: [_jsx(VisibilityIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(LocalPhoneRoundedIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(ChatBubbleOutlineIcon, { className: classes.iconColor, onClick: handleChat }), _jsx(DehazeIcon, { className: classes.iconColor, onClick: handleClick }), _jsx(Drawer, __assign({ anchor: "left", open: toggleDrawer, onClose: function () { return setToggleDrawer(false); } }, { children: _jsx(Box, __assign({ className: classes.chatBox }, { children: _jsx(MessageBox, { closeIt: function () { return setToggleDrawer(false); }, params: params }) })) }))] })));
+    var id = "cell-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var visibilityIconId = "visibility-icon-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var localPhoneRoundedIconId = "local-phone-rounded-icon-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var chatBubbleOutlineIconId = "chat-bubble-outline-icon-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var dehazeIconId = "dehaze-icon-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var drawerId = "drawer-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var elementName = "".concat(params.colDef.field, "-").concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var containerId = "container-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    return (_jsxs("div", __assign({ id: containerId, className: classes.commonAlignment }, { children: [_jsx(VisibilityIcon, { id: visibilityIconId, className: classes.iconColor, onClick: handleClick }), _jsx(LocalPhoneRoundedIcon, { id: localPhoneRoundedIconId, className: classes.iconColor, onClick: handleClick }), _jsx(ChatBubbleOutlineIcon, { id: chatBubbleOutlineIconId, className: classes.iconColor, onClick: handleChat }), _jsx(DehazeIcon, { id: dehazeIconId, className: classes.iconColor, onClick: handleClick }), _jsx(Drawer, __assign({ id: drawerId, anchor: "left", open: toggleDrawer, onClose: function () { return setToggleDrawer(false); } }, { children: _jsx(Box, __assign({ className: classes.chatBox }, { children: _jsx(MessageBox, { closeIt: function () { return setToggleDrawer(false); }, params: params }) })) }))] })));
 };
 export var CustomDropDown = function (params) {
     var _a = useState(false), disable = _a[0], setDisable = _a[1];
@@ -191,8 +201,23 @@ export var CustomDropDown = function (params) {
             setDisable(true);
         }
     }, []);
-    var id = "cellNo".concat(params.rowIndex).concat(params.column.instanceId);
+    var id = "cell-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var dropDownId = "drop-down-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var dropDownContainerId = "drop-down-container-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var dropDownName = "drop-down-".concat(params.colDef.field, "-").concat(params.rowIndex, "-").concat(params.column.instanceId);
     var iconId = "iconNo".concat(params.rowIndex).concat(params.column.instanceId);
+    var consentContainerId = "consent-container-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var consentPassContainerId = "consent-pass-container-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var consentPassButtonId = "consent-pass-button-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var consentPassButtonName = "consent-pass-button-name-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var consentFailContainerId = "consent-fail-container-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var consentFailButtonId = "consent-fail-button-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var consentFailButtonName = "consent-fail-button-name-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var consentPendingContainerId = "consent-pending-container-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var consentPendingButtonId = "consent-pending-button-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var consentPendingButtonName = "consent-pending-button-name-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var resendButtonId = "resend-button-no-".concat(params.rowIndex, "-").concat(params.column.instanceId);
+    var resendButtonName = "resend-button-name-".concat(params.rowIndex, "-").concat(params.column.instanceId);
     var _c = useState(""), message = _c[0], setMessage = _c[1];
     var dispatchNotificationData = function (notifyData) {
         dispatch({
@@ -355,21 +380,21 @@ export var CustomDropDown = function (params) {
             }
         });
     }); };
-    return (_jsxs(_Fragment, { children: [_jsx("div", { children: _jsxs("select", __assign({ id: id, className: classes.dropdown, value: option.option || "JOB_SEEKER_CONSENT_PENDING", onChange: handleChange, disabled: true
+    return (_jsxs(_Fragment, { children: [_jsx("div", __assign({ id: dropDownContainerId }, { children: _jsxs("select", __assign({ id: dropDownId, name: dropDownName, className: classes.dropdown, value: option.option || "JOB_SEEKER_CONSENT_PENDING", onChange: handleChange, disabled: true
                         ? option.option === "JOB_SEEKER_CONSENT_FAIL" ||
                             option.option === "JOB_SEEKER_CONSENT_PASS"
-                        : false }, { children: [_jsx("option", __assign({ value: "JOB_SEEKER_CONSENT_PASS" }, { children: "Passed" })), _jsx("option", __assign({ value: "JOB_SEEKER_CONSENT_PENDING" }, { children: "Pending" })), _jsx("option", __assign({ value: "JOB_SEEKER_CONSENT_FAIL" }, { children: "Failed" }))] })) }), _jsx("div", __assign({ className: classes.dropdownAlignment }, { children: (function () {
+                        : false }, { children: [_jsx("option", __assign({ value: "JOB_SEEKER_CONSENT_PASS" }, { children: "Passed" })), _jsx("option", __assign({ value: "JOB_SEEKER_CONSENT_PENDING" }, { children: "Pending" })), _jsx("option", __assign({ value: "JOB_SEEKER_CONSENT_FAIL" }, { children: "Failed" }))] })) })), _jsx("div", __assign({ id: consentContainerId, className: classes.dropdownAlignment }, { children: (function () {
                     if (option.option == "JOB_SEEKER_CONSENT_PASS") {
-                        return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, __assign({ className: classes.dropdownIconAlignment }, { children: _jsx(CheckCircleIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) })) })));
+                        return (_jsx(Tooltip, __assign({ id: consentPassContainerId, title: option.body, placement: "right-start" }, { children: _jsx(IconButton, __assign({ id: consentPassButtonId, name: consentPassButtonName, className: classes.dropdownIconAlignment }, { children: _jsx(CheckCircleIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) })) })));
                     }
                     else if (option.option == "JOB_SEEKER_CONSENT_FAIL") {
-                        return (_jsx(Tooltip, __assign({ title: option.body, placement: "right-start" }, { children: _jsx(IconButton, __assign({ className: classes.dropdownIconAlignment }, { children: _jsx(ErrorIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) })) })));
+                        return (_jsx(Tooltip, __assign({ id: consentFailContainerId, title: option.body, placement: "right-start" }, { children: _jsx(IconButton, __assign({ id: consentFailButtonId, name: consentFailButtonName, className: classes.dropdownIconAlignment }, { children: _jsx(ErrorIcon, { id: iconId, sx: { color: option.color, fontSize: "25px" } }) })) })));
                     }
                     else {
-                        return (_jsxs(_Fragment, { children: [_jsx(ColorButton, __assign({ variant: "contained", onClick: function () { return handleResend(params); } }, { children: "Resend" })), _jsx(Tooltip, __assign({ title: option.body || "Pending", placement: "right-start" }, { children: _jsx(IconButton, { children: _jsx(PauseCircleFilledIcon, { id: iconId, sx: {
+                        return (_jsxs(_Fragment, { children: [_jsx(ColorButton, __assign({ id: resendButtonId, name: resendButtonName, variant: "contained", onClick: function () { return handleResend(params); } }, { children: "Resend" })), _jsx(Tooltip, __assign({ id: consentPendingContainerId, title: option.body || "Pending", placement: "right-start" }, { children: _jsx(IconButton, __assign({ id: consentPendingButtonId, name: consentPendingButtonName }, { children: _jsx(PauseCircleFilledIcon, { id: iconId, sx: {
                                                 color: option.color || "#ff781f",
                                                 fontSize: "25px",
-                                            } }) }) }))] }));
+                                            } }) })) }))] }));
                     }
                 })() }))] }));
 };

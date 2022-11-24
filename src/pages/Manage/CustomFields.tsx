@@ -303,14 +303,20 @@ const useStyles = makeStyles(() => ({
 
 export const ResumeUploaded = (params) => {
   const classes = useStyles();
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
   const handleViewResume = async () => {
     const resumeId = params.getValue();
     await openFile(resumeId);
   };
 
   return (
-    <div className={classes.assessmentDialogueContent}>
-      <Typography onClick={handleViewResume} className={classes.uploadText}>
+    <div id={containerId} className={classes.assessmentDialogueContent}>
+      <Typography
+        id={id}
+        onClick={handleViewResume}
+        className={classes.uploadText}
+      >
         View Resume Uploaded
       </Typography>
     </div>
@@ -355,7 +361,10 @@ export const Icons = (params) => {
 
 export const MainStageDropDown = (params: any) => {
   const dispatch = useAppDispatch();
-  const id = `cellNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `element-name-${params.rowIndex}-${params.column.instanceId}`;
+
   const [mainStageSelected, setMainStageSelected] = useState<any>(
     params.data.jobSeekerMainStage
   );
@@ -413,9 +422,10 @@ export const MainStageDropDown = (params: any) => {
 
   return (
     <>
-      <div>
+      <div id={containerId}>
         <select
           id={id}
+          name={elementName}
           className={classes.dropdown}
           onChange={handleChange}
           defaultValue={mainStageSelected}
@@ -431,7 +441,9 @@ export const MainStageDropDown = (params: any) => {
 };
 
 export const SubStageDropDown = (params: any) => {
-  const id = `cellNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `element-name-${params.rowIndex}-${params.column.instanceId}`;
   const iconId = `iconNo${params.rowIndex}${params.column.instanceId}`;
   let initalValue: string;
   const [subStageSelected, setSubStageSelected] = useState<any>(
@@ -499,9 +511,10 @@ export const SubStageDropDown = (params: any) => {
   if (mainStageVal)
     return (
       <>
-        <div>
+        <div id={containerId}>
           <select
             id={id}
+            name={elementName}
             className={classes.dropdown}
             onChange={handleChange}
             defaultValue={subStageSelected}
@@ -519,7 +532,9 @@ export const SubStageDropDown = (params: any) => {
 };
 
 export const SubStageCommentsDropDown = (params: any) => {
-  const id = `cellNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `element-name-${params.rowIndex}-${params.column.instanceId}`;
   const iconId = `iconNo${params.rowIndex}${params.column.instanceId}`;
   const [mainStageVal, setMainStageVal] = useState<any>("");
   const [subStageVal, setSubStageVal] = useState<any>("");
@@ -573,9 +588,10 @@ export const SubStageCommentsDropDown = (params: any) => {
   if (mainStageVal && subStageVal)
     return (
       <>
-        <div>
+        <div id={containerId}>
           <select
             id={id}
+            name={elementName}
             className={classes.dropdown}
             onChange={handleChange}
             defaultValue={params.data.jobSeekerComment}
@@ -593,6 +609,27 @@ export const SubStageCommentsDropDown = (params: any) => {
 };
 
 export const ViewAssessments = (params) => {
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const cardId = `card-no-${params.rowIndex}-${params.column.instanceId}`;
+  const cardCloseButtonId = `card-close-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const assessmentTypeId = `assessment-type-drop-down-no-${params.rowIndex}-${params.column.instanceId}`;
+  const assessmentTypeName = `assessment-type-drop-down-name-${params.rowIndex}-${params.column.instanceId}`;
+  const assessmentPartnerId = `assessment-partner-drop-down-no-${params.rowIndex}-${params.column.instanceId}`;
+  const assessmentPartnerName = `assessment-partner-drop-down-name-${params.rowIndex}-${params.column.instanceId}`;
+  const assessmentButtonId = `assessment-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const assessmentButtonName = `assessment-button-name-${params.rowIndex}-${params.column.instanceId}`;
+
+  const viewAssessmentCardId = `view-assessment-card-no-${params.rowIndex}-${params.column.instanceId}`;
+  const viewAssessmentButtonId = `view-assessment-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const viewAssessmentButtonName = `view-assessment-button-name-${params.rowIndex}-${params.column.instanceId}`;
+  const uploadAssessmentCardId = `upload-assessment-card-no-${params.rowIndex}-${params.column.instanceId}`;
+  const uploadAssessmentButtonId = `upload-assessment-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const uploadAssessmentButtonName = `upload-assessment-button-name-${params.rowIndex}-${params.column.instanceId}`;
+  const deleteAssessmentContainerId = `delete-assessment-container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const deleteAssessmentCloseButtonId = `delete-assessment-close-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const deleteAssessmentYesButtonId = `delete-assessment-yes-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const deleteAssessmentCancelButtonId = `delete-assessment-cancel-button-no-${params.rowIndex}-${params.column.instanceId}`;
+
   const [toggleDrawer, setToggleDrawer] = useState(false);
   const [assessmentType, setAssessmentType] = React.useState<string[]>([]);
   const [assessmentPartner, setAssessmentPartner] = React.useState<string[]>(
@@ -662,7 +699,11 @@ export const ViewAssessments = (params) => {
 
   const ViewAssessmentReport = () => {
     return (
-      <Card className={classes.viewAssessmentCard} elevation={3}>
+      <Card
+        id={viewAssessmentCardId}
+        className={classes.viewAssessmentCard}
+        elevation={3}
+      >
         <Box className={classes.assessmentDialogueContent}>
           <div className={classes.commonMargin}>
             Assessment Type - Interview as a Service
@@ -712,7 +753,13 @@ export const ViewAssessments = (params) => {
           </div>
         </Box>
         <Box className={classes.assessmentButton}>
-          <Button variant="contained">View Assesment Report</Button>
+          <Button
+            id={viewAssessmentButtonId}
+            name={viewAssessmentButtonName}
+            variant="contained"
+          >
+            View Assesment Report
+          </Button>
         </Box>
       </Card>
     );
@@ -730,7 +777,11 @@ export const ViewAssessments = (params) => {
 
   const UploadAssessmentReport = () => {
     return (
-      <Card className={classes.viewAssessmentCard} elevation={3}>
+      <Card
+        id={uploadAssessmentCardId}
+        className={classes.viewAssessmentCard}
+        elevation={3}
+      >
         <Box textAlign={"center"}>
           <div className={classes.commonMargin}>
             Assessment Type - Interview as a Service
@@ -780,7 +831,13 @@ export const ViewAssessments = (params) => {
           </div>
         </Box>
         <Box className={classes.assessmentButton}>
-          <Button variant="contained">Upload Assesment Report</Button>
+          <Button
+            id={uploadAssessmentButtonId}
+            name={uploadAssessmentButtonName}
+            variant="contained"
+          >
+            Upload Assesment Report
+          </Button>
         </Box>
       </Card>
     );
@@ -799,6 +856,7 @@ export const ViewAssessments = (params) => {
   const DeleteAssessment = () => {
     return (
       <Dialog
+        id={deleteAssessmentContainerId}
         open={isDeleteBoxOpen}
         aria-labelledby="delete-dialog-title"
         aria-describedby="delete-dialog-description"
@@ -809,6 +867,7 @@ export const ViewAssessments = (params) => {
         >
           {"Delete Assessment"}
           <CloseIcon
+            id={deleteAssessmentCloseButtonId}
             onClick={() => {
               setIsDeleteBoxOpen(false);
             }}
@@ -825,10 +884,15 @@ export const ViewAssessments = (params) => {
           </DialogContentText>
         </DialogContent>
         <Box className={classes.assessmentDialogueAction}>
-          <Box className={classes.delete} onClick={handleDelete}>
+          <Box
+            id={deleteAssessmentYesButtonId}
+            className={classes.delete}
+            onClick={handleDelete}
+          >
             <Typography>Yes</Typography>
           </Box>
           <Box
+            id={deleteAssessmentCancelButtonId}
             className={classes.cancel}
             onClick={() => {
               setIsDeleteBoxOpen(false);
@@ -939,7 +1003,7 @@ export const ViewAssessments = (params) => {
   };
 
   return (
-    <div className={classes.assessmentDialogueContent}>
+    <div id={containerId} className={classes.assessmentDialogueContent}>
       <Typography onClick={handleClick} className={classes.uploadText}>
         View Assessments
       </Typography>
@@ -955,6 +1019,7 @@ export const ViewAssessments = (params) => {
               <Typography className={classes.viewAssessmentTitle}>
                 View Assessments
                 <CloseIcon
+                  id={cardCloseButtonId}
                   className={classes.closeIcon}
                   onClick={() => setToggleDrawer(false)}
                 />
@@ -967,7 +1032,11 @@ export const ViewAssessments = (params) => {
               Job Seeker Name - Rajesh Sharma
             </Typography>
             <Box>
-              <Card className={classes.assessmentDetailsCard} elevation={3}>
+              <Card
+                id={cardId}
+                className={classes.assessmentDetailsCard}
+                elevation={3}
+              >
                 <Box display={"flex"}>
                   <Typography p={2.2}>Assessment Type</Typography>
                   <FormControl className={classes.formControl} size="small">
@@ -976,7 +1045,8 @@ export const ViewAssessments = (params) => {
                     </InputLabel> */}
                     <Select
                       labelId="demo-multiple-checkbox-label"
-                      id="demo-multiple-checkbox"
+                      id={assessmentTypeId}
+                      name={assessmentTypeName}
                       multiple
                       value={assessmentType}
                       onChange={handleChangeAssessmentType}
@@ -1003,7 +1073,8 @@ export const ViewAssessments = (params) => {
                     </InputLabel> */}
                     <Select
                       labelId="demo-multiple-checkbox-label"
-                      id="demo-multiple-checkbox"
+                      id={assessmentPartnerId}
+                      name={assessmentPartnerName}
                       multiple
                       value={assessmentPartner}
                       onChange={handleChangeAssessmentPartner}
@@ -1028,7 +1099,13 @@ export const ViewAssessments = (params) => {
                     classes.section3
                   )}
                 >
-                  <Button variant="contained">Request Assessment</Button>
+                  <Button
+                    id={assessmentButtonId}
+                    name={assessmentButtonName}
+                    variant="contained"
+                  >
+                    Request Assessment
+                  </Button>
                 </Box>
               </Card>
               <Typography className={classes.partnerAssessment}>
@@ -1050,6 +1127,16 @@ export const ViewAssessments = (params) => {
 };
 
 export const Interview = (params: any) => {
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const scheduleButtonId = `schedule-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const scheduleButtonName = `schedule-button-name-${params.rowIndex}-${params.column.instanceId}`;
+  const scheduledrawerId = `schedule-drawer-no-${params.rowIndex}-${params.column.instanceId}`;
+  const cardId = `card-no-${params.rowIndex}-${params.column.instanceId}`;
+  const cardScheduleButtonId = `card-schedule-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const cardScheduleButtonName = `card-schedule-button-name-${params.rowIndex}-${params.column.instanceId}`;
+  const cardCloseButtonId = `card-close-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const cardDatePickerId = `card-date-picker-no-${params.rowIndex}-${params.column.instanceId}`;
+
   const classes = useStyles();
 
   const [toggleDrawer, setToggleDrawer] = useState(false);
@@ -1118,7 +1205,11 @@ export const Interview = (params: any) => {
         <Box>
           <Typography className={classes.viewAssessmentTitle}>
             Interview Scheduling
-            <CloseIcon onClick={handleClose} className={classes.closeIcon} />
+            <CloseIcon
+              id={cardCloseButtonId}
+              onClick={handleClose}
+              className={classes.closeIcon}
+            />
           </Typography>
         </Box>
         <Box className={classes.section2}>
@@ -1134,7 +1225,9 @@ export const Interview = (params: any) => {
                 value={moment(dateValue, "DD-MM-YYYY").format("MM-DD-YYYY")}
                 onChange={handleDateChange}
                 disablePast
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => (
+                  <TextField id={cardDatePickerId} {...params} />
+                )}
               />
             </LocalizationProvider>
           </Box>
@@ -1143,8 +1236,9 @@ export const Interview = (params: any) => {
         <Box p={1} className={classes.timeSlotTitleContainer}>
           <p>Time Slots Available</p>
           <FormGroup>
-            {times.map((time) => (
+            {times.map((time, index) => (
               <FormControlLabel
+                id={`${time}-${index}`}
                 onChange={handleOnChange}
                 value={time}
                 control={<Checkbox />}
@@ -1154,7 +1248,12 @@ export const Interview = (params: any) => {
           </FormGroup>
         </Box>
         <Box p={1} className={classes.timeSlotTitleContainer}>
-          <Button variant="contained" onClick={handleSchedule}>
+          <Button
+            id={cardScheduleButtonId}
+            name={cardScheduleButtonName}
+            variant="contained"
+            onClick={handleSchedule}
+          >
             Schedule
           </Button>
         </Box>
@@ -1167,8 +1266,10 @@ export const Interview = (params: any) => {
   };
 
   return (
-    <div className={classes.assessmentDialogueContent}>
+    <div id={containerId} className={classes.assessmentDialogueContent}>
       <Button
+        id={scheduleButtonId}
+        name={scheduleButtonName}
         size="small"
         onClick={() => setToggleDrawer(true)}
         variant="contained"
@@ -1176,8 +1277,13 @@ export const Interview = (params: any) => {
       >
         Schedule
       </Button>
-      <Drawer anchor="right" open={toggleDrawer} onClose={handleClose}>
-        <Card handleCloseIcon={handleClose} />
+      <Drawer
+        id={scheduledrawerId}
+        anchor="right"
+        open={toggleDrawer}
+        onClose={handleClose}
+      >
+        <Card id={cardId} handleCloseIcon={handleClose} />
       </Drawer>
     </div>
   );
@@ -1185,6 +1291,9 @@ export const Interview = (params: any) => {
 
 export const Reward = (params: any) => {
   const [disable, setDisable] = useState<any>(params.data.sendReward);
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `element-name-${params.rowIndex}-${params.column.instanceId}`;
 
   useEffect(() => {
     if (params.data.coolingPeriod === "Complete") {
@@ -1195,8 +1304,10 @@ export const Reward = (params: any) => {
   }, [params.data.coolingPeriod]);
 
   return (
-    <div>
+    <div id={containerId}>
       <Button
+        id={id}
+        name={elementName}
         disabled={!disable}
         size="small"
         variant="contained"
@@ -1209,6 +1320,8 @@ export const Reward = (params: any) => {
 };
 
 export const JobSeekerJoined = (params: any) => {
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
   const [disable, setDisable] = useState<any>();
   const [dateValue, setDateValue] = React.useState<any>(params.getValue());
   const dispatch = useAppDispatch();
@@ -1257,21 +1370,25 @@ export const JobSeekerJoined = (params: any) => {
   };
 
   return (
-    <div>
+    <div id={containerId}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DesktopDatePicker
           // label="Choose Date"
+
           inputFormat="DD/MM/YYYY"
           value={moment(dateValue, "DD-MM-YYYY").format("MM-DD-YYYY")}
           onChange={handleDateChange}
           disablePast
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) => <TextField id={id} {...params} />}
         />
       </LocalizationProvider>
     </div>
   );
 };
 export const CoolingPeriod = (params: any) => {
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `element-name-${params.rowIndex}-${params.column.instanceId}`;
   const [coolingPeriodEntered, setCoolingPeriodEntered] = useState<any>(
     params.data.coolingPeriod
   );
@@ -1379,9 +1496,10 @@ export const CoolingPeriod = (params: any) => {
   };
 
   return (
-    <div>
+    <div id={containerId}>
       <TextField
-        id="outlined-basic"
+        id={id}
+        name={elementName}
         label="CoolingPeriod"
         variant="outlined"
         value={coolingPeriodEntered}

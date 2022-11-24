@@ -81,6 +81,8 @@ const useStyles = makeStyles(() => ({
 
 export const ResumeUploaded = (params) => {
   const classes = useStyles();
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
 
   const handleViewResume = async () => {
     const resumeId = params.getValue();
@@ -88,8 +90,12 @@ export const ResumeUploaded = (params) => {
   };
 
   return (
-    <div className={classes.commonAlignment}>
-      <Typography onClick={handleViewResume} className={classes.uploadText}>
+    <div id={containerId} className={classes.commonAlignment}>
+      <Typography
+        id={id}
+        onClick={handleViewResume}
+        className={classes.uploadText}
+      >
         View Resume Uploaded
       </Typography>
     </div>
@@ -104,21 +110,39 @@ export const Icons = (params) => {
   const handleChat = () => {
     setToggleDrawer(true);
   };
-
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const visibilityIconId = `visibility-icon-no-${params.rowIndex}-${params.column.instanceId}`;
+  const localPhoneRoundedIconId = `local-phone-rounded-icon-no-${params.rowIndex}-${params.column.instanceId}`;
+  const chatBubbleOutlineIconId = `chat-bubble-outline-icon-no-${params.rowIndex}-${params.column.instanceId}`;
+  const dehazeIconId = `dehaze-icon-no-${params.rowIndex}-${params.column.instanceId}`;
+  const drawerId = `drawer-no-${params.rowIndex}-${params.column.instanceId}`;
+  const elementName = `${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
+  const containerId = `container-no-${params.rowIndex}-${params.column.instanceId}`;
   return (
-    <div className={classes.commonAlignment}>
-      <VisibilityIcon className={classes.iconColor} onClick={handleClick} />
+    <div id={containerId} className={classes.commonAlignment}>
+      <VisibilityIcon
+        id={visibilityIconId}
+        className={classes.iconColor}
+        onClick={handleClick}
+      />
 
       <LocalPhoneRoundedIcon
+        id={localPhoneRoundedIconId}
         className={classes.iconColor}
         onClick={handleClick}
       />
       <ChatBubbleOutlineIcon
+        id={chatBubbleOutlineIconId}
         className={classes.iconColor}
         onClick={handleChat}
       />
-      <DehazeIcon className={classes.iconColor} onClick={handleClick} />
+      <DehazeIcon
+        id={dehazeIconId}
+        className={classes.iconColor}
+        onClick={handleClick}
+      />
       <Drawer
+        id={drawerId}
         anchor="left"
         open={toggleDrawer}
         onClose={() => setToggleDrawer(false)}
@@ -187,8 +211,27 @@ export const CustomDropDown = (params: any) => {
     }
   }, []);
 
-  const id = `cellNo${params.rowIndex}${params.column.instanceId}`;
+  const id = `cell-no-${params.rowIndex}-${params.column.instanceId}`;
+  const dropDownId = `drop-down-no-${params.rowIndex}-${params.column.instanceId}`;
+  const dropDownContainerId = `drop-down-container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const dropDownName = `drop-down-${params.colDef.field}-${params.rowIndex}-${params.column.instanceId}`;
   const iconId = `iconNo${params.rowIndex}${params.column.instanceId}`;
+  const consentContainerId = `consent-container-no-${params.rowIndex}-${params.column.instanceId}`;
+
+  const consentPassContainerId = `consent-pass-container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const consentPassButtonId = `consent-pass-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const consentPassButtonName = `consent-pass-button-name-${params.rowIndex}-${params.column.instanceId}`;
+
+  const consentFailContainerId = `consent-fail-container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const consentFailButtonId = `consent-fail-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const consentFailButtonName = `consent-fail-button-name-${params.rowIndex}-${params.column.instanceId}`;
+
+  const consentPendingContainerId = `consent-pending-container-no-${params.rowIndex}-${params.column.instanceId}`;
+  const consentPendingButtonId = `consent-pending-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const consentPendingButtonName = `consent-pending-button-name-${params.rowIndex}-${params.column.instanceId}`;
+
+  const resendButtonId = `resend-button-no-${params.rowIndex}-${params.column.instanceId}`;
+  const resendButtonName = `resend-button-name-${params.rowIndex}-${params.column.instanceId}`;
 
   const [message, setMessage] = useState("");
 
@@ -330,9 +373,10 @@ export const CustomDropDown = (params: any) => {
 
   return (
     <>
-      <div>
+      <div id={dropDownContainerId}>
         <select
-          id={id}
+          id={dropDownId}
+          name={dropDownName}
           className={classes.dropdown}
           value={option.option || "JOB_SEEKER_CONSENT_PENDING"}
           onChange={handleChange}
@@ -348,12 +392,20 @@ export const CustomDropDown = (params: any) => {
           <option value="JOB_SEEKER_CONSENT_FAIL">Failed</option>
         </select>
       </div>
-      <div className={classes.dropdownAlignment}>
+      <div id={consentContainerId} className={classes.dropdownAlignment}>
         {(() => {
           if (option.option == "JOB_SEEKER_CONSENT_PASS") {
             return (
-              <Tooltip title={option.body} placement="right-start">
-                <IconButton className={classes.dropdownIconAlignment}>
+              <Tooltip
+                id={consentPassContainerId}
+                title={option.body}
+                placement="right-start"
+              >
+                <IconButton
+                  id={consentPassButtonId}
+                  name={consentPassButtonName}
+                  className={classes.dropdownIconAlignment}
+                >
                   <CheckCircleIcon
                     id={iconId}
                     sx={{ color: option.color, fontSize: "25px" }}
@@ -363,8 +415,16 @@ export const CustomDropDown = (params: any) => {
             );
           } else if (option.option == "JOB_SEEKER_CONSENT_FAIL") {
             return (
-              <Tooltip title={option.body} placement="right-start">
-                <IconButton className={classes.dropdownIconAlignment}>
+              <Tooltip
+                id={consentFailContainerId}
+                title={option.body}
+                placement="right-start"
+              >
+                <IconButton
+                  id={consentFailButtonId}
+                  name={consentFailButtonName}
+                  className={classes.dropdownIconAlignment}
+                >
                   <ErrorIcon
                     id={iconId}
                     sx={{ color: option.color, fontSize: "25px" }}
@@ -376,16 +436,22 @@ export const CustomDropDown = (params: any) => {
             return (
               <>
                 <ColorButton
+                  id={resendButtonId}
+                  name={resendButtonName}
                   variant="contained"
                   onClick={() => handleResend(params)}
                 >
                   Resend
                 </ColorButton>
                 <Tooltip
+                  id={consentPendingContainerId}
                   title={option.body || "Pending"}
                   placement="right-start"
                 >
-                  <IconButton>
+                  <IconButton
+                    id={consentPendingButtonId}
+                    name={consentPendingButtonName}
+                  >
                     <PauseCircleFilledIcon
                       id={iconId}
                       sx={{
