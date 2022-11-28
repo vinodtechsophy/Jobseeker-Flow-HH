@@ -1,4 +1,4 @@
-import React, { ReactElement, FC, useEffect } from "react";
+import React, { ReactElement, FC, useEffect, useState } from "react";
 import {
   Select,
   MenuItem,
@@ -31,6 +31,7 @@ import {
 import "./JobSeekerProfileFlow.css";
 import PreviousNextButtons from "../../components/PreviousNextButtons/PreviousNextButtons";
 import {
+  fetchFormData,
   getJobSeekerProfile,
   updateJobSeekerProfile,
 } from "../../services/FormDataService";
@@ -41,7 +42,9 @@ import {
   FORM_SUBMISSION_SUCCESS,
   EXPEXTED_CTC_DET,
   WARNING_KEY,
+  HH_Skills,
 } from "../../constants";
+import { HH_Roles } from "../../constants";
 
 const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
   const dispatch = useAppDispatch();
@@ -50,6 +53,8 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
   const [freshGraduate, setFreshGraduate] = React.useState(false);
   const [loader, setLoader] = React.useState(false);
   const [workStatus, setWorkStatus] = React.useState("");
+  const [role, setRole] = useState("");
+  const [roles, setRoles] = useState<any>([]);
   const [totalCtc, setTotalCtc] = React.useState("");
   const [totalExperience, setTotalExperience] = React.useState<{
     totalExperienceYears: string;
@@ -238,6 +243,7 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
   const submitDetails = async () => {
     setLoader(true);
     const profileDetailsMap = buildDetailsPayload();
+
     if (
       profileDetailsMap.expectedCtc.expectedCtcLakh &&
       parseInt(profileDetailsMap.expectedCtc.expectedCtcLakh) != 0
@@ -246,6 +252,10 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
         if (checkExperienceDetails(profileDetailsMap)) {
           props.setType(WARNING_KEY);
           props.setDataMessage("Please fill Experience Details");
+          props.setOpen(true);
+        } else if (!profileDetailsMap.role) {
+          props.setType(WARNING_KEY);
+          props.setDataMessage("Please fill Role");
           props.setOpen(true);
         } else if (
           (profileDetailsMap.workStatus == WorkStatusArray[0] ||
@@ -275,6 +285,8 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
           props.setDataMessage("Expected CTC must be greater than Total CTC");
           props.setOpen(true);
         } else {
+          finalBuildDetailsPayload(profileDetailsMap);
+
           try {
             const profileDetailsResponse = await updateJobSeekerProfile({
               profileId:
@@ -320,7 +332,46 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
       freshGraduate: freshGraduate.toString(),
       workStatus,
       currentlyWorking: workStatus === WorkStatusArray[0] ? "Yes" : "No",
+      role,
     };
+  };
+
+  const checkZero = (value: number) => {
+    return value ? value : 0;
+  };
+
+  const finalBuildDetailsPayload = (data) => {
+    data.expectedCtc.expectedCtcLakh = checkZero(
+      parseInt(data.expectedCtc.expectedCtcLakh)
+    );
+    data.expectedCtc.expectedCtcThousand = checkZero(
+      parseInt(data.expectedCtc.expectedCtcThousand)
+    );
+    data.fixedCtc.fixedCtcLakh = checkZero(
+      parseInt(data.fixedCtc.fixedCtcLakh)
+    );
+    data.fixedCtc.fixedCtcThousand = checkZero(
+      parseInt(data.fixedCtc.fixedCtcThousand)
+    );
+    data.relevantExperience.relevantExperienceYears = checkZero(
+      parseInt(data.relevantExperience.relevantExperienceYears)
+    );
+    data.relevantExperience.relevantExperienceMonths = checkZero(
+      parseInt(data.relevantExperience.relevantExperienceMonths)
+    );
+    data.totalExperience.totalExperienceYears = checkZero(
+      parseInt(data.totalExperience.totalExperienceYears)
+    );
+    data.totalExperience.totalExperienceMonths = checkZero(
+      parseInt(data.totalExperience.totalExperienceMonths)
+    );
+    data.variableCtc.variableCtcLakh = checkZero(
+      parseInt(data.variableCtc.variableCtcakh)
+    );
+    data.variableCtc.variableCtcThousand = checkZero(
+      parseInt(data.variableCtc.variableCtcThousand)
+    );
+    data.totalCtc = checkZero(parseInt(data.totalCtc));
   };
 
   const dispatchWorkStatus = (workStatus) => {
@@ -337,9 +388,23 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
   };
 
   useEffect(() => {
+    getRolesData();
     if (props.profileDataId || userDataState.userData.profileId)
       callPrefillData();
   }, []);
+
+  const getRolesData = async () => {
+    const response: any = await fetchFormData(HH_Roles, 0, 10000);
+    console.log(response);
+
+    let mapData = response.data.content;
+    let result = mapData.map((item, index) => {
+      let Data = item.formData.role;
+
+      return Data;
+    });
+    setRoles(result);
+  };
 
   const callPrefillData = async () => {
     try {
@@ -361,6 +426,7 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
 
   const patchProfileDetails = (patchData: any) => {
     console.log(patchData);
+    setRole(patchData?.role);
     setFreshGrad(patchData.freshGraduate);
     setTotalExperience({
       totalExperienceYears: patchData.totalExperience.totalExperienceYears,
@@ -556,6 +622,7 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
               </div>
             </div>
           </div>
+
           <div className="generic-container">
             <div className="expected-ctc">
               <p className="step-content-title-text">
@@ -574,6 +641,44 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
                 setValues={handleExpectedCtc}
                 value={expectedCtc}
               />
+            </div>
+            <div
+              id="work-status-parent-parent-container"
+              className="generic-container"
+            >
+              <div id="work-status-parent-container" className="inline-div">
+                <div>
+                  <p className="step-content-title-text">
+                    Role <span className="asterisk-span"> *</span>
+                  </p>
+                </div>
+                <div id="work-status-container" className="work-status-select">
+                  <FormControl
+                    id="work-status-formcontrol"
+                    sx={{ minWidth: 250 }}
+                  >
+                    <InputLabel id="demo-simple-select-helper-label">
+                      Role
+                    </InputLabel>
+                    <Select
+                      id="work-status-dropdown"
+                      name="workStatusDropDown"
+                      // disabled={!props.hasButtons || freshGraduate}
+                      value={role}
+                      label={WORK_STATUS_TEXT}
+                      onChange={(e) => {
+                        setRole(e.target.value);
+                      }}
+                    >
+                      {roles.map((item: string) => (
+                        <MenuItem key={item} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              </div>
             </div>
           </div>
           {props.hasButtons ? (

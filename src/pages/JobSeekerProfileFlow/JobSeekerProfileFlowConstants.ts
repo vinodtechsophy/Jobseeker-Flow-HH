@@ -12,6 +12,7 @@ export const YearMonthDetails = [
 ];
 
 export const WorkStatusArray = ["Working", "Not-Working", "Fresh Graduate"];
+export const Roles = ["Frontend Developer", "Backend Developer"];
 
 export const TOTAL_EXP_TEXT = "Total Work Experience";
 export const RELEVANT_EXP_TEXT = "Relevant Experience";

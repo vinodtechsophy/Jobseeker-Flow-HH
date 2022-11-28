@@ -204,3 +204,6 @@ export const JOB_SEEKER_COMLETE_PROFILE_TEXT = {
 };
 
 export const JOB_TYPE_OPTIONS = ["Full-Time", "Contract"];
+
+export const HH_Roles = "1044515598262362112";
+export const HH_Skills = "1044934608581844992";

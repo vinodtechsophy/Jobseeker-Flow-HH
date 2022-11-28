@@ -1,4 +1,5 @@
 import axios from "axios";
+import { request, ResponseProps } from "../request";
 
 export const getFormData = async (
   formId: string,
@@ -128,4 +129,21 @@ export const getCityList = async () => {
   return axios.get(
     `https://gist.githubusercontent.com/palimadra/133517e2dca16f31e41af82419d6a50f/raw/bf9d1a603b8edabcdcfdefbdeeafd76f1469da1d/city-list-india`
   );
+};
+
+export const fetchFormData = async (
+  formId: string,
+  page?: number,
+  size?: number
+): Promise<{ success: boolean; data?: any; message?: string }> => {
+  const r: any = await request.get(
+    `${process.env.REACT_APP_API_GATEWAY_URL}/form-runtime/v1/form-data?formId=${formId}&page=${page}&size=${size}`
+  );
+
+  if (r.success) {
+    const form = r.data;
+    return { success: r.success, data: form, message: r.message };
+  }
+
+  return { success: false };
 };

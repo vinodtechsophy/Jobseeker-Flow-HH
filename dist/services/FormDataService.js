@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import axios from "axios";
+import { request } from "../request";
 export var getFormData = function (formId, id, recordId, page, size) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, axios
@@ -122,5 +123,20 @@ export var getJobSeekerProfile = function (profileId) { return __awaiter(void 0,
 export var getCityList = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, axios.get("https://gist.githubusercontent.com/palimadra/133517e2dca16f31e41af82419d6a50f/raw/bf9d1a603b8edabcdcfdefbdeeafd76f1469da1d/city-list-india")];
+    });
+}); };
+export var fetchFormData = function (formId, page, size) { return __awaiter(void 0, void 0, void 0, function () {
+    var r, form;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, request.get("".concat(process.env.REACT_APP_API_GATEWAY_URL, "/form-runtime/v1/form-data?formId=").concat(formId, "&page=").concat(page, "&size=").concat(size))];
+            case 1:
+                r = _a.sent();
+                if (r.success) {
+                    form = r.data;
+                    return [2 /*return*/, { success: r.success, data: form, message: r.message }];
+                }
+                return [2 /*return*/, { success: false }];
+        }
     });
 }); };

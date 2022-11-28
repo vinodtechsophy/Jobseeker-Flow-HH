@@ -99,7 +99,6 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
         newCompleted[i] = true;
       }
     }
-    console.log(newCompleted);
     setCompleted(newCompleted);
   };
   const handleComplete = (position?: number) => {
@@ -107,8 +106,7 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
     if (typeof position != "undefined") {
       for (let i = 0; i <= position; i++) {
         if (i == 4 && checkWorkStatus()) continue;
-        console.log(checkWorkStatus());
-        console.log(i);
+
         newCompleted[i] = true;
       }
     } else {
@@ -117,7 +115,6 @@ const JobSeekerProfileFlow: FC<any> = (props): ReactElement => {
         newCompleted[i] = true;
       }
     }
-    console.log(newCompleted);
     setCompleted(newCompleted);
   };
   const handleNotComplete = (position: number) => {

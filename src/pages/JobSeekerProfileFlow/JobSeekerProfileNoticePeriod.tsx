@@ -161,6 +161,7 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
         return;
       }
     }
+    finalBuildDetailsPayload(profileNoticePeriodMap);
     try {
       const profileDetailsResponse = await updateJobSeekerProfile({
         profileId: props.profileDataId || userDataState.userData.profileId,
@@ -182,6 +183,31 @@ const JobSeekerProfileNoticePeriod: FC<any> = (props): ReactElement => {
     }
     setLoader(false);
   };
+  const checkZero = (value: number) => {
+    return value ? value : 0;
+  };
+
+  const finalBuildDetailsPayload = (data) => {
+    data.negotiablePeriod = checkZero(parseInt(data.negotiablePeriod));
+    data.noticePeriod = checkZero(parseInt(data.noticePeriod));
+    data.offerData.forEach((element) => {
+      element.fixedCtc.fixedCtcLakh = checkZero(
+        parseInt(element.fixedCtc.fixedCtcLakh)
+      );
+      element.fixedCtc.fixedCtcThousand = checkZero(
+        parseInt(element.fixedCtc.fixedCtcThousand)
+      );
+
+      element.variableCtc.variableCtcLakh = checkZero(
+        parseInt(element.variableCtc.variableCtcLakh)
+      );
+      element.variableCtc.variableCtcThousand = checkZero(
+        parseInt(element.variableCtc.variableCtcThousand)
+      );
+      element.totalCtc = checkZero(parseInt(element.totalCtc));
+    });
+  };
+
   const validateNoticePeriodInfo = (data) => {
     if (data.noticeStatus === "Serving Notice Period") {
       if (

@@ -46,15 +46,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, MenuItem, Checkbox, TextField, InputLabel, FormControl, CircularProgress, Stack, } from "@mui/material";
 import InlineInputs from "../../components/InlineInputs/InlineInputs";
 import { CTCDetails, FRESHER_TEXT, TCTC_SUB_TEXT, TOTAL_CTC_TEXT, FIXED_CTC_TEXT, TOTAL_EXP_TEXT, CTC_DETAIL_TEXT, TOTAL_CTC_LABEL, WorkStatusArray, YearMonthDetails, TCTC_PLACEHOLDER, EXPERIENCE_TITLE, WORK_STATUS_TEXT, RELEVANT_EXP_TEXT, VARIABLE_CTC_TEXT, EXPECTED_CTC_TEXT, } from "./JobSeekerProfileFlowConstants";
 import "./JobSeekerProfileFlow.css";
 import PreviousNextButtons from "../../components/PreviousNextButtons/PreviousNextButtons";
-import { getJobSeekerProfile, updateJobSeekerProfile, } from "../../services/FormDataService";
+import { fetchFormData, getJobSeekerProfile, updateJobSeekerProfile, } from "../../services/FormDataService";
 import { useAppSelector, useAppDispatch } from "../../services/StoreHooks";
 import { ERROR_KEY, SUCCESS_KEY, FORM_SUBMISSION_SUCCESS, EXPEXTED_CTC_DET, WARNING_KEY, } from "../../constants";
+import { HH_Roles } from "../../constants";
 var JobSeekerProfileDetails = function (props) {
     var dispatch = useAppDispatch();
     var userDataState = useAppSelector(function (state) { return state.currentUser; });
@@ -62,12 +63,14 @@ var JobSeekerProfileDetails = function (props) {
     var _a = React.useState(false), freshGraduate = _a[0], setFreshGraduate = _a[1];
     var _b = React.useState(false), loader = _b[0], setLoader = _b[1];
     var _c = React.useState(""), workStatus = _c[0], setWorkStatus = _c[1];
-    var _d = React.useState(""), totalCtc = _d[0], setTotalCtc = _d[1];
-    var _e = React.useState({ totalExperienceYears: "", totalExperienceMonths: "" }), totalExperience = _e[0], setTotalExperience = _e[1];
-    var _f = React.useState({ relevantExperienceYears: "", relevantExperienceMonths: "" }), relevantExperience = _f[0], setRelevantExperience = _f[1];
-    var _g = React.useState({ fixedCtcLakh: "", fixedCtcThousand: "" }), fixedCtc = _g[0], setFixedCtc = _g[1];
-    var _h = React.useState({ variableCtcLakh: "", variableCtcThousand: "" }), variableCtc = _h[0], setVariableCtc = _h[1];
-    var _j = React.useState({ expectedCtcLakh: "", expectedCtcThousand: "" }), expectedCtc = _j[0], setExpectedCtc = _j[1];
+    var _d = useState(""), role = _d[0], setRole = _d[1];
+    var _e = useState([]), roles = _e[0], setRoles = _e[1];
+    var _f = React.useState(""), totalCtc = _f[0], setTotalCtc = _f[1];
+    var _g = React.useState({ totalExperienceYears: "", totalExperienceMonths: "" }), totalExperience = _g[0], setTotalExperience = _g[1];
+    var _h = React.useState({ relevantExperienceYears: "", relevantExperienceMonths: "" }), relevantExperience = _h[0], setRelevantExperience = _h[1];
+    var _j = React.useState({ fixedCtcLakh: "", fixedCtcThousand: "" }), fixedCtc = _j[0], setFixedCtc = _j[1];
+    var _k = React.useState({ variableCtcLakh: "", variableCtcThousand: "" }), variableCtc = _k[0], setVariableCtc = _k[1];
+    var _l = React.useState({ expectedCtcLakh: "", expectedCtcThousand: "" }), expectedCtc = _l[0], setExpectedCtc = _l[1];
     // useEffect(() => {
     //   props.handleComplete(0);
     //   props.handleComplete(1);
@@ -200,45 +203,54 @@ var JobSeekerProfileDetails = function (props) {
                     setLoader(true);
                     profileDetailsMap = buildDetailsPayload();
                     if (!(profileDetailsMap.expectedCtc.expectedCtcLakh &&
-                        parseInt(profileDetailsMap.expectedCtc.expectedCtcLakh) != 0)) return [3 /*break*/, 10];
-                    if (!profileDetailsMap.workStatus) return [3 /*break*/, 8];
+                        parseInt(profileDetailsMap.expectedCtc.expectedCtcLakh) != 0)) return [3 /*break*/, 12];
+                    if (!profileDetailsMap.workStatus) return [3 /*break*/, 10];
                     if (!checkExperienceDetails(profileDetailsMap)) return [3 /*break*/, 1];
                     props.setType(WARNING_KEY);
                     props.setDataMessage("Please fill Experience Details");
                     props.setOpen(true);
-                    return [3 /*break*/, 7];
+                    return [3 /*break*/, 9];
                 case 1:
+                    if (!!profileDetailsMap.role) return [3 /*break*/, 2];
+                    props.setType(WARNING_KEY);
+                    props.setDataMessage("Please fill Role");
+                    props.setOpen(true);
+                    return [3 /*break*/, 9];
+                case 2:
                     if (!((profileDetailsMap.workStatus == WorkStatusArray[0] ||
                         profileDetailsMap.workStatus == WorkStatusArray[1]) &&
-                        validateExperience(profileDetailsMap))) return [3 /*break*/, 2];
+                        validateExperience(profileDetailsMap))) return [3 /*break*/, 3];
                     props.setType(WARNING_KEY);
                     props.setDataMessage("Relevant Experience must not exceed Total Experience");
                     props.setOpen(true);
-                    return [3 /*break*/, 7];
-                case 2:
+                    return [3 /*break*/, 9];
+                case 3:
                     if (!((profileDetailsMap.workStatus == WorkStatusArray[0] ||
                         profileDetailsMap.workStatus == WorkStatusArray[1]) &&
                         (!profileDetailsMap.fixedCtc.fixedCtcLakh ||
                             parseInt(profileDetailsMap.fixedCtc.fixedCtcLakh) == 0 ||
-                            !profileDetailsMap.variableCtc.variableCtcLakh))) return [3 /*break*/, 3];
+                            !profileDetailsMap.variableCtc.variableCtcLakh))) return [3 /*break*/, 4];
                     props.setType(WARNING_KEY);
                     props.setDataMessage("Please fill Current CTC details");
                     props.setOpen(true);
-                    return [3 /*break*/, 7];
-                case 3:
+                    return [3 /*break*/, 9];
+                case 4:
                     if (!(profileDetailsMap.workStatus != "Fresh Graduate" &&
-                        validateCtc(profileDetailsMap.expectedCtc))) return [3 /*break*/, 4];
+                        validateCtc(profileDetailsMap.expectedCtc))) return [3 /*break*/, 5];
                     props.setType(WARNING_KEY);
                     props.setDataMessage("Expected CTC must be greater than Total CTC");
                     props.setOpen(true);
-                    return [3 /*break*/, 7];
-                case 4:
-                    _b.trys.push([4, 6, , 7]);
+                    return [3 /*break*/, 9];
+                case 5:
+                    finalBuildDetailsPayload(profileDetailsMap);
+                    _b.label = 6;
+                case 6:
+                    _b.trys.push([6, 8, , 9]);
                     return [4 /*yield*/, updateJobSeekerProfile({
                             profileId: props.profileDataId || userDataState.userData.profileId,
                             profileData: { profileDetailsMap: profileDetailsMap, profileLastCompletedStep: "3" },
                         })];
-                case 5:
+                case 7:
                     profileDetailsResponse = _b.sent();
                     if ((_a = profileDetailsResponse === null || profileDetailsResponse === void 0 ? void 0 : profileDetailsResponse.data) === null || _a === void 0 ? void 0 : _a.success) {
                         dispatchWorkStatus(workStatus);
@@ -248,27 +260,27 @@ var JobSeekerProfileDetails = function (props) {
                         props.handleComplete(2);
                         props.handleNext();
                     }
-                    return [3 /*break*/, 7];
-                case 6:
+                    return [3 /*break*/, 9];
+                case 8:
                     error_1 = _b.sent();
                     console.log(error_1);
                     props.setType(ERROR_KEY);
                     props.setDataMessage(error_1 === null || error_1 === void 0 ? void 0 : error_1.message);
                     props.setOpen(true);
-                    return [3 /*break*/, 7];
-                case 7: return [3 /*break*/, 9];
-                case 8:
-                    props.setType(WARNING_KEY);
-                    props.setDataMessage("Please select Work Status");
-                    props.setOpen(true);
-                    _b.label = 9;
+                    return [3 /*break*/, 9];
                 case 9: return [3 /*break*/, 11];
                 case 10:
                     props.setType(WARNING_KEY);
-                    props.setDataMessage(EXPEXTED_CTC_DET);
+                    props.setDataMessage("Please select Work Status");
                     props.setOpen(true);
                     _b.label = 11;
-                case 11:
+                case 11: return [3 /*break*/, 13];
+                case 12:
+                    props.setType(WARNING_KEY);
+                    props.setDataMessage(EXPEXTED_CTC_DET);
+                    props.setOpen(true);
+                    _b.label = 13;
+                case 13:
                     setLoader(false);
                     return [2 /*return*/];
             }
@@ -285,7 +297,24 @@ var JobSeekerProfileDetails = function (props) {
             freshGraduate: freshGraduate.toString(),
             workStatus: workStatus,
             currentlyWorking: workStatus === WorkStatusArray[0] ? "Yes" : "No",
+            role: role,
         };
+    };
+    var checkZero = function (value) {
+        return value ? value : 0;
+    };
+    var finalBuildDetailsPayload = function (data) {
+        data.expectedCtc.expectedCtcLakh = checkZero(parseInt(data.expectedCtc.expectedCtcLakh));
+        data.expectedCtc.expectedCtcThousand = checkZero(parseInt(data.expectedCtc.expectedCtcThousand));
+        data.fixedCtc.fixedCtcLakh = checkZero(parseInt(data.fixedCtc.fixedCtcLakh));
+        data.fixedCtc.fixedCtcThousand = checkZero(parseInt(data.fixedCtc.fixedCtcThousand));
+        data.relevantExperience.relevantExperienceYears = checkZero(parseInt(data.relevantExperience.relevantExperienceYears));
+        data.relevantExperience.relevantExperienceMonths = checkZero(parseInt(data.relevantExperience.relevantExperienceMonths));
+        data.totalExperience.totalExperienceYears = checkZero(parseInt(data.totalExperience.totalExperienceYears));
+        data.totalExperience.totalExperienceMonths = checkZero(parseInt(data.totalExperience.totalExperienceMonths));
+        data.variableCtc.variableCtcLakh = checkZero(parseInt(data.variableCtc.variableCtcakh));
+        data.variableCtc.variableCtcThousand = checkZero(parseInt(data.variableCtc.variableCtcThousand));
+        data.totalCtc = checkZero(parseInt(data.totalCtc));
     };
     var dispatchWorkStatus = function (workStatus) {
         dispatch({
@@ -297,9 +326,28 @@ var JobSeekerProfileDetails = function (props) {
         });
     };
     useEffect(function () {
+        getRolesData();
         if (props.profileDataId || userDataState.userData.profileId)
             callPrefillData();
     }, []);
+    var getRolesData = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response, mapData, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetchFormData(HH_Roles, 0, 10000)];
+                case 1:
+                    response = _a.sent();
+                    console.log(response);
+                    mapData = response.data.content;
+                    result = mapData.map(function (item, index) {
+                        var Data = item.formData.role;
+                        return Data;
+                    });
+                    setRoles(result);
+                    return [2 /*return*/];
+            }
+        });
+    }); };
     var callPrefillData = function () { return __awaiter(void 0, void 0, void 0, function () {
         var profileDataFetched, error_2;
         var _a, _b, _c, _d;
@@ -330,6 +378,7 @@ var JobSeekerProfileDetails = function (props) {
     }); };
     var patchProfileDetails = function (patchData) {
         console.log(patchData);
+        setRole(patchData === null || patchData === void 0 ? void 0 : patchData.role);
         setFreshGrad(patchData.freshGraduate);
         setTotalExperience({
             totalExperienceYears: patchData.totalExperience.totalExperienceYears,
@@ -403,6 +452,10 @@ var JobSeekerProfileDetails = function (props) {
                                                 inputProps: {
                                                     maxLength: 12,
                                                 },
-                                            }, size: "small" }), _jsx("div", __assign({ className: "tctc-text" }, { children: _jsx("span", { children: TCTC_SUB_TEXT }) }))] }))] }))] })), _jsxs("div", __assign({ className: "generic-container" }, { children: [_jsx("div", __assign({ className: "expected-ctc" }, { children: _jsxs("p", __assign({ className: "step-content-title-text" }, { children: [" ", EXPECTED_CTC_TEXT, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] })) })), _jsx("div", __assign({ id: "expected-ctc-container", className: "experience-details-card" }, { children: _jsx(InlineInputs, { required: true, InlineInputsArray: CTCDetails, disabled: !props.hasButtons, setValues: handleExpectedCtc, value: expectedCtc }) }))] })), props.hasButtons ? (_jsx(PreviousNextButtons, { handleNext: submitDetails, handleBack: props.handleBack })) : null] }))) : (_jsx(Stack, __assign({ alignItems: "center" }, { children: _jsx(CircularProgress, {}) }))) }));
+                                            }, size: "small" }), _jsx("div", __assign({ className: "tctc-text" }, { children: _jsx("span", { children: TCTC_SUB_TEXT }) }))] }))] }))] })), _jsxs("div", __assign({ className: "generic-container" }, { children: [_jsx("div", __assign({ className: "expected-ctc" }, { children: _jsxs("p", __assign({ className: "step-content-title-text" }, { children: [" ", EXPECTED_CTC_TEXT, " ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] })) })), _jsx("div", __assign({ id: "expected-ctc-container", className: "experience-details-card" }, { children: _jsx(InlineInputs, { required: true, InlineInputsArray: CTCDetails, disabled: !props.hasButtons, setValues: handleExpectedCtc, value: expectedCtc }) })), _jsx("div", __assign({ id: "work-status-parent-parent-container", className: "generic-container" }, { children: _jsxs("div", __assign({ id: "work-status-parent-container", className: "inline-div" }, { children: [_jsx("div", { children: _jsxs("p", __assign({ className: "step-content-title-text" }, { children: ["Role ", _jsx("span", __assign({ className: "asterisk-span" }, { children: " *" }))] })) }), _jsx("div", __assign({ id: "work-status-container", className: "work-status-select" }, { children: _jsxs(FormControl, __assign({ id: "work-status-formcontrol", sx: { minWidth: 250 } }, { children: [_jsx(InputLabel, __assign({ id: "demo-simple-select-helper-label" }, { children: "Role" })), _jsx(Select, __assign({ id: "work-status-dropdown", name: "workStatusDropDown", 
+                                                    // disabled={!props.hasButtons || freshGraduate}
+                                                    value: role, label: WORK_STATUS_TEXT, onChange: function (e) {
+                                                        setRole(e.target.value);
+                                                    } }, { children: roles.map(function (item) { return (_jsx(MenuItem, __assign({ value: item }, { children: item }), item)); }) }))] })) }))] })) }))] })), props.hasButtons ? (_jsx(PreviousNextButtons, { handleNext: submitDetails, handleBack: props.handleBack })) : null] }))) : (_jsx(Stack, __assign({ alignItems: "center" }, { children: _jsx(CircularProgress, {}) }))) }));
 };
 export default JobSeekerProfileDetails;

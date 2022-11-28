@@ -98,7 +98,6 @@ var JobSeekerProfileFlow = function (props) {
                 newCompleted[i] = true;
             }
         }
-        console.log(newCompleted);
         setCompleted(newCompleted);
     };
     var handleComplete = function (position) {
@@ -107,8 +106,6 @@ var JobSeekerProfileFlow = function (props) {
             for (var i = 0; i <= position; i++) {
                 if (i == 4 && checkWorkStatus())
                     continue;
-                console.log(checkWorkStatus());
-                console.log(i);
                 newCompleted[i] = true;
             }
         }
@@ -119,7 +116,6 @@ var JobSeekerProfileFlow = function (props) {
                 newCompleted[i] = true;
             }
         }
-        console.log(newCompleted);
         setCompleted(newCompleted);
     };
     var handleNotComplete = function (position) {

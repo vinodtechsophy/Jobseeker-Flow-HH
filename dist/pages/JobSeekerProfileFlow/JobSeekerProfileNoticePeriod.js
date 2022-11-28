@@ -185,12 +185,15 @@ var JobSeekerProfileNoticePeriod = function (props) {
                     "Invalid format");
                     return [2 /*return*/];
                 case 4:
-                    _b.trys.push([4, 6, , 7]);
+                    finalBuildDetailsPayload(profileNoticePeriodMap);
+                    _b.label = 5;
+                case 5:
+                    _b.trys.push([5, 7, , 8]);
                     return [4 /*yield*/, updateJobSeekerProfile({
                             profileId: props.profileDataId || userDataState.userData.profileId,
                             profileData: { profileNoticePeriodMap: profileNoticePeriodMap, profileLastCompletedStep: "5" },
                         })];
-                case 5:
+                case 6:
                     profileDetailsResponse = _b.sent();
                     console.log(profileDetailsResponse === null || profileDetailsResponse === void 0 ? void 0 : profileDetailsResponse.data);
                     if ((_a = profileDetailsResponse === null || profileDetailsResponse === void 0 ? void 0 : profileDetailsResponse.data) === null || _a === void 0 ? void 0 : _a.success) {
@@ -200,20 +203,34 @@ var JobSeekerProfileNoticePeriod = function (props) {
                         props.handleComplete(4);
                         props.handleNext();
                     }
-                    return [3 /*break*/, 7];
-                case 6:
+                    return [3 /*break*/, 8];
+                case 7:
                     error_2 = _b.sent();
                     console.log(error_2);
                     props.setType(ERROR_KEY);
                     props.setDataMessage(error_2 === null || error_2 === void 0 ? void 0 : error_2.message);
                     props.setOpen(true);
-                    return [3 /*break*/, 7];
-                case 7:
+                    return [3 /*break*/, 8];
+                case 8:
                     setLoader(false);
                     return [2 /*return*/];
             }
         });
     }); };
+    var checkZero = function (value) {
+        return value ? value : 0;
+    };
+    var finalBuildDetailsPayload = function (data) {
+        data.negotiablePeriod = checkZero(parseInt(data.negotiablePeriod));
+        data.noticePeriod = checkZero(parseInt(data.noticePeriod));
+        data.offerData.forEach(function (element) {
+            element.fixedCtc.fixedCtcLakh = checkZero(parseInt(element.fixedCtc.fixedCtcLakh));
+            element.fixedCtc.fixedCtcThousand = checkZero(parseInt(element.fixedCtc.fixedCtcThousand));
+            element.variableCtc.variableCtcLakh = checkZero(parseInt(element.variableCtc.variableCtcLakh));
+            element.variableCtc.variableCtcThousand = checkZero(parseInt(element.variableCtc.variableCtcThousand));
+            element.totalCtc = checkZero(parseInt(element.totalCtc));
+        });
+    };
     var validateNoticePeriodInfo = function (data) {
         if (data.noticeStatus === "Serving Notice Period") {
             if (!data.lastWorkingDate ||

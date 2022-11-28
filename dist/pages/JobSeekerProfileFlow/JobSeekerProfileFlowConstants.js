@@ -3,6 +3,7 @@ export var YearMonthDetails = [
     { type: "number", label: "Months", placeholder: "10", max: 11 },
 ];
 export var WorkStatusArray = ["Working", "Not-Working", "Fresh Graduate"];
+export var Roles = ["Frontend Developer", "Backend Developer"];
 export var TOTAL_EXP_TEXT = "Total Work Experience";
 export var RELEVANT_EXP_TEXT = "Relevant Experience";
 export var EXPERIENCE_TITLE = "Experience Details";

@@ -160,3 +160,5 @@ export var JOB_SEEKER_COMLETE_PROFILE_TEXT = {
     alyticsTitle: "Your Profile Submission Statistics For this Contest",
 };
 export var JOB_TYPE_OPTIONS = ["Full-Time", "Contract"];
+export var HH_Roles = "1044515598262362112";
+export var HH_Skills = "1044934608581844992";
