@@ -8,6 +8,9 @@ import {
   FormControl,
   CircularProgress,
   Stack,
+  ListItemText,
+  OutlinedInput,
+  Autocomplete,
 } from "@mui/material";
 import InlineInputs from "../../components/InlineInputs/InlineInputs";
 import {
@@ -45,16 +48,46 @@ import {
   HH_Skills,
 } from "../../constants";
 import { HH_Roles } from "../../constants";
+import { Box } from "@mui/system";
+import { makeStyles } from "@mui/styles";
+import { filterSkillValuesWithSkillName } from "../../services/SkillService";
+
+const useStyles = makeStyles(() => ({
+  primarySkillsTitle: {
+    fontSize: "20px",
+    marginTop: "12px",
+    marginBottom: "12px",
+  },
+  secondarySkillsTitle: {
+    fontSize: "20px",
+    marginTop: "12px",
+    marginBottom: "12px",
+  },
+  primarySkillsSelect: {
+    marginLeft: "65px",
+    width: "250px",
+  },
+  secondarySkillsSelect: {
+    marginLeft: "32px",
+    width: "250px",
+  },
+}));
 
 const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
+  const classes = useStyles();
   const dispatch = useAppDispatch();
   const userDataState = useAppSelector((state) => state.currentUser);
   // const activeTabState = useAppSelector((state) => state.tabsState);
   const [freshGraduate, setFreshGraduate] = React.useState(false);
   const [loader, setLoader] = React.useState(false);
   const [workStatus, setWorkStatus] = React.useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState({ label: "" });
   const [roles, setRoles] = useState<any>([]);
+  const [primarySkill, setPrimarySkill] = useState<any>([]);
+  const [secondarySkill, setSecondarySkill] = useState<any>([]);
+  const [primarySkillValues, setPrimarySkillValues] = useState<any>([]);
+  const [secondarySkillValues, setSecondarySkillValues] = useState<any>([]);
+
   const [totalCtc, setTotalCtc] = React.useState("");
   const [totalExperience, setTotalExperience] = React.useState<{
     totalExperienceYears: string;
@@ -76,6 +109,17 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
     expectedCtcLakh: string;
     expectedCtcThousand: string;
   }>({ expectedCtcLakh: "", expectedCtcThousand: "" });
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
   // useEffect(() => {
   //   props.handleComplete(0);
@@ -257,6 +301,14 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
           props.setType(WARNING_KEY);
           props.setDataMessage("Please fill Role");
           props.setOpen(true);
+        } else if (profileDetailsMap.primarySkill.length === 0) {
+          props.setType(WARNING_KEY);
+          props.setDataMessage("Please fill PrimarySkills");
+          props.setOpen(true);
+        } else if (profileDetailsMap.secondarySkill.length === 0) {
+          props.setType(WARNING_KEY);
+          props.setDataMessage("Please fill SecondarySkills");
+          props.setOpen(true);
         } else if (
           (profileDetailsMap.workStatus == WorkStatusArray[0] ||
             profileDetailsMap.workStatus == WorkStatusArray[1]) &&
@@ -333,6 +385,8 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
       workStatus,
       currentlyWorking: workStatus === WorkStatusArray[0] ? "Yes" : "No",
       role,
+      primarySkill,
+      secondarySkill,
     };
   };
 
@@ -399,11 +453,53 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
 
     let mapData = response.data.content;
     let result = mapData.map((item, index) => {
-      let Data = item.formData.role;
+      item.formData.label = item.formData.role;
+
+      let Data = {
+        ...item.formData,
+      };
 
       return Data;
     });
+    console.log(result);
     setRoles(result);
+  };
+
+  const handleRolesField = (e, value) => {
+    console.log(value);
+    e.preventDefault();
+    setPrimarySkillValues([]);
+    setSecondarySkillValues([]);
+    setPrimarySkill([]);
+    setSecondarySkill([]);
+    const data = roles.find((obj) => obj.label === value);
+    setRole(value);
+    handlePrimarySkillsData(value.primarySkills);
+    handleSecondarySkillsData(value.secondarySkills);
+  };
+
+  const handlePrimarySkillsData = (skillNames) => {
+    console.log(skillNames);
+    skillNames.map(async (item) => {
+      const response: any = await filterSkillValuesWithSkillName(item);
+      console.log(response);
+      setPrimarySkillValues((prevState) => [
+        ...prevState,
+        ...response.data.data[0].formData.skillValues,
+      ]);
+    });
+  };
+
+  const handleSecondarySkillsData = (skillNames) => {
+    console.log(skillNames);
+    skillNames.map(async (item) => {
+      const response: any = await filterSkillValuesWithSkillName(item);
+      console.log(response);
+      setSecondarySkillValues((prevState) => [
+        ...prevState,
+        ...response.data.data[0].formData.skillValues,
+      ]);
+    });
   };
 
   const callPrefillData = async () => {
@@ -414,6 +510,13 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
       );
       if (profileDataFetched?.data?.data?.profileDetailsMap) {
         patchProfileDetails(profileDataFetched?.data?.data?.profileDetailsMap);
+        handlePrimarySkillsData(
+          profileDataFetched?.data?.data?.profileDetailsMap?.role?.primarySkills
+        );
+        handleSecondarySkillsData(
+          profileDataFetched?.data?.data?.profileDetailsMap?.role
+            ?.secondarySkills
+        );
       }
     } catch (error: any) {
       console.log(error);
@@ -427,6 +530,8 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
   const patchProfileDetails = (patchData: any) => {
     console.log(patchData);
     setRole(patchData?.role);
+    setPrimarySkill(patchData?.primarySkill);
+    setSecondarySkill(patchData?.secondarySkill);
     setFreshGrad(patchData.freshGraduate);
     setTotalExperience({
       totalExperienceYears: patchData.totalExperience.totalExperienceYears,
@@ -653,32 +758,112 @@ const JobSeekerProfileDetails: FC<any> = (props): ReactElement => {
                   </p>
                 </div>
                 <div id="work-status-container" className="work-status-select">
-                  <FormControl
-                    id="work-status-formcontrol"
-                    sx={{ minWidth: 250 }}
-                  >
-                    <InputLabel id="demo-simple-select-helper-label">
-                      Role
+                  <Autocomplete
+                    disablePortal
+                    id="add-Role"
+                    options={roles}
+                    getOptionLabel={(obj) => obj.label}
+                    onChange={(e, value) => handleRolesField(e, value)}
+                    value={role}
+                    sx={{ width: 250 }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Role" />
+                    )}
+                  />
+                </div>
+              </div>
+              <Box mt={3}>
+                <div id="work-status-parent-container" className="inline-div">
+                  <div>
+                    <p className={classes.primarySkillsTitle}>
+                      Primary Skill <span className="asterisk-span"> *</span>
+                    </p>
+                  </div>
+                  <FormControl sx={{ m: 0, width: 300 }}>
+                    <InputLabel
+                      id="Role-simple-select-helper-label"
+                      className={classes.primarySkillsSelect}
+                    >
+                      Primary Skills
                     </InputLabel>
                     <Select
-                      id="work-status-dropdown"
-                      name="workStatusDropDown"
+                      labelId="demo-multiple-checkbox-label"
+                      id="demo-multiple-checkbox"
+                      className={classes.primarySkillsSelect}
                       // disabled={!props.hasButtons || freshGraduate}
-                      value={role}
-                      label={WORK_STATUS_TEXT}
+                      MenuProps={MenuProps}
+                      multiple
+                      value={primarySkill}
+                      required
+                      input={<OutlinedInput label="Primary Skills" />}
+                      renderValue={(selected) => selected.join(", ")}
                       onChange={(e) => {
-                        setRole(e.target.value);
+                        const {
+                          target: { value },
+                        } = e;
+                        setPrimarySkill(
+                          // On autofill we get a stringified value.
+                          typeof value === "string" ? value.split(",") : value
+                        );
                       }}
                     >
-                      {roles.map((item: string) => (
+                      {primarySkillValues.map((item: string) => (
                         <MenuItem key={item} value={item}>
-                          {item}
+                          <Checkbox checked={primarySkill.indexOf(item) > -1} />
+                          <ListItemText primary={item} />
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
                 </div>
-              </div>
+              </Box>
+              <Box mt={3}>
+                <div id="work-status-parent-container" className="inline-div">
+                  <div>
+                    <p className={classes.secondarySkillsTitle}>
+                      Secondary Skills <span className="asterisk-span"> *</span>
+                    </p>
+                  </div>
+                  <FormControl sx={{ m: 0, width: 300 }}>
+                    <InputLabel
+                      id="Role-simple-select-helper-label"
+                      className={classes.secondarySkillsSelect}
+                    >
+                      Secondary Skill
+                    </InputLabel>
+                    <Select
+                      labelId="demo-multiple-checkbox-label"
+                      id="demo-multiple-checkbox"
+                      className={classes.secondarySkillsSelect}
+                      // disabled={!props.hasButtons || freshGraduate}
+                      MenuProps={MenuProps}
+                      required
+                      multiple
+                      value={secondarySkill}
+                      input={<OutlinedInput label="Secondary Skills" />}
+                      renderValue={(selected) => selected.join(", ")}
+                      onChange={(e) => {
+                        const {
+                          target: { value },
+                        } = e;
+                        setSecondarySkill(
+                          // On autofill we get a stringified value.
+                          typeof value === "string" ? value.split(",") : value
+                        );
+                      }}
+                    >
+                      {secondarySkillValues.map((item: string) => (
+                        <MenuItem key={item} value={item}>
+                          <Checkbox
+                            checked={secondarySkill.indexOf(item) > -1}
+                          />
+                          <ListItemText primary={item} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              </Box>
             </div>
           </div>
           {props.hasButtons ? (
